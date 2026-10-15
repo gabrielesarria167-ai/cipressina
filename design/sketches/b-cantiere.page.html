@@ -1,0 +1,1542 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style></head><body>
+<!-- GENERATED from b-cantiere.html by design/tools/build-pages.py; edit the source. -->
+<title>Cipressina Barche · Cantiere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   B · CANTIERE: a shipyard drawing office at night.
+   Dark-first (navy from the logo blue), light variant below.
+   The waterline organises the page: sections above it are opera morta
+   (servizi, come funziona), sections below it are opera viva (deeper tone).
+   ===================================================================== */
+:root {
+    --bg: #0b1030;
+    --bg-2: #0f1646;
+    --bg-deep: #070b26;
+    --bg-abyss: #04061a;
+    --surface: #111a4a;
+    --surface-2: #19245f;
+    --ink: #e9edfb;
+    --ink-2: #a9b3da;
+    --ink-3: #8592c0;
+    --head: #f4f6ff;
+    --line: rgba(143, 162, 255, .17);
+    --line-strong: rgba(143, 162, 255, .42);
+    --grid: rgba(143, 162, 255, .065);
+    --brand: #0E0E9E;
+    --accent: #1fb765;
+    --accent-text: #4fe08f;
+    --accent-dim: rgba(31, 183, 101, .16);
+    --on-accent: #04122b;
+    --cyan: #55d6ff;
+    --cyan-dim: rgba(85, 214, 255, .13);
+    --hover-bg: #55d6ff;
+    --on-hover: #04122b;
+    --link: #7fdcff;
+    --danger: #ff9a9a;
+    --ph-line: #f0b73c;
+    --ph-ink: #ffd27a;
+    --ph-bg: rgba(240, 183, 60, .11);
+    --overlay: rgba(11, 16, 48, .88);
+    --chip-edge: rgba(255, 255, 255, .3);
+    --draw: #cfd7ff;
+    --hdr: 60px;
+    --f-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    --f-body: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+        --bg: #eef2fa;
+        --bg-2: #f8faff;
+        --bg-deep: #d7e0f2;
+        --bg-abyss: #c4d1ea;
+        --surface: #ffffff;
+        --surface-2: #e4eaf7;
+        --ink: #0d1038;
+        --ink-2: #3b4272;
+        --ink-3: #565e8e;
+        --head: #0E0E9E;
+        --line: rgba(14, 14, 158, .16);
+        --line-strong: rgba(14, 14, 158, .42);
+        --grid: rgba(14, 14, 158, .07);
+        --accent: #009642;
+        --accent-text: #00743a;
+        --accent-dim: rgba(0, 150, 66, .12);
+        --on-accent: #04122b;
+        --cyan: #07709e;
+        --cyan-dim: rgba(7, 112, 158, .1);
+        --hover-bg: #07709e;
+        --on-hover: #ffffff;
+        --link: #0E0E9E;
+        --danger: #b3261e;
+        --ph-line: #b97800;
+        --ph-ink: #6b4300;
+        --ph-bg: rgba(214, 150, 0, .14);
+        --overlay: rgba(238, 242, 250, .9);
+        --chip-edge: rgba(0, 0, 0, .35);
+        --draw: #1a1f6a;
+        color-scheme: light;
+    }
+}
+:root[data-theme="light"] {
+    --bg: #eef2fa;
+    --bg-2: #f8faff;
+    --bg-deep: #d7e0f2;
+    --bg-abyss: #c4d1ea;
+    --surface: #ffffff;
+    --surface-2: #e4eaf7;
+    --ink: #0d1038;
+    --ink-2: #3b4272;
+    --ink-3: #565e8e;
+    --head: #0E0E9E;
+    --line: rgba(14, 14, 158, .16);
+    --line-strong: rgba(14, 14, 158, .42);
+    --grid: rgba(14, 14, 158, .07);
+    --accent: #009642;
+    --accent-text: #00743a;
+    --accent-dim: rgba(0, 150, 66, .12);
+    --on-accent: #04122b;
+    --cyan: #07709e;
+    --cyan-dim: rgba(7, 112, 158, .1);
+    --hover-bg: #07709e;
+    --on-hover: #ffffff;
+    --link: #0E0E9E;
+    --danger: #b3261e;
+    --ph-line: #b97800;
+    --ph-ink: #6b4300;
+    --ph-bg: rgba(214, 150, 0, .14);
+    --overlay: rgba(238, 242, 250, .9);
+    --chip-edge: rgba(0, 0, 0, .35);
+    --draw: #1a1f6a;
+    color-scheme: light;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- Functional CSS the contract requires ---------- */
+[hidden] { display: none !important; }
+#boatOverlay.hidden { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#heroBoat, #boatCanvasWrap { position: relative; }
+#heroBoat canvas, #boatCanvasWrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#heroBoat.is-3d .hero-poster { opacity: 0; }
+#navPanel { display: none; }
+#navPanel.is-open { display: block; }
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--hdr) + 12px); -webkit-text-size-adjust: 100%; }
+body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--ink);
+    font: 400 17px/1.55 var(--f-body);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+h1, h2, h3, h4 { margin: 0; font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .035em; color: var(--head); line-height: 1; }
+p { margin: 0; }
+a { color: var(--link); text-underline-offset: 3px; }
+a:hover { color: var(--cyan); }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+section[id], [id="contenuto"] { scroll-margin-top: calc(var(--hdr) + 8px); }
+.mono { font-family: var(--f-mono); }
+
+.skip-link { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--accent); color: var(--on-accent); padding: 10px 16px; font: 600 14px var(--f-mono); text-decoration: none; }
+.skip-link:focus { top: 8px; }
+
+/* placeholders: dashed amber outline, always obvious */
+.ph { outline: 1px dashed var(--ph-line); outline-offset: 2px; background: var(--ph-bg); color: var(--ph-ink); padding: 0 .3em; border-radius: 1px; }
+
+/* draft ribbon */
+#draftRibbon {
+    padding: 7px 16px; text-align: center; font: 500 12px/1.35 var(--f-mono); letter-spacing: .04em;
+    color: var(--ph-ink); border-bottom: 1px dashed var(--ph-line);
+    background: repeating-linear-gradient(135deg, rgba(240,183,60,.18) 0 10px, rgba(240,183,60,.07) 10px 20px);
+}
+
+/* ---------- Buttons, small furniture ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5em; min-height: 48px; padding: 0 22px;
+    font: 600 14px/1.1 var(--f-mono); letter-spacing: .07em; text-transform: uppercase; text-decoration: none; text-align: center;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); border-radius: 2px;
+    transition: background-color .15s, border-color .15s, color .15s;
+}
+.btn:hover { background: var(--hover-bg); border-color: var(--hover-bg); color: var(--on-hover); }
+.btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.btn--ghost:hover { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+.btn--sm { min-height: 40px; padding: 0 14px; font-size: 13px; }
+button[data-copy] {
+    min-height: 32px; padding: 0 12px; font: 500 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase;
+    background: transparent; border: 1px solid var(--line-strong); color: var(--ink-2); border-radius: 2px;
+}
+button[data-copy]:hover { border-color: var(--cyan); color: var(--cyan); }
+button[data-copy].is-copied { border-color: var(--accent); color: var(--accent-text); }
+
+.elev-row { display: flex; align-items: center; gap: 12px; font: 500 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+.elev { color: var(--cyan); white-space: nowrap; }
+.elev::before { content: ""; display: inline-block; margin-right: 8px; border: 5px solid transparent; border-top: 8px solid var(--cyan); border-bottom: 0; vertical-align: 1px; }
+.elev-row__sep { flex: 1 1 auto; height: 8px; min-width: 20px; background:
+    linear-gradient(var(--line-strong), var(--line-strong)) 0 50% / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 24px) 0 50% / 100% 8px no-repeat; }
+.elev-row__zone { white-space: nowrap; color: var(--ink-3); }
+
+.sec { padding-block: clamp(56px, 9vw, 110px); }
+.sec__head { display: grid; gap: 16px; max-width: 780px; margin-bottom: clamp(28px, 5vw, 52px); }
+.sec__head h2 { font-size: clamp(36px, 5.4vw, 64px); line-height: .98; }
+.sec__head .lede { color: var(--ink-2); font-size: 19px; max-width: 60ch; }
+
+/* corner brackets: the drawing-sheet frame */
+.sheet-frame {
+    border: 1px solid var(--line-strong);
+    background:
+        linear-gradient(var(--cyan), var(--cyan)) top left / 16px 2px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) top left / 2px 16px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) top right / 16px 2px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) top right / 2px 16px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) bottom left / 16px 2px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) bottom left / 2px 16px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) bottom right / 16px 2px no-repeat,
+        linear-gradient(var(--cyan), var(--cyan)) bottom right / 2px 16px no-repeat,
+        var(--bg-2);
+}
+
+/* photo placeholders: blueprint box, diagonals, visible label */
+.photo {
+    position: relative; display: grid; place-items: center; aspect-ratio: 4 / 3; min-width: 0; border: 1px solid var(--line-strong);
+    background:
+        linear-gradient(to top right, transparent calc(50% - .5px), var(--line-strong) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)),
+        linear-gradient(to bottom right, transparent calc(50% - .5px), var(--line-strong) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)),
+        var(--surface);
+}
+.photo .ph { background: var(--bg); padding: 6px 10px; font: 500 12px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; text-align: center; max-width: 86%; }
+
+/* ---------- Header ---------- */
+#siteHeader { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+.hdr { display: flex; align-items: center; gap: 10px; min-height: var(--hdr); }
+.logo { display: block; flex: 0 0 auto; line-height: 0; border-radius: 3px; }
+.logo svg { height: 38px; width: auto; display: block; }
+#siteNav { display: none; margin-left: auto; gap: 4px; }
+#siteNav a, #navPanel a:not(.btn) {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; font: 500 13px var(--f-mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-2); text-decoration: none; border-bottom: 2px solid transparent;
+}
+#siteNav a:hover, #navPanel a:not(.btn):hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+.lang { display: none; border: 1px solid var(--line-strong); border-radius: 2px; }
+.lang button { min-width: 36px; min-height: 36px; padding: 0 6px; background: transparent; border: 0; border-right: 1px solid var(--line); font: 500 12px var(--f-mono); letter-spacing: .06em; color: var(--ink-2); }
+.lang button:last-child { border-right: 0; }
+.lang button:hover { color: var(--cyan); background: var(--cyan-dim); }
+.lang button.is-active, .lang button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.hdr .cta { margin-left: auto; }
+#menuToggle { position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ink); }
+#menuToggle::before { content: ""; width: 20px; height: 2px; background: currentColor; box-shadow: 0 -7px 0 currentColor, 0 7px 0 currentColor; }
+#menuToggle.is-open::before { box-shadow: none; transform: rotate(45deg); }
+#menuToggle.is-open::after { content: ""; position: absolute; width: 20px; height: 2px; background: currentColor; transform: rotate(-45deg); }
+#menuToggle:hover { border-color: var(--cyan); color: var(--cyan); }
+#navPanel { position: absolute; left: 0; right: 0; top: 100%; background: var(--bg); border-bottom: 1px solid var(--line-strong); padding: 8px clamp(16px, 4vw, 40px) 18px; max-height: calc(100dvh - var(--hdr)); overflow: auto; }
+#navPanel a:not(.btn) { display: flex; border-bottom: 1px solid var(--line); min-height: 48px; }
+#navPanel .lang { display: inline-flex; margin: 14px 0 6px; }
+#navPanel .btn { display: flex; margin-top: 10px; }
+@media (min-width: 1040px) {
+    #siteNav { display: flex; }
+    .lang { display: inline-flex; }
+    .hdr .cta { margin-left: 0; }
+    #menuToggle, #navPanel, #navPanel.is-open { display: none; }
+}
+
+/* ---------- Hero: the drawing sheet ---------- */
+.hero { padding-block: clamp(28px, 4vw, 48px) clamp(40px, 6vw, 80px); }
+.hero__top { display: grid; gap: 24px; margin-bottom: clamp(24px, 4vw, 40px); }
+.eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 14px; font: 500 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+.hero h1 { font-size: clamp(48px, 7.2vw, 92px); line-height: .9; letter-spacing: .025em; }
+.hero .lede { font-size: 19px; color: var(--ink-2); max-width: 52ch; margin-bottom: 20px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (min-width: 960px) {
+    .hero__top { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; gap: 48px; }
+}
+
+.sheet { --wl: 60%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "plot" "chips" "tb"; }
+.sheet__plot { grid-area: plot; min-width: 0; }
+.chips { grid-area: chips; min-width: 0; padding: 16px; border-top: 1px solid var(--line-strong); }
+.titleblock { grid-area: tb; display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--line-strong); background: var(--bg-2); }
+.tb { padding: 10px 14px; min-width: 0; border-bottom: 1px solid var(--line); display: grid; gap: 4px; align-content: start; }
+.tb:last-child { border-bottom: 0; }
+.tb__k { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.tb__v { font: 700 24px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; color: var(--head); }
+.tb p { font: 400 13px/1.35 var(--f-mono); color: var(--ink-2); }
+.fan-caption { display: flex; align-items: center; gap: 10px; }
+#heroSwatchChip { flex: 0 0 auto; width: 22px; height: 14px; background: var(--sw, #1d3b8f); border: 1px solid var(--chip-edge); }
+#heroSwatchName { font: 600 14px var(--f-mono); color: var(--ink); }
+@media (min-width: 720px) {
+    .titleblock { grid-template-columns: 1.1fr 1.2fr 1.6fr; }
+    .tb { border-bottom: 0; border-right: 1px solid var(--line); }
+    .tb:last-child { border-right: 0; }
+    .tb--who { grid-column: 1 / -1; border-top: 1px solid var(--line); border-right: 0; }
+}
+@media (min-width: 960px) {
+    .sheet { --wl: 61%; grid-template-columns: minmax(0, 1fr) 260px; grid-template-areas: "plot chips" "tb tb"; }
+    .chips { border-top: 0; border-left: 1px solid var(--line-strong); }
+    .titleblock { grid-template-columns: 1.1fr 1.2fr 1.6fr 1.4fr; }
+    .tb--who { grid-column: auto; border-top: 0; border-right: 0; }
+}
+
+/* the plot: boat on a grid, waterline across it */
+.sheet__plot { background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 20px 20px; }
+#heroBoat { width: 100%; aspect-ratio: 4 / 3; overflow: hidden; container-type: inline-size; }
+@media (min-width: 720px) { #heroBoat { aspect-ratio: 16 / 9; } }
+#heroBoat .wash { position: absolute; left: 0; right: 0; top: var(--wl); bottom: 0; z-index: 0;
+    background:
+        repeating-linear-gradient(180deg, transparent 0 13px, rgba(85, 214, 255, .1) 13px 14px),
+        linear-gradient(180deg, rgba(85, 214, 255, .2), rgba(85, 214, 255, .04)); }
+#heroBoat .hero-poster { position: absolute; left: 0; width: 100%; height: auto; top: calc(var(--wl) - 31.25cqw); z-index: 1; transition: opacity .5s; }
+#heroBoat canvas { z-index: 2; }
+.marks { position: absolute; inset: 0; z-index: 3; pointer-events: none; font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--cyan); }
+.lwl { position: absolute; left: 0; right: 0; top: var(--wl); border-top: 1px dashed var(--cyan); }
+.lwl__tag { position: absolute; left: 22px; top: -9px; padding: 3px 6px; background: var(--bg); border: 1px solid var(--cyan); color: var(--cyan); }
+.lwl__name { position: absolute; left: 22px; top: 12px; color: var(--ink-2); letter-spacing: .06em; }
+.zone { position: absolute; right: 12px; color: var(--ink-2); }
+.zone--up { top: calc(var(--wl) - 24px); }
+.zone--up::before { content: "▲ "; color: var(--cyan); }
+.zone--down { top: calc(var(--wl) + 12px); }
+.zone--down::before { content: "▼ "; color: var(--cyan); }
+.ruler { position: absolute; left: 0; width: 12px; }
+.ruler--up { top: 0; height: var(--wl); background:
+    repeating-linear-gradient(0deg, var(--cyan) 0 1px, transparent 1px 100px) 0 100% / 12px 100%,
+    repeating-linear-gradient(0deg, var(--line-strong) 0 1px, transparent 1px 20px) 0 100% / 7px 100%;
+    background-repeat: no-repeat; }
+.ruler--down { top: var(--wl); bottom: 0; background:
+    repeating-linear-gradient(180deg, var(--cyan) 0 1px, transparent 1px 100px) 0 0 / 12px 100%,
+    repeating-linear-gradient(180deg, var(--line-strong) 0 1px, transparent 1px 20px) 0 0 / 7px 100%;
+    background-repeat: no-repeat; }
+.dim { position: absolute; left: 9%; right: 9%; top: 18px; display: flex; align-items: center; gap: 10px; height: 14px; border-left: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+.dim::before, .dim::after { content: ""; flex: 1 1 0; height: 1px; background: var(--cyan); }
+.dim span { white-space: nowrap; }
+@media (max-width: 719px) { .dim { left: 14px; right: 14px; } .dim span { font-size: 10px; letter-spacing: .05em; } .lwl__name { display: none; } }
+
+/* colour card: the paint maker's rail */
+.chips__head { padding-bottom: 10px; margin-bottom: 6px; border-bottom: 2px solid var(--ink-3); }
+#heroSwatchLabel { font: 500 12px/1.35 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+#heroSwatches { display: grid; grid-template-columns: minmax(0, 1fr); counter-reset: sw; }
+.swatch {
+    counter-increment: sw; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 32px; padding: 2px 8px 2px 3px; text-align: left;
+    background: transparent; border: 1px solid transparent; border-bottom-color: var(--line); color: var(--ink-2); font: 500 13px/1.2 var(--f-mono); border-radius: 0;
+}
+.swatch::before { content: ""; height: 22px; background: var(--sw); border: 1px solid var(--chip-edge); }
+.swatch::after { content: counter(sw, decimal-leading-zero); font-size: 11px; color: var(--ink-3); }
+.swatch__name { min-width: 0; overflow-wrap: anywhere; }
+.swatch:hover { color: var(--ink); border-color: var(--cyan); }
+.swatch.is-active { border-color: var(--accent); background: var(--accent-dim); color: var(--ink); }
+.swatch.is-active::before { outline: 2px solid var(--accent); outline-offset: 1px; }
+.swatch.is-active .swatch__name { font-weight: 600; }
+@media (max-width: 959px) {
+    #heroSwatches { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 10px; }
+    .swatch { grid-template-columns: 32px minmax(0, 1fr); font-size: 12px; }
+    .swatch::after { display: none; }
+}
+
+/* ---------- Waterline divider ---------- */
+.lwl-band { position: relative; overflow: hidden; border-block: 1px solid var(--cyan); background: linear-gradient(180deg, var(--cyan-dim), transparent); color: var(--cyan); }
+.lwl-band__wave { position: absolute; left: 0; top: 0; width: calc(100% + 48px); height: 16px; }
+.lwl-band .wrap { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding-block: 34px 18px; }
+.lwl-band p { font: 400 17px var(--f-body); color: var(--ink); }
+@media (prefers-reduced-motion: no-preference) { .lwl-band__wave { animation: drift 4s linear infinite; } }
+@keyframes drift { to { transform: translateX(-48px); } }
+
+/* ---------- Above the line: servizi, come funziona ---------- */
+.specs { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 800px) { .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.spec { background: var(--surface); border: 1px solid var(--line-strong); min-width: 0; }
+.spec header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line-strong); background: var(--bg-2); }
+.spec h3 { font-size: 30px; }
+.spec header span { font: 500 12px var(--f-mono); letter-spacing: .08em; color: var(--cyan); }
+.spec ol { counter-reset: it; }
+.spec li { counter-increment: it; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+.spec li:last-child { border-bottom: 0; }
+.spec li::before { content: counter(it, decimal-leading-zero); font: 500 13px/1.7 var(--f-mono); color: var(--ink-3); }
+.srv-foot { display: grid; gap: 20px; margin-top: 20px; align-items: stretch; }
+@media (min-width: 800px) { .srv-foot { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+.srv-note { padding: 20px; border: 1px dashed var(--line-strong); color: var(--ink-2); font-size: 18px; display: grid; gap: 10px; align-content: center; }
+.srv-note strong { color: var(--ink); font-weight: 600; }
+
+.stations { display: grid; gap: 18px; counter-reset: st; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 620px) { .stations { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .stations { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.stations li { counter-increment: st; position: relative; padding: 22px 4px 0 0; border-top: 1px solid var(--line-strong); }
+.stations li::before { content: ""; position: absolute; left: 0; top: -5px; width: 9px; height: 9px; background: var(--cyan); transform: rotate(45deg); }
+.stations li::after { content: "ST. " counter(st, decimal-leading-zero); display: block; order: -1; }
+.stations li { display: grid; gap: 8px; }
+.stations li::after { grid-row: 1; font: 500 12px var(--f-mono); letter-spacing: .1em; color: var(--cyan); }
+.stations h3 { font-size: 30px; grid-row: 2; }
+.stations p { grid-row: 3; color: var(--ink-2); }
+.how-cta { margin-top: 36px; }
+
+/* ---------- Below the line: deeper tone ---------- */
+.below {
+    background:
+        repeating-linear-gradient(0deg, transparent 0 15px, rgba(85, 214, 255, .045) 15px 16px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(180deg, var(--bg-deep), var(--bg-abyss));
+}
+:root[data-theme="light"] .below { background:
+        repeating-linear-gradient(0deg, transparent 0 15px, rgba(7, 112, 158, .06) 15px 16px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(180deg, var(--bg-deep), var(--bg-abyss)); }
+.below .sec + .sec { border-top: 1px solid var(--line); }
+
+/* price sentence */
+.cols { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); margin-bottom: 32px; }
+@media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); } }
+.qline { background: var(--surface); border: 1px solid var(--line-strong); min-width: 0; }
+.qline__tag { display: flex; justify-content: space-between; gap: 12px; padding: 9px 16px; border-bottom: 1px solid var(--line); font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); background: var(--bg-2); }
+.qline__body { padding: clamp(18px, 3vw, 30px); }
+.qline__sentence { font: 400 clamp(21px, 2.6vw, 30px)/2.15 var(--f-body); color: var(--ink); }
+.qline select {
+    appearance: none; -webkit-appearance: none; min-height: 40px; padding: 2px 28px 2px 10px; border: 0; border-bottom: 2px solid var(--accent); border-radius: 0;
+    background-color: var(--accent-dim); color: var(--accent-text); font: 600 .82em var(--f-mono);
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 15px) 55%, calc(100% - 10px) 55%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; max-width: 100%; width: auto; min-width: 64px;
+}
+.qline select:hover { border-bottom-color: var(--cyan); color: var(--cyan); }
+.qline option { background: var(--surface); color: var(--ink); }
+#qlTotal { font: 600 1.15em var(--f-mono); color: var(--accent-text); }
+#qlBefore { margin-top: 6px; font: 400 14px var(--f-mono); color: var(--ink-3); }
+#qlBefore s { color: var(--ink-2); }
+.qline .btn { margin-top: 18px; }
+.discount h3 { font-size: 30px; margin-bottom: 14px; }
+#discountList { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; align-items: end; }
+.discount-step { display: flex; flex-direction: column; justify-content: space-between; gap: 6px; padding: 10px; border: 1px solid var(--line-strong); background: var(--accent-dim); }
+.discount-step:nth-child(1) { min-height: 88px; }
+.discount-step:nth-child(2) { min-height: 118px; }
+.discount-step:nth-child(3) { min-height: 148px; }
+.discount-step:nth-child(4) { min-height: 178px; border-color: var(--accent); }
+.discount-step__zones { font: 500 12px/1.3 var(--f-mono); color: var(--ink-2); }
+.discount-step__rate { font: 700 clamp(28px, 4vw, 44px)/1 var(--f-display); color: var(--accent-text); }
+
+.tiers { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .tiers { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tier { display: grid; gap: 14px; align-content: start; padding: 20px; background: var(--surface); border: 1px solid var(--line-strong); min-width: 0; }
+.tier header { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 26px; font: 500 12px var(--f-mono); letter-spacing: .1em; color: var(--ink-3); }
+.tier header p { font: 600 12px var(--f-mono); }
+.tier h3 { font-size: 34px; }
+.tier__price { font: 500 16px var(--f-mono); }
+.tier ul { display: grid; gap: 8px; margin-bottom: 6px; }
+.tier li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 6px; color: var(--ink-2); }
+.tier li::before { content: "+"; font-family: var(--f-mono); color: var(--cyan); }
+.tier .btn { align-self: end; }
+.tier--completo { border-color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+.tier-note { margin-top: 22px; font-size: 15px; color: var(--ink-3); }
+
+/* perché noi */
+.why { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .why { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 48px; } }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line-strong); background: var(--surface); }
+.facts .wide { grid-column: 1 / -1; padding: 16px 18px; border-bottom: 1px solid var(--line-strong); font: 600 20px/1.25 var(--f-body); color: var(--ink); display: flex; gap: 12px; align-items: center; }
+.facts .wide::before { content: ""; flex: 0 0 auto; width: 10px; height: 10px; background: var(--accent); transform: rotate(45deg); }
+.fact { padding: 16px 14px 18px; border-right: 1px solid var(--line); min-width: 0; display: grid; gap: 4px; align-content: start; }
+.fact:last-of-type { border-right: 0; }
+.fact b { font: 700 clamp(44px, 6vw, 64px)/1 var(--f-display); color: var(--accent-text); }
+.fact span { font: 500 12px/1.35 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); hyphens: auto; }
+@media (max-width: 480px) { .fact span { font-size: 11px; letter-spacing: 0; } }
+.booth { grid-column: 1 / -1; padding: 12px 18px; border-top: 1px solid var(--line-strong); font: 400 14px/1.8 var(--f-mono); color: var(--ink-2); }
+.why-sub { margin-top: 26px; display: grid; gap: 10px; }
+.why-sub h3 { font-size: 22px; color: var(--ink-2); letter-spacing: .08em; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { padding: 8px 12px; border: 1px solid var(--line-strong); font: 500 12px/1.2 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.tag--award { border-color: var(--accent); background: var(--accent-dim); }
+.photos { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-content: start; }
+@media (min-width: 560px) and (max-width: 899px) { .photos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* FAQ */
+.faq { max-width: 900px; border-top: 1px solid var(--line-strong); counter-reset: q; }
+.faq details { counter-increment: q; border-bottom: 1px solid var(--line-strong); }
+.faq summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; align-items: center; min-height: 60px; padding: 12px 0; list-style: none; cursor: pointer; font: 600 19px/1.3 var(--f-body); color: var(--ink); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "Q-" counter(q, decimal-leading-zero); font: 500 12px var(--f-mono); letter-spacing: .08em; color: var(--cyan); }
+.faq summary::after { content: "+"; font: 500 24px var(--f-mono); color: var(--ink-2); }
+.faq details[open] summary::after { content: "−"; color: var(--accent-text); }
+.faq summary:hover { color: var(--cyan); }
+.faq details > p { padding: 0 0 20px 56px; color: var(--ink-2); }
+
+/* contatti */
+.contact { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .contact { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; } }
+.spec-dl { margin: 0; border: 1px solid var(--line-strong); background: var(--surface); }
+.spec-dl .row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.spec-dl .row:last-child { border-bottom: 0; }
+@media (min-width: 560px) { .spec-dl .row { grid-template-columns: 150px minmax(0, 1fr); gap: 18px; } }
+.spec-dl dt { font: 500 12px/1.9 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.spec-dl dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; font: 500 16px/1.5 var(--f-mono); color: var(--ink); }
+.spec-dl dd > span:first-child { overflow-wrap: anywhere; min-width: 0; }
+.contact__side { display: grid; gap: 16px; align-content: start; }
+
+/* footer */
+#siteFooter { background: var(--bg-abyss); border-top: 1px solid var(--line-strong); padding: 36px 0 40px; }
+#siteFooter .wrap { display: grid; gap: 16px; }
+#siteFooter p { font: 400 13px/1.6 var(--f-mono); color: var(--ink-2); }
+.foot-links { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.foot-links a { display: inline-flex; align-items: center; min-height: 32px; font: 500 12px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+
+/* FAB */
+.fab { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: grid; place-items: center; width: 54px; height: 54px; background: var(--accent); color: var(--on-accent); border: 1px solid var(--accent); border-radius: 3px; box-shadow: 0 0 0 4px var(--bg); }
+.fab:hover { background: var(--hover-bg); border-color: var(--hover-bg); color: var(--on-hover); }
+.fab svg { width: 28px; height: 28px; }
+body.is-wizard #waFab { display: none; }
+
+/* ---------- Wizard & lookup shell ---------- */
+.wz { max-width: 900px; }
+body[data-step="2"] .wz, body[data-step="3"] .wz { max-width: 1240px; }
+#view-wizard, #view-lookup { padding-bottom: 0; }
+.prog { position: sticky; top: calc(var(--hdr) + env(safe-area-inset-top, 0px)); z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+.prog__bar { display: flex; align-items: stretch; gap: 0; padding-block: 10px; }
+.prog__sheet { display: none; align-items: center; padding: 0 16px 0 0; font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+@media (min-width: 760px) { .prog__sheet { display: flex; } }
+#wizProgress { flex: 1 1 auto; display: flex; min-width: 0; }
+#wizProgress li { flex: 1 1 0; display: flex; flex-direction: column; justify-content: center; gap: 2px; min-width: 0; padding: 7px 8px; border: 1px solid var(--line-strong); margin-left: -1px; font: 500 11px/1.2 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); counter-increment: pr; }
+#wizProgress { counter-reset: pr; }
+#wizProgress li::before { content: counter(pr, decimal-leading-zero); color: var(--ink-3); }
+#wizProgress li.is-current { box-shadow: inset 0 3px 0 var(--accent); background: var(--surface-2); color: var(--head); }
+#wizProgress li.is-current::before { color: var(--accent-text); }
+#wizProgress li.is-done { color: var(--ink-2); }
+#wizProgress li.is-done::before { content: "✓ " counter(pr, decimal-leading-zero); color: var(--accent-text); }
+@media (min-width: 560px) { #wizProgress li { flex-direction: row; align-items: baseline; gap: 10px; padding: 10px 14px; font-size: 12px; } }
+@media (max-width: 439px) { #wizProgress li:not(.is-current) { flex: 0 0 44px; } #wizProgress li:not(.is-current) > span:not(.sr-only) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } #wizProgress li { padding-inline: 5px; } #wizProgress li.is-current { flex: 1 1 0; } }
+
+.step { display: none; margin-block: clamp(20px, 4vw, 36px) 0; padding: clamp(18px, 4vw, 36px); min-width: 0; }
+.step.is-active { display: block; }
+.step__kicker { font: 500 12px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+.step h1, #success h1, #view-lookup h1 { font-size: clamp(36px, 6vw, 58px); margin-bottom: 10px; }
+.step__sub { color: var(--ink-2); max-width: 60ch; margin-bottom: 22px; }
+.step:focus-visible, h1:focus-visible { outline-offset: 4px; }
+fieldset { margin: 0 0 22px; padding: 0; border: 0; min-width: 0; counter-reset: row; }
+legend { padding: 7px 12px; margin-bottom: 0; background: var(--bg); border: 1px solid var(--line-strong); border-bottom: 0; font: 600 12px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); float: left; }
+legend + * { clear: both; }
+.rows { border: 1px solid var(--line-strong); background: var(--surface); padding: 0 16px; clear: both; counter-reset: row; }
+
+.field { counter-increment: row; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.rows .field:last-child { border-bottom: 0; }
+.field > label, .field > .field__label { font: 500 12px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.field > label::before, .field > .field__label::before { content: counter(row, decimal-leading-zero); margin-right: 10px; color: var(--cyan); }
+.opt { text-transform: none; letter-spacing: 0; color: var(--ink-3); margin-left: 6px; }
+@media (min-width: 760px) {
+    .field { grid-template-columns: minmax(150px, 220px) minmax(0, 1fr); column-gap: 24px; align-items: start; }
+    .field > label, .field > .field__label { grid-column: 1; grid-row: 1 / span 5; padding-top: 12px; }
+    .field > :not(label):not(.field__label) { grid-column: 2; }
+}
+input[type="text"], input[type="tel"], input[type="email"], select, textarea, #lookupId {
+    width: 100%; min-height: 46px; padding: 9px 12px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: 2px;
+    font: 400 16px/1.4 var(--f-mono); color: var(--ink);
+}
+textarea { resize: vertical; min-height: 110px; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
+input:hover, select:hover, textarea:hover { border-color: var(--cyan); }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; border-color: var(--cyan); }
+select:not(#qlCount):not(#qlLoa):not(#qlTier) {
+    appearance: none; -webkit-appearance: none; padding-right: 36px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%), linear-gradient(135deg, var(--ink-2) 50%, transparent 50%);
+    background-position: calc(100% - 19px) 55%, calc(100% - 14px) 55%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+select:disabled { opacity: .5; }
+.inwrap { display: flex; align-items: stretch; min-width: 0; }
+.inwrap input { flex: 1 1 auto; min-width: 0; }
+.affix { display: inline-flex; align-items: center; padding: 0 12px; background: var(--surface-2); border: 1px solid var(--line-strong); font: 500 15px var(--f-mono); color: var(--ink-2); }
+.inwrap .affix:last-child { border-left: 0; }
+.inwrap .affix:first-child { border-right: 0; }
+.field__hint { font-size: 14px; line-height: 1.4; color: var(--ink-3); }
+.field__hint a, #modelSource { font: 400 12px var(--f-mono); }
+#modelSource { display: inline-block; padding-block: 4px; }
+.field__error { color: var(--danger); font: 600 14px/1.4 var(--f-body); }
+.field__error::before { content: "▲ "; }
+.field.is-invalid input, .field.is-invalid select, .field.is-invalid textarea, [aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+#registeredNote { padding: 8px 12px; border-left: 3px solid var(--cyan); background: var(--cyan-dim); font-size: 15px; color: var(--ink); }
+#boatSummary { display: flex; align-items: center; gap: 12px; padding: 12px 0; font: 500 14px var(--f-mono); color: var(--accent-text); }
+#boatSummaryIcon svg { width: 54px; height: auto; display: block; fill: currentColor; }
+
+/* radio cards */
+[role="radiogroup"] button[role="radio"] {
+    position: relative; min-height: 46px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ink-2); text-align: left;
+}
+[role="radiogroup"] button[role="radio"]:hover { border-color: var(--cyan); color: var(--ink); }
+[role="radiogroup"] button[role="radio"].is-selected, [role="radiogroup"] button[role="radio"][aria-checked="true"] { border-color: var(--accent); background: var(--accent-dim); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+[role="radiogroup"] button[role="radio"].is-selected::after, [role="radiogroup"] button[role="radio"][aria-checked="true"]::after { content: ""; position: absolute; top: 0; right: 0; border: 9px solid transparent; border-top-color: var(--accent); border-right-color: var(--accent); }
+#boatType { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 8px; }
+#boatType button { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; font: 500 12px/1.2 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; padding: 14px 6px 10px; }
+#boatType [data-type-icon] { display: block; width: 62px; color: var(--ink-3); }
+#boatType [data-type-icon] svg { display: block; width: 100%; height: auto; fill: currentColor; }
+#boatType button.is-selected [data-type-icon], #boatType button[aria-checked="true"] [data-type-icon] { color: var(--accent-text); }
+#registered { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+#registered button { font: 500 14px var(--f-mono); text-align: center; }
+
+/* step 2: tiers */
+#tier { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+#tier button { display: grid; gap: 10px; align-content: start; padding: 20px; }
+#tier strong { font: 700 30px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; color: var(--head); }
+#tier .li { display: grid; grid-template-columns: 14px minmax(0, 1fr); font-size: 15px; color: var(--ink-2); }
+#tier .li::before { content: "+"; font-family: var(--f-mono); color: var(--cyan); }
+#tier [data-tier-from] { justify-self: start; font: 500 15px var(--f-mono); }
+.tier-badge { justify-self: start; font: 600 12px var(--f-mono); }
+
+/* step 3 */
+.s3 { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) { .s3 { grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr); align-items: start; } }
+#boatView3d { min-width: 0; display: grid; gap: 0; }
+.vhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--line-strong); border-bottom: 0; background: var(--bg); font: 600 12px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.vhead span:last-child { color: var(--ink-3); font-weight: 500; }
+#boatCanvasWrap { aspect-ratio: 4 / 3; min-height: 280px; max-height: 58vh; border: 1px solid var(--line-strong); touch-action: none;
+    background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 20px 20px,
+        var(--bg-2); }
+@media (min-width: 720px) { #boatCanvasWrap { aspect-ratio: 16 / 10; } }
+#boatOverlay { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 16px; background: var(--overlay); text-align: center; font: 500 14px var(--f-mono); color: var(--ink); }
+#boatError { color: var(--danger); }
+#zoneHover { position: absolute; left: 12px; bottom: 12px; z-index: 3; pointer-events: none; padding: 5px 10px; border-left: 3px solid var(--cyan); background: var(--overlay); font: 500 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+#zoneHover:empty { display: none; }
+.vbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+#boatViewButtons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; flex: 1 1 340px; }
+@media (min-width: 560px) { #boatViewButtons { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+#boatViewButtons button, #waterToggle {
+    min-height: 44px; padding: 0 8px; background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; font: 500 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2);
+}
+#boatViewButtons button:hover, #waterToggle:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+#boatViewButtons button.is-active, #boatViewButtons button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-dim); color: var(--ink); box-shadow: inset 0 3px 0 var(--accent); }
+#waterToggle { flex: 0 0 auto; padding: 0 14px; }
+#waterToggle::before { content: "≈ "; color: var(--cyan); }
+#waterToggle[data-water="off"] { border-style: dashed; }
+.viewer-hint { margin-top: 10px; font-size: 14px; color: var(--ink-3); }
+
+#zonesSummary { min-width: 0; background: var(--surface); border: 1px solid var(--line-strong); }
+#zonesSummary > header { padding: 12px 16px; border-bottom: 2px solid var(--ink-3); display: grid; gap: 4px; }
+#zonesSummary > header span { font: 500 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--cyan); }
+#zonesSummary h2 { font-size: 30px; }
+.bill { padding: 4px 16px 16px; }
+#zonesCount, #zonesEmpty { padding-block: 10px; font: 400 14px var(--f-mono); color: var(--ink-2); }
+#zonesList li { display: grid; grid-template-columns: minmax(0, 1fr) auto 36px; gap: 8px; align-items: center; min-height: 44px; border-bottom: 1px dotted var(--line-strong); font: 400 14px/1.3 var(--f-mono); }
+.zone-row__price { color: var(--ink); white-space: nowrap; }
+.zone-row__remove { width: 32px; height: 32px; padding: 0; background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ink-2); font-size: 13px; }
+.zone-row__remove:hover { border-color: var(--danger); color: var(--danger); }
+#zonesClear { margin-top: 10px; min-height: 36px; padding: 0 12px; background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; font: 500 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+#zonesClear:hover { border-color: var(--danger); color: var(--danger); }
+#zonesNudge { margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--cyan); background: var(--cyan-dim); font-size: 15px; color: var(--ink); }
+#zonesNudge.is-maxed { border-style: solid; border-color: var(--accent); background: var(--accent-dim); }
+#estimate { margin-top: 14px; padding-top: 6px; border-top: 3px double var(--ink-3); font-family: var(--f-mono); }
+.bill__row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: 14px; color: var(--ink-2); }
+.bill__row--total { align-items: baseline; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--line-strong); color: var(--ink); font-weight: 600; }
+#estTotal { font-size: 26px; color: var(--accent-text); }
+#estNote { padding-top: 6px; font-size: 12px; line-height: 1.45; color: var(--ink-3); }
+.bill > .ph, .bill > p.phline { display: block; margin-top: 12px; font: 500 12px/1.5 var(--f-mono); padding: 4px 8px; }
+#zonesPicker { margin-top: 20px; border: 1px solid var(--line-strong); background: var(--surface); }
+#zonesPicker summary { display: flex; align-items: center; min-height: 48px; padding: 0 16px; cursor: pointer; font: 500 13px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+#zonesPicker summary:hover { color: var(--cyan); }
+#zonesPicker fieldset { padding: 0 16px 16px; margin: 0; }
+#zonesPicker legend { float: none; background: none; border: 0; padding: 0 0 8px; }
+#zonesChecklist { display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 44px; font: 400 14px var(--f-mono); }
+.check input { width: 22px; height: 22px; accent-color: var(--accent); }
+
+/* wizard foot */
+#wizardFoot { position: sticky; bottom: 0; z-index: 25; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; padding: 12px clamp(16px, 4vw, 40px) calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--line-strong); }
+#stepHint { flex: 1 0 100%; padding: 8px 12px; border-left: 3px solid var(--cyan); background: var(--cyan-dim); font-size: 15px; color: var(--ink); }
+#stepNext { flex: 1 1 auto; margin-left: auto; max-width: 420px; min-height: 52px; padding: 0 22px; font: 600 14px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; background: var(--accent); color: var(--on-accent); border: 1px solid var(--accent); border-radius: 2px; }
+#stepNext:hover { background: var(--hover-bg); border-color: var(--hover-bg); color: var(--on-hover); }
+#stepNext[aria-disabled="true"] { background: transparent; color: var(--ink-3); border: 1px dashed var(--line-strong); }
+#stepNext[aria-disabled="true"]:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+#stepBack { min-height: 52px; padding: 0 20px; font: 500 13px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; background: transparent; color: var(--ink); border: 1px solid var(--line-strong); border-radius: 2px; }
+#stepBack:hover { border-color: var(--cyan); color: var(--cyan); }
+@media (min-width: 760px) { #wizardFoot { justify-content: space-between; } #stepNext { flex: 0 0 auto; min-width: 260px; } }
+
+/* success */
+#success { margin-block: clamp(20px, 4vw, 36px) 40px; padding: clamp(20px, 5vw, 44px); background: var(--surface); border: 1px solid var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+#success p { max-width: 60ch; margin-bottom: 14px; color: var(--ink-2); }
+.codebox { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin: 6px 0 16px; padding: 14px 18px; border: 2px double var(--accent); background: var(--bg); }
+#successCode { font: 600 clamp(26px, 6vw, 44px)/1 var(--f-mono); letter-spacing: .12em; color: var(--accent-text); user-select: all; }
+#success .btn { margin-top: 6px; }
+.success__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
+#resetBtn { cursor: pointer; }
+
+/* lookup */
+#view-lookup .lk { max-width: 700px; margin: clamp(20px, 4vw, 36px) auto 56px; padding: clamp(18px, 4vw, 36px); }
+#lookupForm { display: grid; gap: 10px; margin-block: 18px; }
+#lookupForm label { font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+#lookupId { font-size: 22px; letter-spacing: .14em; }
+#lookupForm .btn { justify-self: start; cursor: pointer; }
+#lookupError { color: var(--danger); font-weight: 600; }
+#lookupResult { margin-top: 10px; border: 1px solid var(--line-strong); background: var(--surface); }
+#lookupResult dl { margin: 0; }
+#lookupResult .row { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 11px 16px; border-bottom: 1px dotted var(--line-strong); font: 400 15px var(--f-mono); }
+#lookupResult dt { color: var(--ink-3); text-transform: uppercase; font-size: 12px; letter-spacing: .1em; padding-top: 2px; }
+#lookupResult dd { margin: 0; overflow-wrap: anywhere; }
+#lookupResult p { padding: 12px 16px; font-size: 14px; color: var(--ink-3); }
+#lookupResult:focus-visible { outline-offset: 3px; }
+.back-home { display: inline-flex; align-items: center; min-height: 40px; font: 500 12px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script>
+/* Page-specific home copy, four languages. Italian is the master («tu»).
+   EN / ES / FR: traduzione da revisionare con un madrelingua. */
+(function () {
+    var d = { it: {}, en: {}, es: {}, fr: {} };
+    function R(k, it, en, es, fr) { d.it[k] = it; d.en[k] = en; d.es[k] = es; d.fr[k] = fr; }
+
+    /* hero */
+    R("b.hero.eyebrow", "Riparazione e verniciatura barche · Olmo di Martellago (VE)", "Boat repair and painting · Olmo di Martellago (VE)", "Reparación y pintura de barcos · Olmo di Martellago (VE)", "Réparation et peinture de bateaux · Olmo di Martellago (VE)");
+    R("b.hero.title", "Come appena varata.", "Like the day she was launched.", "Como el primer día.", "Comme au premier jour.");
+    R("b.hero.lede",
+        "Dal gelcoat all'antivegetativa, lavoriamo sulla tua barca sopra e sotto la linea di galleggiamento. Scegli il pacchetto, tocca le zone sul modello 3D e vedi subito una stima.",
+        "From gelcoat to antifouling, we work on your boat above and below the waterline. Pick a package, tap the zones on the 3D model and see an estimate straight away.",
+        "Del gelcoat al antiincrustante, trabajamos en tu barco por encima y por debajo de la línea de flotación. Elige el paquete, toca las zonas en el modelo 3D y ve enseguida una estimación.",
+        "Du gelcoat à l'antifouling, nous intervenons sur votre bateau au-dessus et au-dessous de la ligne de flottaison. Choisissez la formule, touchez les zones sur le modèle 3D et obtenez aussitôt une estimation.");
+    R("b.hero.cta", "Calcola il preventivo", "Get your quote", "Calcula tu presupuesto", "Calculez votre devis");
+    R("b.hero.loa", "LOA 11,0 m · modello di esempio", "LOA 11,0 m · sample model", "LOA 11,0 m · modelo de ejemplo", "LOA 11,0 m · modèle d'exemple");
+    R("b.hero.up", "Opera morta", "Topsides", "Obra muerta", "Œuvres mortes");
+    R("b.hero.down", "Opera viva", "Underwater hull", "Obra viva", "Œuvres vives");
+    R("b.hero.lwl", "Linea di galleggiamento", "Waterline", "Línea de flotación", "Ligne de flottaison");
+    R("b.tb.sheet", "Tavola", "Sheet", "Lámina", "Planche");
+    R("b.tb.sheetv", "TAV. 01 · SCAFO", "SHT. 01 · HULL", "LÁM. 01 · CASCO", "PL. 01 · COQUE");
+    R("b.tb.colour", "Colore dell'opera viva", "Underwater hull colour", "Color de la obra viva", "Couleur des œuvres vives");
+    R("b.tb.note", "Note", "Notes", "Notas", "Notes");
+
+    /* servizi */
+    R("b.srv.title", "Tutto ciò che rimette a nuovo la tua barca", "Everything that makes your boat look new again", "Todo lo que deja tu barco como nuevo", "Tout ce qui remet votre bateau à neuf");
+    R("b.srv.lede", "Interventi sull'opera morta e sull'opera viva, più la manutenzione del motore.", "Work on the topsides and on the underwater hull, plus engine maintenance.", "Intervenciones en la obra muerta y en la obra viva, más el mantenimiento del motor.", "Interventions sur les œuvres mortes et sur les œuvres vives, plus l'entretien du moteur.");
+    R("b.srv.hull", "Scafo e coperta", "Hull and deck", "Casco y cubierta", "Coque et pont");
+    R("b.srv.hull.1", "Lavaggio completo e lucidatura", "Full wash and polish", "Lavado completo y pulido", "Lavage complet et polissage");
+    R("b.srv.hull.2", "Riverniciatura e riparazioni", "Repainting and repairs", "Repintado y reparaciones", "Remise en peinture et réparations");
+    R("b.srv.hull.3", "Applicazione di antivegetativa", "Antifouling application", "Aplicación de antiincrustante", "Application d'antifouling");
+    R("b.srv.hull.4", "Riparazione di crepe o danni strutturali", "Repair of cracks or structural damage", "Reparación de grietas o daños estructurales", "Réparation de fissures ou de dégâts structurels");
+    R("b.srv.hull.5", "Controllo e manutenzione degli accessori esterni", "Inspection and maintenance of exterior fittings", "Revisión y mantenimiento de los accesorios exteriores", "Contrôle et entretien des accessoires extérieurs");
+    R("b.srv.eng", "Motore", "Engine", "Motor", "Moteur");
+    R("b.srv.eng.1", "Controllo e sostituzione dell'olio", "Oil check and change", "Control y cambio del aceite", "Contrôle et vidange de l'huile");
+    R("b.srv.eng.2", "Pulizia del sistema di raffreddamento", "Cleaning of the cooling system", "Limpieza del sistema de refrigeración", "Nettoyage du circuit de refroidissement");
+    R("b.srv.eng.3", "Controllo e pulizia dei motori a iniezione diesel e benzina", "Checking and cleaning of diesel and petrol injection engines", "Control y limpieza de motores de inyección diésel y gasolina", "Contrôle et nettoyage des moteurs à injection diesel et essence");
+    R("b.srv.eng.4", "Sostituzione dei filtri carburante e aria", "Fuel and air filter replacement", "Sustitución de los filtros de combustible y de aire", "Remplacement des filtres à carburant et à air");
+    R("b.srv.eng.5", "Ispezione della cinghia di trasmissione", "Drive belt inspection", "Inspección de la correa de transmisión", "Inspection de la courroie de transmission");
+    R("b.srv.eng.6", "Verifica del sistema elettrico e delle batterie", "Electrical system and battery check", "Revisión del sistema eléctrico y de las baterías", "Vérification du circuit électrique et des batteries");
+    R("b.srv.note", "Da poco c'è anche una nuova sede operativa per gli interventi sui motori entro bordo nautici.", "There is also a new operating site for work on marine inboard engines.", "También hay una nueva sede operativa para intervenir en motores intraborda náuticos.", "Un nouveau site opérationnel est aussi dédié aux interventions sur les moteurs in-bord marins.");
+    R("b.ph.hull", "FOTO · scafo in lavorazione", "PHOTO · hull in progress", "FOTO · casco en trabajo", "PHOTO · coque en cours de travaux");
+
+    /* come funziona */
+    R("b.how.title", "Dalla barca al preventivo, in quattro passi", "From your boat to a quote, in four steps", "De tu barco al presupuesto, en cuatro pasos", "De votre bateau au devis, en quatre étapes");
+    R("b.how.1.t", "Descrivi la barca", "Describe your boat", "Describe tu barco", "Décrivez le bateau");
+    R("b.how.1.d", "Tipo, cantiere, modello, lunghezza. Se scegli un modello noto, misura e tipo si compilano da soli.", "Type, builder, model, length. Pick a known model and its length and type fill in on their own.", "Tipo, astillero, modelo, eslora. Si eliges un modelo conocido, la eslora y el tipo se rellenan solos.", "Type, chantier, modèle, longueur. Si vous choisissez un modèle connu, la longueur et le type se remplissent seuls.");
+    R("b.how.2.t", "Scegli il pacchetto", "Choose a package", "Elige el paquete", "Choisissez la formule");
+    R("b.how.2.d", "Base, Completo o Premium: dal lavaggio con antivegetativa fino alle riparazioni strutturali.", "Base, Complete or Premium: from the wash and antifouling to structural repairs.", "Base, Completo o Premium: del lavado con antiincrustante a las reparaciones estructurales.", "Base, Complète ou Premium : du lavage avec antifouling jusqu'aux réparations structurelles.");
+    R("b.how.3.t", "Tocca le zone in 3D", "Tap the zones in 3D", "Toca las zonas en 3D", "Touchez les zones en 3D");
+    R("b.how.3.d", "Ruota il modello, tocca scafo, tuga o coperta e guarda la stima aggiornarsi.", "Turn the model, tap hull, superstructure or deck, and watch the estimate update.", "Gira el modelo, toca casco, superestructura o cubierta y mira cómo se actualiza la estimación.", "Faites pivoter le modèle, touchez coque, superstructure ou pont et voyez l'estimation se mettre à jour.");
+    R("b.how.4.t", "Lascia i tuoi contatti", "Leave your contact details", "Deja tus datos de contacto", "Laissez vos coordonnées");
+    R("b.how.4.d", "Invii la richiesta e ricevi un codice per ritrovarla quando vuoi.", "Send the request and get a code to find it again whenever you like.", "Envías la solicitud y recibes un código para volver a consultarla cuando quieras.", "Vous envoyez la demande et recevez un code pour la retrouver quand vous voulez.");
+    R("b.how.cta", "Inizia il preventivo", "Start your quote", "Empieza tu presupuesto", "Commencez votre devis");
+
+    /* waterline band */
+    R("b.lwl.text", "Linea di galleggiamento. Da qui in giù si lavora sull'opera viva.", "Waterline. From here down, the work is on the underwater hull.", "Línea de flotación. De aquí hacia abajo se trabaja en la obra viva.", "Ligne de flottaison. À partir d'ici, on travaille sur les œuvres vives.");
+
+    /* interventi */
+    R("b.int.title", "Tre modi di farlo bene", "Three ways to do it right", "Tres formas de hacerlo bien", "Trois façons de bien faire");
+    R("b.int.lede", "Scegli quante zone, quanto è lunga la barca e il pacchetto: il prezzo indicativo si aggiorna qui sotto.", "Choose how many zones, how long the boat is and the package: the indicative price updates below.", "Elige cuántas zonas, la eslora del barco y el paquete: el precio orientativo se actualiza aquí abajo.", "Choisissez le nombre de zones, la longueur du bateau et la formule : le prix indicatif se met à jour ci-dessous.");
+    R("b.int.tag", "Stima rapida", "Quick estimate", "Estimación rápida", "Estimation rapide");
+
+    /* perché noi */
+    R("b.why.title", "Un'officina attrezzata per lavorare bene", "A properly equipped workshop", "Un taller equipado para trabajar bien", "Un atelier équipé pour bien travailler");
+    R("b.why.lede", "Queste sono le dotazioni dell'officina di Olmo di Martellago.", "This is the equipment of the Olmo di Martellago workshop.", "Este es el equipamiento del taller de Olmo di Martellago.", "Voici l'équipement de l'atelier d'Olmo di Martellago.");
+    R("b.why.oven", "Forno di verniciatura e cabina di essiccazione", "Paint oven and drying booth", "Horno de pintura y cabina de secado", "Four de peinture et cabine de séchage");
+    R("b.why.prep", "zone di preparazione", "preparation areas", "zonas de preparación", "zones de préparation");
+    R("b.why.tint", "tintometri", "tinting machines", "tintómetros", "machines à teinter");
+    R("b.why.color", "colorimetri elettronici", "electronic colorimeters", "colorímetros electrónicos", "colorimètres électroniques");
+    R("b.why.booth.h", "Dimensioni massime per le barche in cabina: <span class=\"ph\">da confermare</span>", "Maximum boat size in the booth: <span class=\"ph\">to be confirmed</span>", "Tamaño máximo de barco en la cabina: <span class=\"ph\">por confirmar</span>", "Taille maximale de bateau en cabine : <span class=\"ph\">à confirmer</span>");
+    R("b.why.says", "Come si descrive l'officina", "In the workshop's own words", "En palabras del taller", "Selon l'atelier");
+    R("b.why.s1", "Esperienza e competenza", "Experience and expertise", "Experiencia y competencia", "Expérience et compétence");
+    R("b.why.s2", "Prodotti di alta qualità", "High-quality products", "Productos de alta calidad", "Produits de haute qualité");
+    R("b.why.s3", "Servizio personalizzato", "Personalised service", "Servicio personalizado", "Service personnalisé");
+    R("b.why.awards", "Riconoscimenti", "Awards", "Reconocimientos", "Distinctions");
+    R("b.ph.oven", "FOTO · forno di verniciatura", "PHOTO · paint oven", "FOTO · horno de pintura", "PHOTO · four de peinture");
+    R("b.ph.tint", "FOTO · tintometro e colorimetro", "PHOTO · tinting machine and colorimeter", "FOTO · tintómetro y colorímetro", "PHOTO · machine à teinter et colorimètre");
+
+    /* faq, contatti */
+    R("b.faq.title", "Prima di affidarci la tua barca", "Before you leave your boat with us", "Antes de confiarnos tu barco", "Avant de nous confier votre bateau");
+    R("b.contact.title", "Vieni a trovarci, o scrivici", "Come and see us, or write to us", "Ven a vernos o escríbenos", "Passez nous voir, ou écrivez-nous");
+    R("b.contact.lede", "L'officina è a Olmo di Martellago, in provincia di Venezia.", "The workshop is in Olmo di Martellago, in the province of Venice.", "El taller está en Olmo di Martellago, en la provincia de Venecia.", "L'atelier se trouve à Olmo di Martellago, dans la province de Venise.");
+    R("b.ph.shop", "FOTO · ingresso dell'officina", "PHOTO · workshop entrance", "FOTO · entrada del taller", "PHOTO · entrée de l'atelier");
+
+    /* wizard / lookup furniture */
+    R("b.wiz.sheet", "Foglio preventivo", "Quote sheet", "Hoja de presupuesto", "Feuille de devis");
+    R("b.step.k", "Foglio {n} di 4", "Sheet {n} of 4", "Hoja {n} de 4", "Feuille {n} sur 4");
+    R("b.legend.contact", "Dove ti raggiungiamo", "How we reach you", "Cómo contactarte", "Comment vous joindre");
+    R("b.view.sheet", "TAV. 03 · ZONE", "SHT. 03 · ZONES", "LÁM. 03 · ZONAS", "PL. 03 · ZONES");
+    R("b.view.drag", "trascina per ruotare", "drag to rotate", "arrastra para girar", "glissez pour tourner");
+    R("b.sum.tag", "Computo indicativo", "Bill of quantities", "Cómputo orientativo", "Métré indicatif");
+    R("b.lookup.tag", "Registro richieste", "Request register", "Registro de solicitudes", "Registre des demandes");
+
+    window.CIPRESSINA_I18N_EXTRA = d;
+})();
+window.CIPRESSINA_CONFIG = {
+    theme: { water: "#2c7db8", select: "#27d17c", hover: "#55d6ff", topsides: "#f4f6f8", bottom: "#2a4cb0", deck: "#e9e4da" },
+    heroTheme: { water: "#2c7db8", select: "#27d17c", hover: "#55d6ff", topsides: "#f4f6f8", bottom: "#2a4cb0", deck: "#e9e4da" },
+    heroSpinPitch: -10
+};
+</script>
+
+<!-- logo ricostruito, usare file originale -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="logoMark" viewBox="0 0 210 60">
+        <rect width="210" height="60" rx="4" fill="#ffffff"/>
+        <circle cx="30" cy="32" r="22" fill="#0E0E9E"/>
+        <circle cx="46" cy="32" r="22" fill="#ffffff"/>
+        <circle cx="45" cy="32" r="19" fill="#009642"/>
+        <circle cx="58" cy="32" r="19" fill="#ffffff"/>
+        <text x="84" y="19" font-family="Barlow Condensed, Arial, sans-serif" font-weight="700" font-size="11" fill="#0E0E9E" textLength="118" lengthAdjust="spacingAndGlyphs">OFFICINA CARROZZERIA</text>
+        <text x="83" y="49" font-family="Barlow Condensed, Arial, sans-serif" font-weight="700" font-size="31" fill="#0E0E9E" textLength="120" lengthAdjust="spacingAndGlyphs">CIPRESSINA</text>
+    </symbol>
+</svg>
+
+<a class="skip-link" href="#contenuto" data-skip data-i18n="skip"></a>
+<div id="draftRibbon" role="note" data-i18n="ribbon"></div>
+
+<header id="siteHeader">
+    <div class="wrap hdr">
+        <a class="logo" href="#" data-i18n-attr="aria-label:nav.home"><svg viewBox="0 0 210 60" aria-hidden="true" focusable="false"><use href="#logoMark"/></svg></a>
+        <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+            <a href="#servizi" data-i18n="nav.servizi"></a>
+            <a href="#come-funziona" data-i18n="nav.come"></a>
+            <a href="#interventi" data-i18n="nav.interventi"></a>
+            <a href="#chi-siamo" data-i18n="nav.chi"></a>
+            <a href="#contatti" data-i18n="nav.contatti"></a>
+        </nav>
+        <div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+            <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+            <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+            <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+            <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false">FR</button>
+        </div>
+        <a class="btn btn--sm cta" href="#preventivo" data-i18n="nav.quote"></a>
+        <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel"></button>
+    </div>
+    <div id="navPanel">
+        <a href="#servizi" data-i18n="nav.servizi"></a>
+        <a href="#come-funziona" data-i18n="nav.come"></a>
+        <a href="#interventi" data-i18n="nav.interventi"></a>
+        <a href="#chi-siamo" data-i18n="nav.chi"></a>
+        <a href="#contatti" data-i18n="nav.contatti"></a>
+        <a href="#stato" data-i18n="lookup.title"></a>
+        <div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+            <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+            <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+            <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+            <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false">FR</button>
+        </div>
+        <a class="btn" href="#preventivo" data-i18n="nav.quote"></a>
+    </div>
+</header>
+
+<div id="contenuto" tabindex="-1">
+
+<!-- ====================== VIEW: HOME ====================== -->
+<main id="view-home">
+
+    <section id="hero" class="hero">
+        <div class="wrap">
+            <div class="hero__top">
+                <div>
+                    <p class="eyebrow"><span class="elev">+0.00 m LWL</span><span data-i18n="b.hero.eyebrow"></span></p>
+                    <h1 data-i18n="b.hero.title">Come appena varata.</h1>
+                </div>
+                <div>
+                    <p class="lede" data-i18n="b.hero.lede"></p>
+                    <div class="cta-row">
+                        <a class="btn" href="#preventivo" data-i18n="b.hero.cta"></a>
+                        <a class="btn btn--ghost" href="#stato" data-i18n="lookup.title"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sheet sheet-frame">
+                <div class="sheet__plot">
+                    <div id="heroBoat" data-boat-type="cabinato">
+                        <div class="wash" aria-hidden="true"></div>
+                        <svg class="hero-poster" viewBox="0 0 800 400" role="img" data-i18n-attr="aria-label:hero.boatAlt">
+                            <g stroke="var(--draw)" stroke-width="2" stroke-linejoin="round">
+                                <path d="M70 176H610Q710 184 748 216L752 250H96L74 214Z" fill="#f4f6f8"/>
+                                <path d="M96 250H752Q712 304 610 314H160Q112 302 96 250Z" style="fill:var(--hero-bottom,#1d3b8f)"/>
+                                <path d="M92 242H752V252H96Z" fill="#0b1030" stroke="none" opacity=".55"/>
+                                <path d="M250 176L304 124H520L586 176Z" fill="#e9edf3"/>
+                                <path d="M318 134H508L538 168H282Z" fill="#26324f"/>
+                                <path d="M292 110H552V124H292Z" fill="#dfe5ee"/>
+                            </g>
+                        </svg>
+                        <canvas id="heroCanvas"></canvas>
+                        <div class="marks" aria-hidden="true">
+                            <div class="ruler ruler--up"></div>
+                            <div class="ruler ruler--down"></div>
+                            <div class="dim"><span data-i18n="b.hero.loa"></span></div>
+                            <span class="zone zone--up" data-i18n="b.hero.up"></span>
+                            <div class="lwl">
+                                <span class="lwl__tag">+0.00 m LWL</span>
+                                <span class="lwl__name" data-i18n="b.hero.lwl"></span>
+                            </div>
+                            <span class="zone zone--down" data-i18n="b.hero.down"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="chips">
+                    <div class="chips__head"><p id="heroSwatchLabel" data-i18n="hero.swatchLabel"></p></div>
+                    <div id="heroSwatches" role="radiogroup" aria-labelledby="heroSwatchLabel"></div>
+                </aside>
+
+                <div class="titleblock">
+                    <div class="tb"><span class="tb__k" data-i18n="b.tb.sheet"></span><strong class="tb__v" data-i18n="b.tb.sheetv">TAV. 01 · SCAFO</strong></div>
+                    <div class="tb">
+                        <span class="tb__k" data-i18n="b.tb.colour"></span>
+                        <p class="fan-caption" aria-live="polite">
+                            <span id="heroSwatchChip"></span>
+                            <span class="sr-only" data-i18n="hero.swatchChosen"></span>
+                            <strong id="heroSwatchName"></strong>
+                        </p>
+                    </div>
+                    <div class="tb"><span class="tb__k" data-i18n="b.tb.note"></span><p data-i18n="hero.swatchNote"></p></div>
+                    <div class="tb tb--who"><span class="tb__k">Cipressina</span><p>Via N. Sauro, 15 · Olmo di Martellago (VE)</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOVE THE LINE: opera morta -->
+    <section id="servizi" class="sec">
+        <div class="wrap">
+            <div class="sec__head">
+                <p class="elev-row"><span class="elev">+2.40 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="b.hero.up"></span></p>
+                <h2 data-i18n="b.srv.title"></h2>
+                <p class="lede" data-i18n="b.srv.lede"></p>
+            </div>
+            <div class="specs">
+                <article class="spec">
+                    <header><h3 data-i18n="b.srv.hull"></h3><span>S-01</span></header>
+                    <ol>
+                        <li data-i18n="b.srv.hull.1"></li>
+                        <li data-i18n="b.srv.hull.2"></li>
+                        <li data-i18n="b.srv.hull.3"></li>
+                        <li data-i18n="b.srv.hull.4"></li>
+                        <li data-i18n="b.srv.hull.5"></li>
+                    </ol>
+                </article>
+                <article class="spec">
+                    <header><h3 data-i18n="b.srv.eng"></h3><span>S-02</span></header>
+                    <ol>
+                        <li data-i18n="b.srv.eng.1"></li>
+                        <li data-i18n="b.srv.eng.2"></li>
+                        <li data-i18n="b.srv.eng.3"></li>
+                        <li data-i18n="b.srv.eng.4"></li>
+                        <li data-i18n="b.srv.eng.5"></li>
+                        <li data-i18n="b.srv.eng.6"></li>
+                    </ol>
+                </article>
+            </div>
+            <div class="srv-foot">
+                <p class="srv-note" data-i18n="b.srv.note"></p>
+                <div class="photo"><span class="ph" data-i18n="b.ph.hull"></span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="come-funziona" class="sec" style="padding-top:0">
+        <div class="wrap">
+            <div class="sec__head">
+                <p class="elev-row"><span class="elev">+1.20 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="b.hero.up"></span></p>
+                <h2 data-i18n="b.how.title"></h2>
+            </div>
+            <ol class="stations">
+                <li><h3 data-i18n="b.how.1.t"></h3><p data-i18n="b.how.1.d"></p></li>
+                <li><h3 data-i18n="b.how.2.t"></h3><p data-i18n="b.how.2.d"></p></li>
+                <li><h3 data-i18n="b.how.3.t"></h3><p data-i18n="b.how.3.d"></p></li>
+                <li><h3 data-i18n="b.how.4.t"></h3><p data-i18n="b.how.4.d"></p></li>
+            </ol>
+            <p class="how-cta"><a class="btn" href="#preventivo" data-i18n="b.how.cta"></a></p>
+        </div>
+    </section>
+
+    <!-- THE WATERLINE -->
+    <div class="lwl-band">
+        <svg class="lwl-band__wave" height="16" aria-hidden="true" focusable="false">
+            <defs><pattern id="wv" width="48" height="16" patternUnits="userSpaceOnUse"><path d="M0 8Q12 0 24 8T48 8" fill="none" stroke="currentColor" stroke-width="1.5"/></pattern></defs>
+            <rect width="100%" height="16" fill="url(#wv)"/>
+        </svg>
+        <div class="wrap"><span class="elev">LWL ±0.00 m</span><p data-i18n="b.lwl.text"></p></div>
+    </div>
+
+    <!-- BELOW THE LINE: opera viva -->
+    <div class="below">
+        <section id="interventi" class="sec">
+            <div class="wrap">
+                <div class="sec__head">
+                    <p class="elev-row"><span class="elev">−0.80 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="b.hero.down"></span></p>
+                    <h2 data-i18n="b.int.title"></h2>
+                    <p class="lede" data-i18n="b.int.lede"></p>
+                </div>
+
+                <div class="cols">
+                    <form id="quoteLine" class="qline" novalidate>
+                        <div class="qline__tag"><span data-i18n="b.int.tag"></span><span>Q-01</span></div>
+                        <div class="qline__body">
+                            <p class="qline__sentence">
+                                <span data-i18n="ql.pre">Intervenire su</span>
+                                <label class="sr-only" for="qlCount" data-i18n="ql.countLabel">Numero di zone</label>
+                                <select id="qlCount">
+                                    <option value="1">1</option>
+                                    <option value="2" selected>2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                                <span id="qlWord">zone</span>
+                                <span data-i18n="ql.mid1">di una barca lunga</span>
+                                <label class="sr-only" for="qlLoa" data-i18n="ql.loaLabel">Lunghezza della barca</label>
+                                <select id="qlLoa">
+                                    <option value="5">5 m</option>
+                                    <option value="6">6 m</option>
+                                    <option value="8" selected>8 m</option>
+                                    <option value="10">10 m</option>
+                                    <option value="12">12 m</option>
+                                    <option value="15">15 m</option>
+                                </select>
+                                <span data-i18n="ql.afterLoa"></span>
+                                <span data-i18n="ql.mid2">con il</span>
+                                <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
+                                <select id="qlTier">
+                                    <option value="base" data-i18n="tier.base.name">Pacchetto Base</option>
+                                    <option value="completo" data-i18n="tier.completo.name" selected>Pacchetto Completo</option>
+                                    <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
+                                </select>
+                                <span data-i18n="ql.post">costa da</span>
+                                <span class="ph"><output id="qlTotal">1.292 €</output></span>
+                            </p>
+                            <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+                            <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
+                        </div>
+                    </form>
+
+                    <div class="discount">
+                        <h3 data-i18n="disc.title"></h3>
+                        <p data-i18n-html="sum.placeholder.h"></p>
+                        <ul id="discountList">
+                            <li class="discount-step"><span class="discount-step__zones">2 zone</span><strong class="discount-step__rate">5%</strong></li>
+                            <li class="discount-step"><span class="discount-step__zones">3 zone</span><strong class="discount-step__rate">7%</strong></li>
+                            <li class="discount-step"><span class="discount-step__zones">4 zone</span><strong class="discount-step__rate">9%</strong></li>
+                            <li class="discount-step"><span class="discount-step__zones">5 o più zone</span><strong class="discount-step__rate">10%</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tiers">
+                    <article class="tier">
+                        <header><span>PKG-01</span></header>
+                        <h3 data-i18n="tier.base.name"></h3>
+                        <p class="tier__price"><span class="ph" data-tier-from="base">da 60 € al metro</span></p>
+                        <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
+                        <a class="btn btn--ghost" href="#preventivo" data-tier-choose="base" data-i18n="tier.choose"></a>
+                    </article>
+                    <article class="tier tier--completo">
+                        <header><span>PKG-02</span><p data-i18n-html="tier.badge.h"></p></header>
+                        <h3 data-i18n="tier.completo.name"></h3>
+                        <p class="tier__price"><span class="ph" data-tier-from="completo">da 85 € al metro</span></p>
+                        <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
+                        <a class="btn" href="#preventivo" data-tier-choose="completo" data-i18n="tier.choose"></a>
+                    </article>
+                    <article class="tier">
+                        <header><span>PKG-03</span></header>
+                        <h3 data-i18n="tier.premium.name"></h3>
+                        <p class="tier__price"><span class="ph" data-tier-from="premium">da 120 € al metro</span></p>
+                        <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
+                        <a class="btn btn--ghost" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
+                    </article>
+                </div>
+                <p class="tier-note" data-i18n-html="tier.note.h"></p>
+            </div>
+        </section>
+
+        <section id="chi-siamo" class="sec">
+            <div class="wrap">
+                <div class="sec__head">
+                    <p class="elev-row"><span class="elev">−1.60 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="b.hero.down"></span></p>
+                    <h2 data-i18n="b.why.title"></h2>
+                    <p class="lede" data-i18n="b.why.lede"></p>
+                </div>
+                <div class="why">
+                    <div>
+                        <div class="facts">
+                            <p class="wide" data-i18n="b.why.oven"></p>
+                            <div class="fact"><b>3</b><span data-i18n="b.why.prep"></span></div>
+                            <div class="fact"><b>4</b><span data-i18n="b.why.tint"></span></div>
+                            <div class="fact"><b>2</b><span data-i18n="b.why.color"></span></div>
+                            <p class="booth" data-i18n-html="b.why.booth.h"></p>
+                        </div>
+                        <div class="why-sub">
+                            <h3 data-i18n="b.why.says"></h3>
+                            <div class="tags">
+                                <span class="tag" data-i18n="b.why.s1"></span>
+                                <span class="tag" data-i18n="b.why.s2"></span>
+                                <span class="tag" data-i18n="b.why.s3"></span>
+                            </div>
+                        </div>
+                        <div class="why-sub">
+                            <h3 data-i18n="b.why.awards"></h3>
+                            <div class="tags">
+                                <span class="tag tag--award">Mercurio d'oro</span>
+                                <span class="tag tag--award">Alfiere Economico</span>
+                                <span class="tag tag--award">Venezia che Lavora</span>
+                                <span class="tag tag--award">Lavoro e Progresso</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="photos">
+                        <div class="photo"><span class="ph" data-i18n="b.ph.oven"></span></div>
+                        <div class="photo"><span class="ph" data-i18n="b.ph.tint"></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="domande" class="sec">
+            <div class="wrap">
+                <div class="sec__head">
+                    <p class="elev-row"><span class="elev">−2.40 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="b.hero.down"></span></p>
+                    <h2 data-i18n="b.faq.title"></h2>
+                </div>
+                <div class="faq">
+                    <details><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q4"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q5"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q6"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q7"></summary><p data-i18n-html="faq.a.h"></p></details>
+                    <details><summary data-i18n="faq.q8"></summary><p data-i18n-html="faq.a.h"></p></details>
+                </div>
+            </div>
+        </section>
+
+        <section id="contatti" class="sec">
+            <div class="wrap">
+                <div class="sec__head">
+                    <p class="elev-row"><span class="elev">−3.20 m</span><span class="elev-row__sep"></span><span class="elev-row__zone" data-i18n="nav.contatti"></span></p>
+                    <h2 data-i18n="b.contact.title"></h2>
+                    <p class="lede" data-i18n="b.contact.lede"></p>
+                </div>
+                <div class="contact">
+                    <dl class="spec-dl">
+                        <div class="row">
+                            <dt data-i18n="contact.address"></dt>
+                            <dd><span id="contactAddress">Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</span>
+                                <button type="button" data-copy="#contactAddress" data-i18n="btn.copy"></button>
+                                <a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Nazario+Sauro+15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map"></a></dd>
+                        </div>
+                        <div class="row">
+                            <dt data-i18n="contact.phone"></dt>
+                            <dd><span id="contactPhone">041 907941</span>
+                                <button type="button" data-copy="#contactPhone" data-i18n="btn.copy"></button></dd>
+                        </div>
+                        <div class="row">
+                            <dt data-i18n="contact.email"></dt>
+                            <dd><span id="contactEmail">info@carrozzeriacipressina.it</span>
+                                <button type="button" data-copy="#contactEmail" data-i18n="btn.copy"></button></dd>
+                        </div>
+                        <div class="row">
+                            <dt data-i18n="contact.whatsapp"></dt>
+                            <dd data-i18n-html="contact.whatsappTbc.h"></dd>
+                        </div>
+                        <div class="row">
+                            <dt data-i18n="contact.hours"></dt>
+                            <dd data-i18n-html="contact.hoursTbc.h"></dd>
+                        </div>
+                    </dl>
+                    <div class="contact__side">
+                        <div class="photo"><span class="ph" data-i18n="b.ph.shop"></span></div>
+                        <div class="cta-row">
+                            <a class="btn" href="#preventivo" data-i18n="b.hero.cta"></a>
+                            <a class="btn btn--ghost" href="#stato" data-i18n="lookup.title"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- ====================== VIEW: WIZARD ====================== -->
+<section id="view-wizard" hidden>
+
+    <nav class="prog" data-i18n-attr="aria-label:wiz.progress">
+        <div class="wrap wz prog__bar">
+            <span class="prog__sheet" data-i18n="b.wiz.sheet"></span>
+            <ol id="wizProgress">
+                <li data-step="1"><span data-i18n="prog.1"></span><span class="sr-only" data-progress-sr></span></li>
+                <li data-step="2"><span data-i18n="prog.2"></span><span class="sr-only" data-progress-sr></span></li>
+                <li data-step="3"><span data-i18n="prog.3"></span><span class="sr-only" data-progress-sr></span></li>
+                <li data-step="4"><span data-i18n="prog.4"></span><span class="sr-only" data-progress-sr></span></li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="wrap wz">
+
+    <!-- STEP 1 -->
+    <form class="step sheet-frame" data-step="1" novalidate hidden>
+        <p class="step__kicker" data-i18n="b.step.k" data-i18n-params='{"n":1}'></p>
+        <h1 data-i18n="step1.title"></h1>
+        <p class="step__sub" data-i18n="step1.sub"></p>
+
+        <fieldset>
+            <legend data-i18n="step1.cardBoat"></legend>
+            <div class="rows">
+
+            <div class="field">
+                <span id="boatTypeLabel" class="field__label" data-i18n="fld.boatType"></span>
+                <div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">
+                    <button type="button" role="radio" aria-checked="false" data-value="gommone"><span data-type-icon="gommone"></span><span data-i18n="type.gommone"></span></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="open"><span data-type-icon="open"></span><span data-i18n="type.open"></span></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="cabinato"><span data-type-icon="cabinato"></span><span data-i18n="type.cabinato"></span></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="flybridge"><span data-type-icon="flybridge"></span><span data-i18n="type.flybridge"></span></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="vela"><span data-type-icon="vela"></span><span data-i18n="type.vela"></span></button>
+                </div>
+                <p id="boatTypeError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="builder" data-i18n="fld.builder"></label>
+                <input id="builder" type="text" list="builderList" autocomplete="off">
+                <datalist id="builderList"></datalist>
+                <p id="builderHint" class="field__hint" data-i18n="hint.builder"></p>
+                <p id="builderError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="model" data-i18n="fld.model"></label>
+                <input id="model" type="text" list="modelList" autocomplete="off">
+                <datalist id="modelList"></datalist>
+                <p id="modelHint" class="field__hint" data-i18n="hint.model"></p>
+                <a id="modelSource" href="#" target="_blank" rel="noopener" hidden></a>
+                <p id="modelError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="year" data-i18n="fld.year"></label>
+                <input id="year" type="text" inputmode="numeric" autocomplete="off">
+                <p id="yearError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="loa" data-i18n="fld.loa"></label>
+                <div class="inwrap"><input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix">m</span></div>
+                <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
+                <p id="loaError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <span id="registeredLabel" class="field__label" data-i18n="fld.registered"></span>
+                <div id="registered" role="radiogroup" aria-labelledby="registeredLabel">
+                    <button type="button" role="radio" aria-checked="false" data-value="registrata" data-i18n="opt.registrata"></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="natante" data-i18n="opt.natante"></button>
+                </div>
+                <p id="registeredNote" role="status" hidden data-i18n-html="note.natante10.h"></p>
+                <p id="registeredError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field" hidden>
+                <label for="registration" data-i18n="fld.registration"></label>
+                <input id="registration" type="text" autocapitalize="characters" autocomplete="off">
+                <p id="registrationHint" class="field__hint" data-i18n-html="hint.registration.h"></p>
+                <p id="registrationError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="engineHours"><span data-i18n="fld.engineHours"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                <input id="engineHours" type="text" inputmode="numeric" autocomplete="off">
+                <p id="engineHoursHint" class="field__hint" data-i18n="hint.engineHours"></p>
+                <p id="engineHoursError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="location"><span data-i18n="fld.location"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                <input id="location" type="text">
+                <p id="locationHint" class="field__hint" data-i18n="hint.location"></p>
+            </div>
+
+            <div class="field">
+                <label for="boatName"><span data-i18n="fld.boatName"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                <input id="boatName" type="text">
+            </div>
+
+            <div class="field">
+                <label for="colorCode"><span data-i18n="fld.colorCode"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                <input id="colorCode" type="text">
+                <p id="colorCodeHint" class="field__hint" data-i18n-html="hint.colorCode.h"></p>
+            </div>
+
+            <div id="boatSummary" hidden>
+                <span id="boatSummaryIcon"></span>
+                <span id="boatSummaryText"></span>
+            </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n="step1.cardOwner"></legend>
+            <div class="rows">
+            <div class="field">
+                <label for="firstName" data-i18n="fld.firstName"></label>
+                <input id="firstName" type="text" autocomplete="given-name">
+                <p id="firstNameError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="lastName" data-i18n="fld.lastName"></label>
+                <input id="lastName" type="text" autocomplete="family-name">
+                <p id="lastNameError" class="field__error" role="alert" hidden></p>
+            </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <!-- STEP 2 -->
+    <section class="step sheet-frame" data-step="2" hidden>
+        <p class="step__kicker" data-i18n="b.step.k" data-i18n-params='{"n":2}'></p>
+        <h1 data-i18n="step2.title"></h1>
+        <p class="step__sub" data-i18n="step2.sub"></p>
+        <div class="field" style="display:block;border:0;padding:0">
+            <div id="tier" role="radiogroup" data-i18n-attr="aria-label:step2.title">
+                <button type="button" role="radio" aria-checked="false" data-value="base">
+                    <strong data-i18n="tier.base.name"></strong>
+                    <span class="ph" data-tier-from="base"></span>
+                    <span class="li" data-i18n="tier.base.i1"></span>
+                    <span class="li" data-i18n="tier.base.i2"></span>
+                </button>
+                <button type="button" role="radio" aria-checked="false" data-value="completo">
+                    <strong data-i18n="tier.completo.name"></strong>
+                    <span class="tier-badge" data-i18n-html="tier.badge.h"></span>
+                    <span class="ph" data-tier-from="completo"></span>
+                    <span class="li" data-i18n="tier.completo.i1"></span>
+                    <span class="li" data-i18n="tier.completo.i2"></span>
+                </button>
+                <button type="button" role="radio" aria-checked="false" data-value="premium">
+                    <strong data-i18n="tier.premium.name"></strong>
+                    <span class="ph" data-tier-from="premium"></span>
+                    <span class="li" data-i18n="tier.premium.i1"></span>
+                    <span class="li" data-i18n="tier.premium.i2"></span>
+                    <span class="li" data-i18n="tier.premium.i3"></span>
+                </button>
+            </div>
+            <p id="tierError" class="field__error" role="alert" hidden></p>
+        </div>
+        <p class="tier-note" data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step sheet-frame" data-step="3" hidden>
+        <p class="step__kicker" data-i18n="b.step.k" data-i18n-params='{"n":3}'></p>
+        <h1 data-i18n="step3.title"></h1>
+        <p class="step__sub" data-i18n="step3.sub"></p>
+
+        <div class="s3">
+            <div id="boatView3d">
+                <div class="vhead"><span data-i18n="b.view.sheet"></span><span data-i18n="b.view.drag"></span></div>
+                <div id="boatCanvasWrap">
+                    <canvas id="boatCanvas" data-i18n-attr="aria-label:viewer.label"></canvas>
+                    <div id="boatOverlay">
+                        <p id="boatLoading" data-i18n="viewer.loading"></p>
+                        <p id="boatError" role="alert" hidden></p>
+                    </div>
+                    <span id="zoneHover" aria-hidden="true"></span>
+                </div>
+                <div class="vbar">
+                    <div id="boatViewButtons" role="group" data-i18n-attr="aria-label:viewer.views">
+                        <button type="button" data-view="prua" aria-pressed="false" data-i18n="view.prua"></button>
+                        <button type="button" data-view="poppa" aria-pressed="false" data-i18n="view.poppa"></button>
+                        <button type="button" data-view="sinistra" aria-pressed="false" data-i18n="view.sinistra"></button>
+                        <button type="button" data-view="destra" aria-pressed="false" data-i18n="view.destra"></button>
+                        <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
+                        <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
+                    </div>
+                    <button type="button" id="waterToggle"></button>
+                </div>
+                <p class="viewer-hint" data-i18n="viewer.hint"></p>
+            </div>
+
+            <aside id="zonesSummary" tabindex="-1">
+                <header><span data-i18n="b.sum.tag"></span><h2 data-i18n="sum.title"></h2></header>
+                <div class="bill">
+                    <p id="zonesCount"></p>
+                    <p id="zonesEmpty" data-i18n="sum.empty"></p>
+                    <ul id="zonesList"></ul>
+                    <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
+                    <p id="zonesNudge" hidden></p>
+                    <div id="estimate" hidden>
+                        <div id="estSubtotalRow" class="bill__row"><span data-i18n="sum.subtotal"></span><span id="estSubtotal"></span></div>
+                        <div id="estDiscountRow" class="bill__row"><span id="estDiscountLabel"></span><span id="estDiscount"></span></div>
+                        <div class="bill__row bill__row--total"><span data-i18n="sum.total"></span><strong id="estTotal" aria-live="polite"></strong></div>
+                        <p id="estNote"></p>
+                    </div>
+                    <p data-i18n-html="sum.placeholder.h"></p>
+                </div>
+            </aside>
+        </div>
+
+        <details id="zonesPicker">
+            <summary data-i18n="zones.picker"></summary>
+            <fieldset>
+                <legend data-i18n="zones.pickerLegend"></legend>
+                <div id="zonesChecklist"></div>
+            </fieldset>
+        </details>
+    </section>
+
+    <!-- STEP 4 -->
+    <form class="step sheet-frame" data-step="4" novalidate hidden>
+        <p class="step__kicker" data-i18n="b.step.k" data-i18n-params='{"n":4}'></p>
+        <h1 data-i18n="step4.title"></h1>
+        <p class="step__sub" data-i18n-html="step4.sub.h"></p>
+
+        <fieldset>
+            <legend data-i18n="b.legend.contact"></legend>
+            <div class="rows">
+            <div class="field">
+                <label for="region" data-i18n="fld.region"></label>
+                <select id="region" autocomplete="off"></select>
+                <p id="regionError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="province" data-i18n="fld.province"></label>
+                <select id="province"></select>
+                <p id="provinceError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field" hidden>
+                <label for="provinceText" data-i18n="fld.province"></label>
+                <input id="provinceText" type="text" autocomplete="off">
+                <p id="provinceTextError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field" hidden>
+                <label for="country" data-i18n="fld.country"></label>
+                <input id="country" type="text" autocomplete="country-name">
+                <p id="countryError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="phone" data-i18n="fld.phone"></label>
+                <div class="inwrap"><span class="affix">+39</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel-national"></div>
+                <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
+                <p id="phoneError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field" hidden>
+                <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
+                <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
+                <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="email" data-i18n="fld.email"></label>
+                <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+                <p id="emailHint" class="field__hint" data-i18n="hint.email"></p>
+                <p id="emailError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="notes"><span data-i18n="fld.notes"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                <textarea id="notes" rows="4" data-i18n-attr="placeholder:ph.notes"></textarea>
+            </div>
+            </div>
+        </fieldset>
+        <p class="field__hint" data-i18n-html="privacy.h"></p>
+    </form>
+
+    <!-- SUCCESS -->
+    <section id="success" class="sheet-frame" hidden>
+        <h1 data-i18n="success.title"></h1>
+        <p data-i18n="success.lede"></p>
+        <p><span data-i18n="success.code"></span> (<span class="ph" data-i18n="success.demo"></span>)</p>
+        <div class="codebox">
+            <strong id="successCode"></strong>
+            <button type="button" id="successCopy" data-copy="#successCode" data-i18n="btn.copy"></button>
+        </div>
+        <p data-i18n-html="success.demoNote.h"></p>
+        <div class="success__actions">
+            <a class="btn btn--ghost" href="#stato" data-i18n="success.lookup"></a>
+            <button type="button" class="btn" id="resetBtn" data-i18n="btn.reset"></button>
+        </div>
+    </section>
+
+    </div>
+
+    <div id="wizardFoot">
+        <p id="stepHint" role="status" hidden></p>
+        <button type="button" id="stepBack" hidden data-i18n="btn.back"></button>
+        <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+    </div>
+</section>
+
+<!-- ====================== VIEW: LOOKUP ====================== -->
+<section id="view-lookup" hidden>
+    <div class="wrap">
+        <div class="lk sheet-frame">
+            <p class="step__kicker" data-i18n="b.lookup.tag"></p>
+            <h1 data-i18n="lookup.title"></h1>
+            <p class="step__sub" data-i18n="lookup.sub"></p>
+            <form id="lookupForm" novalidate>
+                <label for="lookupId" data-i18n="lookup.label"></label>
+                <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+                <button type="submit" id="lookupSubmit" class="btn" data-i18n="lookup.submit"></button>
+                <p id="lookupError" role="alert" hidden></p>
+            </form>
+            <div id="lookupResult" hidden>
+                <dl>
+                    <div class="row"><dt data-i18n="lookup.res.code"></dt><dd id="resultId"></dd></div>
+                    <div class="row"><dt data-i18n="lookup.res.boat"></dt><dd id="resultBoat"></dd></div>
+                    <div class="row"><dt data-i18n="lookup.res.name"></dt><dd id="resultName"></dd></div>
+                    <div class="row"><dt data-i18n="lookup.res.status"></dt><dd><span class="ph" id="resultStatus"></span></dd></div>
+                </dl>
+                <p data-i18n-html="lookup.demoNote.h"></p>
+            </div>
+            <p><a class="back-home" href="#" data-i18n="nav.home"></a></p>
+        </div>
+    </div>
+</section>
+
+</div><!-- /#contenuto -->
+
+<a id="waFab" class="fab" href="#contatti" data-i18n-attr="aria-label:fab.label">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.4-.2-2.6.7.7-2.5-.2-.4A8 8 0 0 1 12 4zm-3 3.5c-.3 0-.7.1-1 .5-.4.4-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.8 5 2.8 1.100 3.400.9 4 .8.600-.1 2-.8 2.300-1.600.3-.8.3-1.500.2-1.600-.1-.2-.3-.3-.7-.5l-2.100-1c-.3-.1-.5-.2-.7.2l-.9 1.100c-.2.200-.3.200-.7.100-.3-.2-1.300-.5-2.500-1.500-.9-.8-1.500-1.800-1.700-2.100-.2-.3 0-.5.100-.6l.5-.6c.2-.2.2-.3.300-.5.100-.2.100-.4 0-.5l-1-2.300c-.2-.6-.5-.5-.7-.5z"/></svg>
+</a>
+
+<footer id="siteFooter">
+    <div class="wrap">
+        <a class="logo" href="#" data-i18n-attr="aria-label:nav.home"><svg viewBox="0 0 210 60" aria-hidden="true" focusable="false"><use href="#logoMark"/></svg></a>
+        <p>Officina Carrozzeria Cipressina S.R.L. · <span data-i18n="foot.vat"></span> IT00762770279</p>
+        <p>Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</p>
+        <div class="foot-links">
+            <a href="#preventivo" data-i18n="nav.quote"></a>
+            <a href="#stato" data-i18n="lookup.title"></a>
+            <a href="#contatti" data-i18n="nav.contatti"></a>
+        </div>
+        <p>© <span id="footYear">2026</span></p>
+    </div>
+</footer>
+
+<script src="shared/zones.js" defer></script>
+<script src="shared/regioni.js" defer></script>
+<script src="shared/i18n.js" defer></script>
+<script src="shared/app.js" defer></script>
+
+</body></html>

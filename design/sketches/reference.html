@@ -1,0 +1,576 @@
+<!doctype html>
+<!-- reference.html: the bare, unstyled page that follows shared/CONTRACT.md to
+     the letter. Not published. It exists to test app.js, zones.js and i18n.js
+     with nothing else in the way, and as the copy-paste starting point for a
+     skin. Serve this folder over http (python3 -m http.server) rather than
+     opening the file: boat3d.js is an ES module, which file:// blocks. -->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cipressina Barche · Reference</title>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<style>
+/* The functional CSS every skin must carry (see CONTRACT.md §Required CSS).
+   Everything else on this page is the browser's default on purpose. */
+[hidden] { display: none !important; }
+.hidden, #boatOverlay.hidden { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ph { outline: 1px dashed #d98a00; outline-offset: 1px; }
+#heroBoat, #boatCanvasWrap { position: relative; width: 100%; max-width: 640px; height: 320px; border: 1px solid #ccc; }
+#heroBoat canvas, #boatCanvasWrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#heroBoat .hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
+#heroBoat.is-3d .hero-poster { display: none; }
+#boatOverlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(255,255,255,.8); }
+#navPanel { display: none; }
+#navPanel.is-open { display: block; }
+.swatch { border: 1px solid #888; background: var(--sw); }
+.swatch.is-active, .is-selected, [aria-pressed="true"] { outline: 3px solid #009642; }
+.swatch__name { background: #fff; }
+.field.is-invalid input, .field.is-invalid select, [aria-invalid="true"] { outline: 2px solid #b00020; }
+.field__error { color: #b00020; }
+#nudge, #zonesNudge { border: 1px dashed #666; }
+#zonesNudge.is-maxed { border-style: solid; border-color: #009642; }
+[aria-disabled="true"] { opacity: .55; }
+body.is-wizard #waFab { display: none; }
+.is-done::before { content: "✓ "; }
+.is-current { font-weight: bold; }
+.progress { display: flex; gap: 1em; list-style: none; padding: 0; }
+</style>
+<!-- Home copy of this page: the mechanism a skin uses (extend() works too). -->
+<script>
+window.CIPRESSINA_I18N_EXTRA = {
+    it: { "ref.hero.title": "Come appena varata.", "ref.hero.lede": "Testo di esempio della pagina di riferimento." },
+    en: { "ref.hero.title": "Like the day she was launched.", "ref.hero.lede": "Sample text of the reference page." },
+    es: { "ref.hero.title": "Como el primer día.", "ref.hero.lede": "Texto de ejemplo de la página de referencia." },
+    fr: { "ref.hero.title": "Comme au premier jour.", "ref.hero.lede": "Texte d'exemple de la page de référence." }
+};
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#contenuto" data-skip data-i18n="skip"></a>
+<div id="draftRibbon" role="note" data-i18n="ribbon"></div>
+
+<header id="siteHeader">
+    <a class="logo" href="#" data-i18n-attr="aria-label:nav.home">Cipressina Barche</a>
+    <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+        <a href="#servizi" data-i18n="nav.servizi"></a>
+        <a href="#come-funziona" data-i18n="nav.come"></a>
+        <a href="#interventi" data-i18n="nav.interventi"></a>
+        <a href="#chi-siamo" data-i18n="nav.chi"></a>
+        <a href="#contatti" data-i18n="nav.contatti"></a>
+    </nav>
+    <div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+        <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+        <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+        <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false">FR</button>
+    </div>
+    <a class="cta" href="#preventivo" data-i18n="nav.quote"></a>
+    <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel"></button>
+</header>
+
+<div id="navPanel">
+    <a href="#servizi" data-i18n="nav.servizi"></a>
+    <a href="#come-funziona" data-i18n="nav.come"></a>
+    <a href="#interventi" data-i18n="nav.interventi"></a>
+    <a href="#chi-siamo" data-i18n="nav.chi"></a>
+    <a href="#contatti" data-i18n="nav.contatti"></a>
+    <a href="#preventivo" data-i18n="nav.quote"></a>
+    <a href="#stato" data-i18n="lookup.title"></a>
+</div>
+
+<div id="contenuto" tabindex="-1">
+
+<!-- ====================== VIEW: HOME ====================== -->
+<main id="view-home">
+
+    <section id="hero">
+        <h1 data-i18n="ref.hero.title">Come appena varata.</h1>
+        <p data-i18n="ref.hero.lede"></p>
+
+        <div id="heroBoat" data-boat-type="cabinato">
+            <svg class="hero-poster" viewBox="0 0 320 160" role="img" data-i18n-attr="aria-label:hero.boatAlt">
+                <path d="M20 84h280l-26 34H52z" fill="#f4f4f2" stroke="#333"/>
+                <path d="M30 98h260l-16 20H52z" style="fill:var(--hero-bottom,#1d3b8f)"/>
+                <path d="M96 84l24-26h90l24 26z" fill="#e9e4da" stroke="#333"/>
+            </svg>
+            <canvas id="heroCanvas"></canvas>
+        </div>
+
+        <p id="heroSwatchLabel" data-i18n="hero.swatchLabel"></p>
+        <div id="heroSwatches" role="radiogroup" aria-labelledby="heroSwatchLabel"></div>
+        <p class="fan-caption" aria-live="polite">
+            <span id="heroSwatchChip" style="display:inline-block;width:1em;height:1em;background:var(--sw)"></span>
+            <span class="sr-only" data-i18n="hero.swatchChosen"></span>
+            <strong id="heroSwatchName"></strong>
+        </p>
+        <p data-i18n="hero.swatchNote"></p>
+        <p><a href="#preventivo" data-i18n="nav.quote"></a></p>
+    </section>
+
+    <section id="servizi">
+        <h2>Servizi</h2>
+        <p><span class="ph">Contenuto della sezione servizi (testo di pagina, non condiviso).</span></p>
+    </section>
+
+    <section id="come-funziona">
+        <h2>Come funziona</h2>
+        <ol>
+            <li data-i18n="prog.1"></li>
+            <li data-i18n="prog.2"></li>
+            <li data-i18n="prog.3"></li>
+            <li data-i18n="prog.4"></li>
+        </ol>
+    </section>
+
+    <section id="interventi">
+        <h2>Interventi</h2>
+
+        <!-- The price sentence. The static content is the true default result
+             (2 zones, 8 m, Pacchetto Completo) so the page is right without JS. -->
+        <form id="quoteLine" novalidate>
+            <p>
+                <span data-i18n="ql.pre">Intervenire su</span>
+                <label class="sr-only" for="qlCount" data-i18n="ql.countLabel">Numero di zone</label>
+                <select id="qlCount">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                <span id="qlWord">zone</span>
+                <span data-i18n="ql.mid1">di una barca lunga</span>
+                <label class="sr-only" for="qlLoa" data-i18n="ql.loaLabel">Lunghezza della barca</label>
+                <select id="qlLoa">
+                    <option value="5">5 m</option>
+                    <option value="6">6 m</option>
+                    <option value="8" selected>8 m</option>
+                    <option value="10">10 m</option>
+                    <option value="12">12 m</option>
+                    <option value="15">15 m</option>
+                </select>
+                <span data-i18n="ql.afterLoa"></span>
+                <span data-i18n="ql.mid2">con il</span>
+                <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
+                <select id="qlTier">
+                    <option value="base" data-i18n="tier.base.name">Pacchetto Base</option>
+                    <option value="completo" data-i18n="tier.completo.name" selected>Pacchetto Completo</option>
+                    <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
+                </select>
+                <span data-i18n="ql.post">costa da</span>
+                <span class="ph"><output id="qlTotal">1.292 €</output></span>
+            </p>
+            <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+            <button type="submit" data-i18n="ql.cta">Seleziona le zone in 3D</button>
+        </form>
+
+        <h3 data-i18n="disc.title"></h3>
+        <ul id="discountList">
+            <li>2 zone 5%</li><li>3 zone 7%</li><li>4 zone 9%</li><li>5 o più zone 10%</li>
+        </ul>
+
+        <article class="tier">
+            <h3 data-i18n="tier.base.name"></h3>
+            <p><span class="ph" data-tier-from="base">da 60 € al metro</span></p>
+            <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
+            <a href="#preventivo" data-tier-choose="base" data-i18n="tier.choose"></a>
+        </article>
+        <article class="tier">
+            <h3 data-i18n="tier.completo.name"></h3>
+            <p data-i18n-html="tier.badge.h"></p>
+            <p><span class="ph" data-tier-from="completo">da 85 € al metro</span></p>
+            <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
+            <a href="#preventivo" data-tier-choose="completo" data-i18n="tier.choose"></a>
+        </article>
+        <article class="tier">
+            <h3 data-i18n="tier.premium.name"></h3>
+            <p><span class="ph" data-tier-from="premium">da 120 € al metro</span></p>
+            <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
+            <a href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
+        </article>
+        <p data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <section id="chi-siamo">
+        <h2>Chi siamo</h2>
+        <p><span class="ph">Contenuto della sezione (testo di pagina, non condiviso).</span></p>
+    </section>
+
+    <section id="domande">
+        <h2>FAQ</h2>
+        <details><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
+        <details><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
+        <details><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
+    </section>
+
+    <section id="contatti">
+        <h2 data-i18n="nav.contatti"></h2>
+        <dl>
+            <dt data-i18n="contact.address"></dt>
+            <dd><span id="contactAddress">Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</span>
+                <button type="button" data-copy="#contactAddress" data-i18n="btn.copy"></button>
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Nazario+Sauro+15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map"></a></dd>
+            <dt data-i18n="contact.phone"></dt>
+            <dd><span id="contactPhone">041 907941</span>
+                <button type="button" data-copy="#contactPhone" data-i18n="btn.copy"></button></dd>
+            <dt data-i18n="contact.email"></dt>
+            <dd><span id="contactEmail">info@carrozzeriacipressina.it</span>
+                <button type="button" data-copy="#contactEmail" data-i18n="btn.copy"></button></dd>
+            <dt data-i18n="contact.whatsapp"></dt>
+            <dd data-i18n-html="contact.whatsappTbc.h"></dd>
+            <dt data-i18n="contact.hours"></dt>
+            <dd data-i18n-html="contact.hoursTbc.h"></dd>
+        </dl>
+        <p><a href="#stato" data-i18n="lookup.title"></a></p>
+    </section>
+</main>
+
+<!-- ====================== VIEW: WIZARD ====================== -->
+<section id="view-wizard" hidden>
+
+    <nav data-i18n-attr="aria-label:wiz.progress">
+        <ol id="wizProgress" class="progress">
+            <li data-step="1"><span data-i18n="prog.1"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="2"><span data-i18n="prog.2"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="3"><span data-i18n="prog.3"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="4"><span data-i18n="prog.4"></span><span class="sr-only" data-progress-sr></span></li>
+        </ol>
+    </nav>
+
+    <!-- STEP 1: the boat and its owner -->
+    <form class="step" data-step="1" novalidate hidden>
+        <h1 data-i18n="step1.title"></h1>
+        <p data-i18n="step1.sub"></p>
+
+        <fieldset>
+            <legend data-i18n="step1.cardBoat"></legend>
+
+            <div class="field">
+                <span id="boatTypeLabel" data-i18n="fld.boatType"></span>
+                <div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">
+                    <button type="button" role="radio" aria-checked="false" data-value="gommone" aria-labelledby="typeName-gommone" aria-describedby="typeSub-gommone">
+                        <span class="type-media"><img data-type-thumb="gommone" src="models/thumbs/gommone.webp" alt="" width="96"><span data-type-icon="gommone"></span></span>
+                        <span id="typeName-gommone" data-i18n="type.gommone"></span>
+                        <small id="typeSub-gommone" data-i18n="type.sub.gommone"></small>
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-value="open" aria-labelledby="typeName-open" aria-describedby="typeSub-open">
+                        <span class="type-media"><img data-type-thumb="open" src="models/thumbs/open.webp" alt="" width="96"><span data-type-icon="open"></span></span>
+                        <span id="typeName-open" data-i18n="type.open"></span>
+                        <small id="typeSub-open" data-i18n="type.sub.open"></small>
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-value="cabinato" aria-labelledby="typeName-cabinato" aria-describedby="typeSub-cabinato">
+                        <span class="type-media"><img data-type-thumb="cabinato" src="models/thumbs/cabinato.webp" alt="" width="96"><span data-type-icon="cabinato"></span></span>
+                        <span id="typeName-cabinato" data-i18n="type.cabinato"></span>
+                        <small id="typeSub-cabinato" data-i18n="type.sub.cabinato"></small>
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-value="flybridge" aria-labelledby="typeName-flybridge" aria-describedby="typeSub-flybridge">
+                        <span class="type-media"><img data-type-thumb="flybridge" src="models/thumbs/flybridge.webp" alt="" width="96"><span data-type-icon="flybridge"></span></span>
+                        <span id="typeName-flybridge" data-i18n="type.flybridge"></span>
+                        <small id="typeSub-flybridge" data-i18n="type.sub.flybridge"></small>
+                    </button>
+                    <button type="button" role="radio" aria-checked="false" data-value="vela" aria-labelledby="typeName-vela" aria-describedby="typeSub-vela">
+                        <span class="type-media"><img data-type-thumb="vela" src="models/thumbs/vela.webp" alt="" width="96"><span data-type-icon="vela"></span></span>
+                        <span id="typeName-vela" data-i18n="type.vela"></span>
+                        <small id="typeSub-vela" data-i18n="type.sub.vela"></small>
+                    </button>
+                </div>
+                <p id="boatTypeHint" class="field__hint" data-i18n="type.note"></p>
+                <p id="boatTypeError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="builder" data-i18n="fld.builder"></label>
+                <input id="builder" type="text" list="builderList" autocomplete="off">
+                <datalist id="builderList"></datalist>
+                <p id="builderHint" class="field__hint" data-i18n="hint.builder"></p>
+                <p id="builderError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="model" data-i18n="fld.model"></label>
+                <input id="model" type="text" list="modelList" autocomplete="off">
+                <datalist id="modelList"></datalist>
+                <p id="modelHint" class="field__hint" data-i18n="hint.model"></p>
+                <a id="modelSource" href="#" target="_blank" rel="noopener" hidden></a>
+                <p id="modelAutofill" class="field__hint" role="status" aria-live="polite"></p>
+                <p id="modelError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="year" data-i18n="fld.year"></label>
+                <input id="year" type="text" inputmode="numeric" autocomplete="off">
+                <p id="yearError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="loa" data-i18n="fld.loa"></label>
+                <input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix">m</span>
+                <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
+                <p id="loaError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <span id="registeredLabel" data-i18n="fld.registered"></span>
+                <div id="registered" role="radiogroup" aria-labelledby="registeredLabel">
+                    <button type="button" role="radio" aria-checked="false" data-value="registrata" data-i18n="opt.registrata"></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="natante" data-i18n="opt.natante"></button>
+                </div>
+                <p id="registeredNote" role="status" hidden data-i18n-html="note.natante10.h"></p>
+                <p id="registeredError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field" hidden>
+                <label for="registration" data-i18n="fld.registration"></label>
+                <input id="registration" type="text" autocapitalize="characters" autocomplete="off">
+                <p id="registrationHint" class="field__hint" data-i18n-html="hint.registration.h"></p>
+                <p id="registrationError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <span id="berthKindLabel" data-i18n="fld.berthKind"></span>
+                <div id="berthKind" role="radiogroup" aria-labelledby="berthKindLabel">
+                    <button type="button" role="radio" aria-checked="false" data-value="acqua" data-i18n="opt.berth.acqua"></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="terra" data-i18n="opt.berth.terra"></button>
+                    <button type="button" role="radio" aria-checked="false" data-value="carrello" data-i18n="opt.berth.carrello"></button>
+                </div>
+                <p id="berthKindError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="location"><span data-i18n="fld.location"></span> <span data-i18n="fld.optional"></span></label>
+                <input id="location" type="text">
+                <p id="locationHint" class="field__hint" data-i18n="hint.location"></p>
+            </div>
+
+            <div class="field">
+                <label for="engineHours"><span data-i18n="fld.engineHours"></span> <span data-i18n="fld.optional"></span></label>
+                <input id="engineHours" type="text" inputmode="numeric" autocomplete="off">
+                <p id="engineHoursHint" class="field__hint" data-i18n="hint.engineHours"></p>
+                <p id="engineHoursError" class="field__error" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+                <label for="boatName"><span data-i18n="fld.boatName"></span> <span data-i18n="fld.optional"></span></label>
+                <input id="boatName" type="text">
+            </div>
+
+            <div class="field">
+                <label for="colorCode"><span data-i18n="fld.colorCode"></span> <span data-i18n="fld.optional"></span></label>
+                <input id="colorCode" type="text">
+                <p id="colorCodeHint" class="field__hint" data-i18n-html="hint.colorCode.h"></p>
+            </div>
+
+            <div id="boatSummary" hidden>
+                <span class="type-media"><img id="boatSummaryThumb" data-type-thumb="" alt="" width="72" hidden><span id="boatSummaryIcon"></span></span>
+                <span id="boatSummaryText"></span>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n="step1.cardOwner"></legend>
+            <div class="field">
+                <label for="firstName" data-i18n="fld.firstName"></label>
+                <input id="firstName" type="text" autocomplete="given-name">
+                <p id="firstNameError" class="field__error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+                <label for="lastName" data-i18n="fld.lastName"></label>
+                <input id="lastName" type="text" autocomplete="family-name">
+                <p id="lastNameError" class="field__error" role="alert" hidden></p>
+            </div>
+        </fieldset>
+    </form>
+
+    <!-- STEP 2: the tier -->
+    <section class="step" data-step="2" hidden>
+        <h1 data-i18n="step2.title"></h1>
+        <p data-i18n="step2.sub"></p>
+        <div class="field">
+            <div id="tier" role="radiogroup" data-i18n-attr="aria-label:step2.title">
+                <button type="button" role="radio" aria-checked="false" data-value="base">
+                    <strong data-i18n="tier.base.name"></strong>
+                    <span class="ph" data-tier-from="base"></span>
+                    <span data-i18n="tier.base.i1"></span>; <span data-i18n="tier.base.i2"></span>
+                </button>
+                <button type="button" role="radio" aria-checked="false" data-value="completo">
+                    <strong data-i18n="tier.completo.name"></strong> <span data-i18n-html="tier.badge.h"></span>
+                    <span class="ph" data-tier-from="completo"></span>
+                    <span data-i18n="tier.completo.i1"></span>; <span data-i18n="tier.completo.i2"></span>
+                </button>
+                <button type="button" role="radio" aria-checked="false" data-value="premium">
+                    <strong data-i18n="tier.premium.name"></strong>
+                    <span class="ph" data-tier-from="premium"></span>
+                    <span data-i18n="tier.premium.i1"></span>; <span data-i18n="tier.premium.i2"></span>; <span data-i18n="tier.premium.i3"></span>
+                </button>
+            </div>
+            <p id="tierError" class="field__error" role="alert" hidden></p>
+        </div>
+        <p data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <!-- STEP 3: zones -->
+    <section class="step" data-step="3" hidden>
+        <h1 data-i18n="step3.title"></h1>
+        <p data-i18n="step3.sub"></p>
+
+        <div id="boatView3d">
+            <div id="boatCanvasWrap">
+                <canvas id="boatCanvas" data-i18n-attr="aria-label:viewer.label"></canvas>
+                <div id="boatOverlay">
+                    <p id="boatLoading" data-i18n="viewer.loading"></p>
+                    <p id="boatError" role="alert" hidden></p>
+                </div>
+            </div>
+            <div id="boatViewButtons" role="group" data-i18n-attr="aria-label:viewer.views">
+                <button type="button" data-view="prua" aria-pressed="false" data-i18n="view.prua"></button>
+                <button type="button" data-view="poppa" aria-pressed="false" data-i18n="view.poppa"></button>
+                <button type="button" data-view="sinistra" aria-pressed="false" data-i18n="view.sinistra"></button>
+                <button type="button" data-view="destra" aria-pressed="false" data-i18n="view.destra"></button>
+                <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
+                <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
+            </div>
+            <button type="button" id="waterToggle"></button>
+            <span id="zoneHover" aria-hidden="true"></span>
+            <p data-i18n="viewer.hint"></p>
+            <div id="antifoulingBlock" hidden>
+                <p id="antifoulingLabel"><span data-i18n="af.label"></span> <span data-i18n="fld.optional"></span></p>
+                <div id="antifoulingSwatches" role="radiogroup" aria-labelledby="antifoulingLabel"></div>
+                <p id="antifoulingCaption" hidden><span id="antifoulingChip"></span> <span data-i18n="hero.swatchChosen"></span> <strong id="antifoulingName"></strong></p>
+                <p data-i18n-html="af.note.h"></p>
+            </div>
+        </div>
+
+        <aside id="zonesSummary" tabindex="-1">
+            <h2 data-i18n="sum.title"></h2>
+            <p id="zonesCount"></p>
+            <p id="zonesEmpty" data-i18n="sum.empty"></p>
+            <ul id="zonesList"></ul>
+            <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
+            <p id="zonesNudge" hidden></p>
+            <div id="estimate" hidden>
+                <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
+                <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
+                <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
+                <p id="estNote"></p>
+            </div>
+            <p data-i18n-html="sum.placeholder.h"></p>
+        </aside>
+
+        <details id="zonesPicker">
+            <summary data-i18n="zones.picker"></summary>
+            <fieldset>
+                <legend data-i18n="zones.pickerLegend"></legend>
+                <div id="zonesChecklist"></div>
+            </fieldset>
+        </details>
+    </section>
+
+    <!-- STEP 4: contacts -->
+    <form class="step" data-step="4" novalidate hidden>
+        <h1 data-i18n="step4.title"></h1>
+        <p data-i18n-html="step4.sub.h"></p>
+
+        <div class="field">
+            <label for="region" data-i18n="fld.region"></label>
+            <select id="region" autocomplete="off"></select>
+            <p id="regionError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+            <label for="province" data-i18n="fld.province"></label>
+            <select id="province"></select>
+            <p id="provinceError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+            <label for="provinceText" data-i18n="fld.province"></label>
+            <input id="provinceText" type="text" autocomplete="off">
+            <p id="provinceTextError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+            <label for="country" data-i18n="fld.country"></label>
+            <input id="country" type="text" autocomplete="country-name">
+            <p id="countryError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+            <label for="phone" data-i18n="fld.phone"></label>
+            <span class="affix">+39</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel-national">
+            <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
+            <p id="phoneError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+            <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
+            <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
+            <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+            <label for="email" data-i18n="fld.email"></label>
+            <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+            <p id="emailHint" class="field__hint" data-i18n="hint.email"></p>
+            <p id="emailError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+            <label for="notes"><span data-i18n="fld.notes"></span> <span data-i18n="fld.optional"></span></label>
+            <textarea id="notes" rows="4" data-i18n-attr="placeholder:ph.notes"></textarea>
+        </div>
+        <p data-i18n-html="privacy.h"></p>
+    </form>
+
+    <!-- SUCCESS -->
+    <section id="success" hidden>
+        <h1 data-i18n="success.title"></h1>
+        <p data-i18n="success.lede"></p>
+        <p><span data-i18n="success.code"></span> (<span class="ph" data-i18n="success.demo"></span>)</p>
+        <p><strong id="successCode"></strong>
+            <button type="button" id="successCopy" data-copy="#successCode" data-i18n="btn.copy"></button></p>
+        <p data-i18n-html="success.demoNote.h"></p>
+        <p><a href="#stato" data-i18n="success.lookup"></a>
+            <button type="button" id="resetBtn" data-i18n="btn.reset"></button></p>
+    </section>
+
+    <div id="wizardFoot">
+        <p id="stepHint" role="status" hidden></p>
+        <button type="button" id="stepBack" hidden data-i18n="btn.back"></button>
+        <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+    </div>
+</section>
+
+<!-- ====================== VIEW: LOOKUP ====================== -->
+<section id="view-lookup" hidden>
+    <h1 data-i18n="lookup.title"></h1>
+    <p data-i18n="lookup.sub"></p>
+    <form id="lookupForm" novalidate>
+        <label for="lookupId" data-i18n="lookup.label"></label>
+        <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+        <button type="submit" id="lookupSubmit" data-i18n="lookup.submit"></button>
+        <p id="lookupError" role="alert" hidden></p>
+    </form>
+    <div id="lookupResult" hidden>
+        <dl>
+            <dt data-i18n="lookup.res.code"></dt><dd id="resultId"></dd>
+            <dt data-i18n="lookup.res.boat"></dt><dd id="resultBoat"></dd>
+            <dt data-i18n="lookup.res.name"></dt><dd id="resultName"></dd>
+            <dt data-i18n="lookup.res.status"></dt><dd><span class="ph" id="resultStatus"></span></dd>
+        </dl>
+        <p data-i18n-html="lookup.demoNote.h"></p>
+    </div>
+    <p><a href="#" data-i18n="nav.home"></a></p>
+</section>
+
+</div><!-- /#contenuto -->
+
+<a id="waFab" class="fab" href="#contatti" data-i18n-attr="aria-label:fab.label">WhatsApp</a>
+
+<footer id="siteFooter">
+    <p>Officina Carrozzeria Cipressina S.R.L. · <span data-i18n="foot.vat"></span> IT00762770279</p>
+    <p>© <span id="footYear">2026</span></p>
+</footer>
+
+<script src="shared/zones.js" defer></script>
+<script src="shared/regioni.js" defer></script>
+<script src="shared/i18n.js" defer></script>
+<script src="shared/app.js" defer></script>
+</body>
+</html>

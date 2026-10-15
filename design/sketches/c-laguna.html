@@ -1,0 +1,1409 @@
+<title>Cipressina Barche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* =========================================================================
+   C · LAGUNA, restyled to the Cipressina look (see cipressina-look.md).
+   Features from autocolor, look from carrozzeriacipressina.it: white ground,
+   blue text (#004c9e), Bootstrap-blue actions (#007bff), a dark page-title
+   band, a solid blue footer, one type family, 4px corners, no shadows.
+   Deliberately a single light look: the client's site has no dark mode, so
+   there are no dark-mode token blocks.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --text: #004c9e;           /* body text and headings, as on their site */
+  --muted: #4d6a92;          /* secondary text, 5.7:1 on white */
+  --primary: #007bff;        /* buttons, active bar, focus */
+  --primary-dark: #0464cb;   /* hover, and text links (contrast) */
+  --primary-soft: #eaf3ff;
+  --secondary-dark: #013874;
+  --panel: #f4f7fb;          /* light panels */
+  --border: #dde3ea;
+  --input-border: #ced4da;
+  --green: #009642;          /* logo, 3D selection, ticks only */
+  --err: #c0182b;
+  --white: #ffffff;
+  --band: #1b232d;           /* the page-title band, a dark photo stand-in */
+  --footer: #004c9e;
+  --fab: #1c8c80;            /* their teal pill, a touch darker for contrast */
+  --ph-line: #c47f00;
+  --ph-bg: #fff4d6;
+  --ph-ink: #5c3b00;
+  --ribbon-bg: #fff3cd;
+  --ribbon-ink: #664d03;
+  --ribbon-line: #ffe69c;
+  --logo-blue: #0e0e9e;
+  --logo-green: #009642;
+  --caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23004c9e' stroke-width='2'/%3E%3C/svg%3E");
+  --flag-en: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Crect fill='%23012169' width='60' height='40'/%3E%3Cpath d='M0 0L60 40M60 0L0 40' stroke='%23fff' stroke-width='8'/%3E%3Cpath d='M0 0L60 40M60 0L0 40' stroke='%23c8102e' stroke-width='3'/%3E%3Cpath d='M30 0V40M0 20H60' stroke='%23fff' stroke-width='12'/%3E%3Cpath d='M30 0V40M0 20H60' stroke='%23c8102e' stroke-width='7'/%3E%3C/svg%3E");
+  --font: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --gutter: 16px;
+  --hdr-h: 64px;
+}
+
+/* ---- Base ---------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--hdr-h) + 16px); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 var(--font); overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+img, svg, canvas { max-width: 100%; }
+h1, h2, h3, h4 { font-family: var(--font); font-weight: 700; color: var(--text); margin: 0; line-height: 1.25; }
+h2 { font-size: 1.375rem; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 20px; }
+h3 { font-size: 1.0625rem; text-transform: uppercase; margin-bottom: 12px; }
+p { margin: 0 0 1em; max-width: 65ch; }
+ul, ol, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: var(--primary-dark); text-underline-offset: .15em; }
+a:hover { color: var(--secondary-dark); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+strong { font-weight: 700; }
+[tabindex="-1"]:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+::selection { background: var(--primary); color: #fff; }
+
+/* ---- Required functional CSS (CONTRACT.md) -------------------------------- */
+[hidden] { display: none !important; }
+#boatOverlay.hidden { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+#heroBoat, #boatCanvasWrap { position: relative; }
+#heroBoat canvas, #boatCanvasWrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#heroBoat .hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity .4s; }
+#heroBoat.is-3d .hero-poster { opacity: 0; pointer-events: none; }
+#navPanel { display: none; }
+#navPanel.is-open { display: block; }
+@media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+
+/* ---- Placeholders -------------------------------------------------------- */
+.ph {
+  outline: 1.5px dashed var(--ph-line); outline-offset: 1px;
+  background: var(--ph-bg); color: var(--ph-ink); border-radius: 2px; padding: 0 .2em;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
+/* ---- Skip link, ribbon ---------------------------------------------------- */
+.skip-link { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--text); color: #fff; padding: 10px 16px; border-radius: 4px; }
+.skip-link:focus { top: 12px; }
+#draftRibbon { background: var(--ribbon-bg); color: var(--ribbon-ink); border-bottom: 1px solid var(--ribbon-line); font-size: .875rem; line-height: 1.4; padding: 8px var(--gutter); text-align: center; }
+
+/* ---- Layout helpers -------------------------------------------------------- */
+.container { width: 100%; max-width: 1140px; margin-inline: auto; padding-inline: var(--gutter); }
+@media (min-width: 768px) { :root { --gutter: 24px; } }
+.lede { font-size: 1.125rem; }
+.note { font-size: .9375rem; color: var(--muted); }
+.label { font-weight: 700; margin: 0 0 8px; }
+
+/* ---- Buttons and links --------------------------------------------------- */
+.btn, #stepNext, #resetBtn, #lookupSubmit, #stepBack {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 44px; padding: 8px 20px; border: 1px solid var(--primary); border-radius: 4px;
+  background: var(--primary); color: #fff; font-size: 1rem; font-weight: 600; line-height: 1.2; text-decoration: none;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.btn:hover, #stepNext:hover, #resetBtn:hover, #lookupSubmit:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
+.btn--outline, #stepBack { background: #fff; color: var(--primary-dark); border-color: var(--primary); }
+.btn--outline:hover, #stepBack:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
+.link-arrow { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+[data-copy] {
+  min-height: 36px; min-width: 64px; padding: 2px 12px; margin-left: 10px; vertical-align: middle;
+  background: #fff; color: var(--primary-dark); border: 1px solid var(--primary); border-radius: 4px; font-size: .9375rem; font-weight: 600;
+}
+[data-copy]:hover { background: var(--primary); color: #fff; }
+[data-copy].is-copied { border-color: var(--green); color: var(--green); background: #fff; }
+
+/* ---- Header (theirs: white, hairline, uppercase menu, blue active bar) ---- */
+#siteHeader { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: #fff; border-bottom: 1px solid var(--border); }
+.hdr { display: flex; align-items: center; gap: 12px; height: var(--hdr-h); max-width: 1140px; margin-inline: auto; padding-inline: var(--gutter); }
+.logo { display: inline-flex; align-items: center; flex: none; min-height: 44px; }
+.logo svg { height: 34px; width: auto; display: block; }
+.logo__blue { fill: var(--logo-blue); }
+.logo__green { fill: var(--logo-green); }
+.logo__word { fill: var(--logo-blue); font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif; font-weight: 900; }
+.hdr__spacer { flex: 1; min-width: 0; }
+#siteNav { display: none; align-self: stretch; }
+#siteNav a {
+  position: relative; display: flex; align-items: center; padding: 0 14px; height: 100%;
+  color: var(--text); text-decoration: none; text-transform: uppercase; font-size: .9375rem; font-weight: 600;
+}
+#siteNav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; background: transparent; }
+#siteNav a:hover, #siteNav a:focus-visible { color: var(--primary); }
+#siteNav a:hover::after, #siteNav a:focus-visible::after, #siteNav a[aria-current]::after { background: var(--primary); }
+#siteNav a:focus-visible { outline-offset: -3px; }
+.hdr .btn { min-height: 40px; padding: 6px 18px; }
+
+/* The «Italiano +» switcher: the current language shows, the others open on
+   hover or focus. Plain CSS, no behaviour of its own. */
+.lang-wrap { position: relative; flex: none; width: 132px; height: 40px; display: none; }
+.lang { position: absolute; top: 0; left: 0; right: 0; z-index: 3; display: flex; flex-direction: column; background: #fff; border: 1px solid transparent; border-radius: 4px; }
+.lang button { display: none; align-items: center; gap: 8px; width: 100%; min-height: 38px; padding: 0 10px; background: none; border: 0; border-radius: 4px; text-align: left; font-size: .9375rem; font-weight: 600; color: var(--text); }
+.lang button.is-active { display: flex; order: -1; }
+.lang button.is-active::after { content: "+"; margin-left: auto; font-size: 1.25rem; line-height: 1; color: var(--primary); }
+.lang:hover, .lang:focus-within { border-color: var(--border); box-shadow: 0 6px 14px rgba(0, 0, 0, .1); }
+.lang:hover button, .lang:focus-within button { display: flex; }
+.lang button:hover { background: var(--panel); color: var(--primary); }
+.flag { flex: none; width: 20px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .18); background-size: cover; }
+.flag-it { background: linear-gradient(90deg, #009246 33.3%, #fff 33.3% 66.6%, #ce2b37 66.6%); }
+.flag-fr { background: linear-gradient(90deg, #0055a4 33.3%, #fff 33.3% 66.6%, #ef4135 66.6%); }
+.flag-es { background: linear-gradient(#aa151b 25%, #f1bf00 25% 75%, #aa151b 75%); }
+.flag-en { background: var(--flag-en) center / cover; }
+
+#menuToggle { position: relative; flex: none; width: 44px; height: 44px; padding: 0; background: #fff; border: 1px solid var(--input-border); border-radius: 4px; }
+#menuToggle::before, #menuToggle::after { content: ""; position: absolute; left: 11px; right: 11px; height: 0; border-top: 2px solid var(--text); transition: transform .2s, top .2s; }
+#menuToggle::before { top: 15px; }
+#menuToggle::after { top: 25px; }
+#menuToggle.is-open::before { top: 20px; transform: rotate(45deg); }
+#menuToggle.is-open::after { top: 20px; transform: rotate(-45deg); }
+#navPanel { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--border); padding: 4px var(--gutter) 20px; max-height: calc(100vh - var(--hdr-h) - 20px); overflow-y: auto; }
+#navPanel > a:not(.btn) { display: flex; align-items: center; min-height: 48px; border-bottom: 1px solid var(--border); color: var(--text); text-transform: uppercase; font-weight: 600; text-decoration: none; }
+#navPanel .lang-wrap { display: block; width: auto; height: auto; margin-top: 12px; }
+#navPanel .lang { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px 12px; border: 0; box-shadow: none; }
+#navPanel .lang button { display: flex; width: auto; min-height: 44px; padding: 0 8px; }
+#navPanel .lang button.is-active { order: 0; background: var(--primary-soft); color: var(--primary-dark); }
+#navPanel .lang button.is-active::after { content: none; }
+#navPanel .btn { margin-top: 12px; width: 100%; }
+@media (min-width: 1100px) {
+  :root { --hdr-h: 88px; }
+  .logo svg { height: 42px; }
+  #siteNav { display: flex; }
+  .lang-wrap { display: block; margin-left: 8px; }
+  #menuToggle, #navPanel { display: none !important; }
+  .hdr .btn { min-height: 44px; margin-left: 4px; }
+}
+@media (max-width: 1099px) { .hdr > .btn { display: none; } }
+@media (max-width: 380px) { .logo svg { height: 30px; } }
+
+/* ---- Page-title band (every view) ---------------------------------------- */
+.band {
+  background: var(--band) repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 16px);
+  color: #fff; text-align: center; padding: 44px var(--gutter) 36px;
+}
+.band__title { margin: 0 0 12px; color: #fff; font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.2; font-weight: 700; text-transform: none; letter-spacing: 0; }
+.band .crumbs { margin: 0 auto; max-width: none; font-size: .9375rem; font-weight: 600; }
+.band .crumbs a { color: #fff; text-decoration: none; }
+.band .crumbs a:hover { text-decoration: underline; }
+.band .crumbs .sep { margin: 0 .5em; opacity: .8; }
+@media (min-width: 768px) { .band { padding-block: 64px 52px; } }
+
+/* ---- Home: intro + 3D ------------------------------------------------------ */
+.intro { display: grid; gap: 32px; padding-block: 40px 56px; }
+.intro__text { min-width: 0; }
+.intro__text .lead { font-weight: 700; font-size: 1.125rem; }
+.intro__cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 32px; max-width: none; }
+.intro__text h2 { margin-top: 8px; }
+.tick-list { list-style: disc; padding-left: 1.25rem; font-weight: 700; }
+.tick-list li { padding: 2px 0; }
+.intro__boat { min-width: 0; }
+#heroBoat { width: 100%; height: clamp(260px, 62vw, 380px); background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+#heroBoat canvas, #heroBoat .hero-poster { z-index: 1; }
+#heroBoat .hero-poster .p-top { fill: #fff; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
+#heroBoat .hero-poster .p-cab { fill: #e9eef4; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
+#heroBoat .hero-poster .p-glass { fill: #9db4cf; }
+#heroSwatchLabel { margin: 16px 0 8px; }
+#heroSwatches, #antifoulingSwatches { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 2px; }
+.swatch { position: relative; width: 32px; height: 32px; padding: 0; border-radius: 3px; background: var(--sw); border: 1px solid rgba(0, 0, 0, .3); }
+.swatch:hover { border-color: var(--text); }
+.swatch.is-active { outline: 3px solid var(--primary); outline-offset: 2px; }
+.swatch:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.swatch__name { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.fan-caption { display: flex; align-items: center; gap: 10px; margin: 8px 0 4px; font-weight: 700; }
+#heroSwatchChip, .swatch-chip { display: inline-block; vertical-align: middle; width: 18px; height: 18px; flex: none; border-radius: 3px; background: var(--sw); border: 1px solid rgba(0, 0, 0, .3); }
+@media (min-width: 960px) {
+  .intro { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; padding-block: 56px 72px; }
+}
+
+/* ---- Home sections --------------------------------------------------------- */
+.sec { padding-block: 48px; border-top: 1px solid var(--border); }
+.sec--panel { background: var(--panel); }
+@media (min-width: 768px) { .sec { padding-block: 64px; } }
+
+.cols { display: grid; gap: 32px; }
+@media (min-width: 720px) { .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; } }
+.bul { list-style: disc; padding-left: 1.25rem; }
+.bul li { padding: 3px 0; }
+.srv-note { margin-top: 16px; color: var(--muted); font-size: .9688rem; }
+
+.steps { counter-reset: s; display: grid; gap: 20px; max-width: 720px; }
+.steps li { counter-increment: s; position: relative; padding-left: 52px; }
+.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--primary); color: #fff; font-weight: 700;
+}
+.steps h3 { margin: 4px 0 4px; text-transform: none; font-size: 1.0625rem; }
+.steps p { margin: 0; }
+.steps__end { margin-top: 28px; }
+
+.qline { margin: 24px 0 0; }
+.qline__s { font-size: 1.25rem; line-height: 2.2; max-width: 40em; margin: 0 0 8px; }
+.qline select {
+  display: inline-block; width: auto; max-width: 100%; min-height: 40px; padding: 4px 32px 4px 10px; margin: 0 2px;
+  font: inherit; font-weight: 600; color: var(--text); background: #fff var(--caret) no-repeat right 10px center / 12px auto;
+  border: 1px solid var(--input-border); border-radius: 4px; appearance: none; -webkit-appearance: none; cursor: pointer;
+}
+.qline select option { font: 400 1rem var(--font); color: #004c9e; background: #fff; }
+.qline output { font-weight: 700; }
+#qlBefore { color: var(--muted); margin: 0 0 20px; }
+.disc { margin-top: 40px; }
+.disc__lede { color: var(--muted); }
+#discountList { max-width: 360px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+.discount-step { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 9px 14px; border-bottom: 1px solid var(--border); }
+.discount-step:last-child { border-bottom: 0; }
+.discount-step:nth-child(odd) { background: var(--panel); }
+.discount-step__rate { font-weight: 700; }
+.pkgs-title { margin: 48px 0 20px; text-transform: none; }
+.pkgs { display: grid; gap: 16px; }
+.pkg { position: relative; display: grid; align-content: start; min-width: 0; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 4px; }
+.pkg--c { border-color: var(--primary); }
+.pkg h3 { text-transform: none; font-size: 1.25rem; margin-bottom: 8px; }
+.pkg__badge { position: absolute; top: -13px; right: 14px; margin: 0; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.pkg__badge .ph { display: inline-block; padding: 2px 8px; background: var(--primary); color: #fff; border-radius: 3px; outline-color: var(--ph-line); }
+.pkg__price { margin: 0 0 12px; font-weight: 700; }
+.pkg ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 20px; }
+.pkg li { padding: 2px 0; }
+.pkg .btn { justify-self: start; margin-top: auto; }
+.pkgs__note { margin-top: 16px; }
+@media (min-width: 900px) { .pkgs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+
+.about { display: grid; gap: 32px; }
+.photo {
+  position: relative; display: flex; align-items: flex-end; aspect-ratio: var(--ar, 4 / 3); width: 100%; margin: 0;
+  background: var(--panel); border: 1.5px dashed var(--ph-line);
+}
+.photo__label { margin: 0; padding: 8px 12px; background: var(--ph-bg); color: var(--ph-ink); border-top: 1.5px dashed var(--ph-line); border-right: 1.5px dashed var(--ph-line); font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.3; }
+.awards { list-style: disc; padding-left: 1.25rem; font-weight: 600; }
+.about h3 { margin-top: 24px; }
+.about p.why__ph { margin-top: 16px; }
+@media (min-width: 900px) { .about { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; } }
+
+.faq details { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 8px; background: #fff; max-width: 820px; }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 10px 16px; font-weight: 700; cursor: pointer; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; flex: none; font-size: 1.5rem; line-height: 1; color: var(--primary); }
+.faq details[open] summary::after { content: "−"; }
+.faq details[open] summary { border-bottom: 1px solid var(--border); }
+.faq details > p { margin: 0; padding: 14px 16px; }
+
+.contacts dl { max-width: 720px; border-top: 1px solid var(--border); }
+.contacts .row { display: grid; gap: 2px 24px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.contacts dt { font-weight: 700; }
+.contacts dd { overflow-wrap: anywhere; }
+.contacts dd .map { display: inline-block; margin-top: 8px; min-height: 32px; font-weight: 600; }
+.contacts__cta { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; margin-top: 24px; max-width: none; }
+@media (min-width: 720px) { .contacts .row { grid-template-columns: 160px minmax(0, 1fr); align-items: baseline; } }
+
+/* ---- Footer, FAB ----------------------------------------------------------- */
+#siteFooter { background: var(--footer); color: #fff; padding: 40px 0 calc(40px + env(safe-area-inset-bottom, 0px)); }
+#siteFooter .in { max-width: 1140px; margin-inline: auto; padding-inline: var(--gutter); }
+#siteFooter p { margin: 0 0 6px; max-width: none; }
+#siteFooter .name { font-weight: 700; font-size: 1.125rem; }
+#siteFooter .credits { font-size: .8125rem; opacity: .85; }
+#siteFooter .credits a { min-height: 0; text-decoration: underline; }
+#siteFooter a { color: #fff; display: inline-block; min-height: 32px; }
+#siteFooter :focus-visible { outline-color: #fff; }
+#waFab {
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 20px 8px 16px; border-radius: 999px;
+  background: var(--fab); color: #fff; font-weight: 600; font-size: .9375rem; text-decoration: none; box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+}
+#waFab:hover { background: #167166; color: #fff; }
+#waFab svg { width: 24px; height: 24px; flex: none; }
+body.is-wizard #waFab { display: none; }
+@media (max-width: 420px) { #waFab { padding: 8px 14px 8px 12px; font-size: .875rem; } }
+
+/* ---- WIZARD & LOOKUP: a Bootstrap-form feel --------------------------------- */
+.page { max-width: 1140px; margin-inline: auto; padding: 32px var(--gutter) 0; }
+.step { max-width: 760px; }
+body[data-step="2"] .step { max-width: 860px; }
+body[data-step="3"] .step { max-width: none; }
+body[data-step="success"] #success { max-width: 760px; }
+
+.wiz-progress { position: sticky; top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px)); z-index: 20; background: #fff; border-bottom: 1px solid var(--border); }
+#wizProgress { display: flex; gap: 8px; max-width: 1140px; margin: 0 auto; padding: 12px var(--gutter); }
+#wizProgress li { flex: 1; min-width: 0; padding-top: 8px; border-top: 4px solid var(--border); font-size: .875rem; font-weight: 600; color: var(--muted); }
+#wizProgress li.is-done { border-top-color: var(--primary); color: var(--text); }
+#wizProgress li.is-done > span:first-child::before { content: "✓ "; color: var(--green); font-weight: 700; }
+#wizProgress li.is-current { border-top-color: var(--primary); color: var(--text); font-weight: 700; }
+
+.step > h1, #success > h1 { font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 8px; }
+.step > h1 + p { color: var(--muted); margin-bottom: 24px; }
+
+fieldset { border: 1px solid var(--border); border-radius: 4px; margin: 0 0 24px; padding: 8px 20px 20px; min-width: 0; }
+legend { padding: 0 8px; font-weight: 700; font-size: 1.0625rem; text-transform: uppercase; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px 20px; padding-top: 8px; }
+@media (min-width: 640px) { .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fields .wide { grid-column: 1 / -1; } }
+.step > .fields { padding-top: 0; }
+
+.field { min-width: 0; }
+.field > label, .field > .flabel { display: block; margin-bottom: 6px; font-weight: 700; line-height: 1.3; }
+.field > label span, .field .flabel span { font-weight: 400; color: var(--muted); }
+input[type="text"], input[type="tel"], input[type="email"], select, textarea {
+  display: block; width: 100%; min-height: 44px; padding: 6px 12px; font-size: 1rem; line-height: 1.5;
+  background: #fff; color: var(--text); border: 1px solid var(--input-border); border-radius: 4px; appearance: none; -webkit-appearance: none;
+}
+select { background-image: var(--caret); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px auto; padding-right: 36px; }
+select:disabled { background-color: #e9ecef; }
+textarea { resize: vertical; min-height: 110px; }
+input::placeholder, textarea::placeholder { color: #6c757d; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #80bdff; box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25); }
+.affixed { display: flex; align-items: stretch; }
+.affixed input { flex: 1; min-width: 0; }
+.affixed .affix { display: grid; place-items: center; padding: 0 12px; background: #e9ecef; border: 1px solid var(--input-border); color: var(--text); font-weight: 600; }
+.affixed .affix:first-child { border-right: 0; border-radius: 4px 0 0 4px; }
+.affixed .affix:last-child { border-left: 0; border-radius: 0 4px 4px 0; }
+.affixed .affix:first-child + input { border-radius: 0 4px 4px 0; }
+.affixed input:has(+ .affix) { border-radius: 4px 0 0 4px; }
+.field__hint { margin: 4px 0 0; font-size: .875rem; color: var(--muted); }
+.field__error { margin: 4px 0 0; font-size: .9375rem; font-weight: 600; color: var(--err); }
+.field.is-invalid input, .field.is-invalid select, .field.is-invalid textarea, [aria-invalid="true"] { border-color: var(--err); }
+.field.is-invalid input:focus, .field.is-invalid select:focus { box-shadow: 0 0 0 .2rem rgba(192, 24, 43, .2); }
+#modelSource { display: inline-block; margin-top: 4px; font-size: .875rem; }
+#registeredNote { margin: 8px 0 0; font-size: .9375rem; }
+
+#boatType { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; }
+#boatType button, #registered button, #berthKind button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 12px 8px;
+  background: #fff; border: 1px solid var(--input-border); border-radius: 4px; font-weight: 600; text-align: center; line-height: 1.2; color: var(--text);
+}
+#boatType button { justify-content: flex-start; }
+.type-media { display: grid; place-items: center; width: 100%; max-width: 120px; aspect-ratio: 4 / 3; }
+.type-media > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#boatType [data-type-icon] { display: block; width: 72px; color: var(--text); }
+#boatType [data-type-icon] svg, #boatSummaryIcon svg { display: block; width: 100%; height: auto; }
+.type-sub { font-size: .8125rem; font-weight: 400; color: var(--muted); line-height: 1.3; }
+#registered, #berthKind { display: flex; flex-wrap: wrap; gap: 8px; }
+#registered button, #berthKind button { flex: 1 1 160px; }
+#boatType button:hover, #registered button:hover, #berthKind button:hover, #tier button:hover { border-color: var(--primary); }
+#boatType button.is-selected, #registered button.is-selected, #berthKind button.is-selected, #tier button.is-selected { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); background: var(--primary-soft); color: var(--text); }
+[role="radiogroup"][aria-invalid="true"] button { border-color: var(--err); }
+#boatSummary { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--panel); border-left: 4px solid var(--green); border-radius: 4px; font-weight: 600; }
+#boatSummary .type-media { width: 72px; max-width: none; flex: none; }
+#boatSummaryIcon { display: block; width: 60px; color: var(--text); }
+
+#tier { display: grid; gap: 12px; }
+#tier button {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 12px; align-items: start; text-align: left;
+  padding: 16px; background: #fff; border: 1px solid var(--input-border); border-radius: 4px; line-height: 1.4; color: var(--text);
+}
+#tier button::before { content: ""; grid-row: 1 / span 6; width: 20px; height: 20px; margin-top: 2px; border-radius: 50%; border: 2px solid var(--input-border); background: #fff; }
+#tier button.is-selected::before { border-color: var(--primary); background: radial-gradient(circle, var(--primary) 0 4px, #fff 5px); }
+#tier button > * { grid-column: 2; }
+#tier button strong { font-size: 1.1875rem; }
+#tier [data-tier-from] { justify-self: start; margin: 4px 0 8px; font-weight: 700; }
+#tier .t-item { display: block; font-weight: 400; padding: 1px 0; }
+#tier .t-badge { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.tier-note { margin-top: 16px; }
+
+/* Step 3: the viewer on a light panel, summary as a plain table */
+.step3 { display: grid; gap: 24px; margin-top: 8px; }
+@media (min-width: 960px) { .step3 { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 32px; align-items: start; } }
+.step3__main { min-width: 0; }
+#boatCanvasWrap { width: 100%; aspect-ratio: 16 / 10; min-height: 280px; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; touch-action: pan-y; }
+#boatOverlay { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; padding: 16px; text-align: center; background: rgba(244, 247, 251, .92); }
+#boatOverlay p { margin: 0; color: var(--muted); }
+#boatError { color: var(--err) !important; font-weight: 600; }
+#zoneHover { position: absolute; left: 12px; top: 10px; z-index: 3; padding: 2px 8px; background: #fff; border: 1px solid var(--border); border-radius: 3px; font-size: .8125rem; font-weight: 700; color: var(--text); pointer-events: none; }
+#zoneHover:empty { display: none; }
+.viewer-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 10px; }
+#boatViewButtons { display: flex; flex-wrap: wrap; gap: 6px; }
+#boatViewButtons button, #waterToggle {
+  min-height: 36px; padding: 0 12px; background: #fff; color: var(--primary-dark); border: 1px solid var(--primary); border-radius: 4px; font-size: .875rem; font-weight: 600;
+}
+#boatViewButtons button:hover, #waterToggle:hover { background: var(--primary-soft); }
+#boatViewButtons button.is-active { background: var(--primary); color: #fff; }
+#waterToggle { color: var(--text); border-color: var(--input-border); }
+.viewer-hint { margin: 10px 0 0; font-size: .9375rem; color: var(--muted); }
+#antifoulingBlock { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+#antifoulingLabel { margin: 0 0 6px; font-weight: 700; line-height: 1.3; }
+#antifoulingLabel span + span { font-weight: 400; color: var(--muted); }
+.zone-row__sub { font-weight: 400; color: var(--muted); }
+#zonesPicker { margin-top: 16px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+#zonesPicker summary { display: flex; align-items: center; min-height: 48px; padding: 0 16px; font-weight: 700; cursor: pointer; color: var(--primary-dark); }
+#zonesPicker fieldset { margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; padding: 12px 16px 8px; }
+#zonesPicker legend { font-size: .9375rem; }
+#zonesChecklist { display: grid; gap: 0 20px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--green); flex: none; margin: 0; }
+
+#zonesSummary { min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+#zonesSummary h2 { font-size: 1.0625rem; margin-bottom: 4px; }
+#zonesCount { font-size: .9375rem; color: var(--muted); margin: 0 0 8px; }
+#zonesEmpty { color: var(--muted); }
+#zonesList { border-top: 1px solid var(--border); }
+.zone-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 8px; border-bottom: 1px solid var(--border); }
+.zone-row__name { font-weight: 600; line-height: 1.3; padding: 6px 0; }
+.zone-row__price { font-variant-numeric: tabular-nums; }
+.zone-row__remove { width: 44px; height: 44px; padding: 0; background: none; border: 0; border-radius: 4px; color: var(--muted); }
+.zone-row__remove:hover { color: var(--err); }
+#zonesClear { min-height: 44px; padding: 0; background: none; border: 0; color: var(--primary-dark); font-weight: 600; text-decoration: underline; }
+#zonesNudge { margin: 12px 0 0; padding: 10px 12px; border: 1px dashed var(--muted); border-radius: 4px; font-size: .9375rem; max-width: none; }
+#zonesNudge.is-maxed { border-style: solid; border-color: var(--green); }
+#estimate { margin-top: 16px; padding-top: 12px; border-top: 2px solid var(--text); }
+#estimate p { margin: 0 0 4px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; max-width: none; }
+#estTotal { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+#estSubtotal, #estDiscount { font-variant-numeric: tabular-nums; }
+#estNote { display: block !important; font-size: .875rem; color: var(--muted); }
+.est-ph { margin: 12px 0 0; }
+
+#wizardFoot {
+  position: sticky; bottom: 0; z-index: 15; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px;
+  margin: 32px calc(var(--gutter) * -1) 0; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+  background: #fff; border-top: 1px solid var(--border);
+}
+#stepHint { flex: 1 0 100%; margin: 0; font-size: .9375rem; font-weight: 600; color: var(--err); order: -1; max-width: none; }
+#stepBack { order: 1; }
+#stepNext { order: 2; margin-left: auto; min-width: 180px; }
+#stepNext[aria-disabled="true"] { opacity: .65; cursor: not-allowed; }
+#stepNext[aria-disabled="true"]:hover { background: var(--primary); border-color: var(--primary); }
+@media (max-width: 479px) { #stepNext { flex: 1 1 auto; min-width: 0; } }
+
+#success { border: 1px solid var(--border); border-left: 4px solid var(--green); border-radius: 4px; padding: 24px; background: #fff; }
+#success p { max-width: 52ch; }
+#success .code { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 4px 0 20px; }
+#successCode { font-size: clamp(1.75rem, 7vw, 2.5rem); font-weight: 700; letter-spacing: .06em; font-variant-numeric: tabular-nums; user-select: all; overflow-wrap: anywhere; }
+#success .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 8px; }
+#success .btn, #resetBtn { margin: 0; }
+
+#lookupForm { display: grid; gap: 8px; max-width: 480px; }
+#lookupForm label { font-weight: 700; }
+#lookupId { font-size: 1.25rem; letter-spacing: .1em; min-height: 52px; font-variant-numeric: tabular-nums; }
+#lookupSubmit { justify-self: start; margin-top: 8px; }
+#lookupError { margin: 4px 0 0; color: var(--err); font-weight: 600; }
+#lookupResult { margin-top: 32px; max-width: 560px; outline: none; border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px; }
+#lookupResult dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 16px; }
+#lookupResult dt { font-weight: 700; }
+#lookupResult dd { overflow-wrap: anywhere; }
+.page .back { margin-top: 32px; }
+#view-lookup .page { padding-bottom: 56px; }
+
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+
+<!-- Page copy for the home view. Italian is the master ("tu"). EN / ES / FR:
+     traduzione da revisionare. ES / FR nautical terms marked * in zones.js
+     (obra muerta/viva, œuvres mortes/vives, ligne de flottaison...) and
+     «tintometri» (tintómetros, machines à teinter) are unverified. The
+     intro and the three «Perché scegliere noi?» titles are the wording of
+     carrozzeriacipressina.it/manuntenzione-barche/ (research.md §1). -->
+<script>
+window.CIPRESSINA_I18N_EXTRA = {
+  "it": {
+    "cip.srv.h1": "Lavaggio completo e lucidatura",
+    "cip.srv.h2": "Riverniciatura e riparazioni",
+    "cip.srv.h3": "Applicazione di antivegetativa",
+    "cip.srv.h4": "Riparazione di crepe o danni strutturali",
+    "cip.srv.h5": "Controllo e manutenzione degli accessori esterni",
+    "cip.srv.e1": "Controllo e sostituzione dell'olio",
+    "cip.srv.e2": "Pulizia del sistema di raffreddamento",
+    "cip.srv.e3": "Controllo e pulizia dei motori a iniezione diesel e benzina",
+    "cip.srv.e4": "Sostituzione dei filtri carburante e aria",
+    "cip.srv.e5": "Ispezione della cinghia di trasmissione",
+    "cip.srv.e6": "Verifica del sistema elettrico e delle batterie",
+    "cip.srv.engineNote": "Da poco abbiamo attivato una nuova sede operativa per gli interventi sui motori entro bordo nautici.",
+    "cip.how.1t": "Racconta la barca",
+    "cip.how.1d": "Tipo, cantiere, modello, anno e lunghezza. Se il modello è tra quelli che conosciamo, la lunghezza si compila da sola.",
+    "cip.how.2t": "Scegli il pacchetto",
+    "cip.how.2d": "Base, Completo o Premium: dal lavaggio con antivegetativa fino alle riparazioni strutturali e al trattamento osmosi. La composizione è indicativa.",
+    "cip.how.3t": "Tocca le zone sul modello 3D",
+    "cip.how.3d": "Ruota la barca e scegli le zone: opera viva, fiancate, specchio di poppa, coperta. Più zone scegli, più sale lo sconto.",
+    "cip.how.4t": "Lasciaci i contatti",
+    "cip.how.4d.h": "Invii la richiesta e ricevi un codice per controllarne lo stato. <span class=\"ph\">Tempi di risposta: da confermare.</span>",
+    "cip.how.cta": "Inizia dal passo 1",
+    "cip.int.lede": "Imposta le zone, la lunghezza e il pacchetto: la frase ti dice da quanto parte l'intervento. Per una stima più precisa, scegli le zone sul modello 3D.",
+    "cip.int.disc.h": "Lo sconto cresce a ogni zona in più, fino a un massimo. <span class=\"ph\">Percentuali di esempio.</span>",
+    "cip.int.pkg": "Tre pacchetti, dal più semplice al più completo.",
+    "cip.why.awards": "Riconoscimenti",
+    "cip.why.ph.h": "<span class=\"ph\">Dimensioni della cabina e lunghezza massima della barca: da confermare con l'officina.</span>",
+    "cip.photo": "FOTO · cantiere / barca in lavorazione",
+    "cip.con.lede": "L'officina è a Olmo di Martellago, in provincia di Venezia.",
+    "cip.hero.cta": "Chiedi il preventivo",
+    "cip.hero.cta2": "Vedi i pacchetti",
+    "cip.band.home": "Manutenzione Barche",
+    "cip.band.quote": "Preventivo barca",
+    "cip.bc.home": "Home",
+    "cip.bc.boats": "Barche",
+    "cip.hero.p1": "La tua barca è un bene prezioso, e per garantirne la lunga durata e le migliori prestazioni, è fondamentale eseguire una manutenzione regolare.",
+    "cip.hero.p2": "Eseguiamo interventi su barche sia sull'opera morta che sull'opera viva. Descrivi la tua barca, tocca le zone sul modello 3D e leggi subito una stima.",
+    "cip.hero.why": "Perché scegliere noi?",
+    "cip.hero.why1": "Esperienza e competenza",
+    "cip.hero.why2": "Prodotti di alta qualità",
+    "cip.hero.why3": "Servizio personalizzato",
+    "cip.srv.title": "I nostri servizi",
+    "cip.srv.lede": "Eseguiamo interventi su barche sia sull'opera morta che sull'opera viva.",
+    "cip.srv.hull": "Manutenzione scafo e coperta",
+    "cip.srv.engine": "Manutenzione del motore",
+    "cip.why.lede": "Officina Carrozzeria Cipressina S.R.L. è un centro di riparazione per auto e veicoli, e svolge interventi anche su barche.",
+    "cip.why.equip": "Attrezzature",
+    "cip.why.f1": "Forno di verniciatura e cabina di essiccazione",
+    "cip.why.f2": "3 zone di preparazione",
+    "cip.why.f3": "4 tintometri",
+    "cip.why.f4": "2 colorimetri elettronici",
+    "cip.faq.title": "Domande frequenti",
+    "cip.fab": "Sono a tua disposizione"
+  },
+  "en": {
+    "cip.srv.h1": "Full wash and polish",
+    "cip.srv.h2": "Repainting and repairs",
+    "cip.srv.h3": "Antifouling application",
+    "cip.srv.h4": "Repair of cracks and structural damage",
+    "cip.srv.h5": "Inspection and upkeep of external fittings",
+    "cip.srv.e1": "Oil check and change",
+    "cip.srv.e2": "Cooling system cleaning",
+    "cip.srv.e3": "Checks and cleaning of diesel and petrol injection engines",
+    "cip.srv.e4": "Fuel and air filter replacement",
+    "cip.srv.e5": "Drive belt inspection",
+    "cip.srv.e6": "Electrical system and battery check",
+    "cip.srv.engineNote": "We recently opened a new operating site for work on inboard marine engines.",
+    "cip.how.1t": "Tell us about your boat",
+    "cip.how.1d": "Type, builder, model, year and length. If we know the model, the length fills itself in.",
+    "cip.how.2t": "Choose a package",
+    "cip.how.2d": "Base, Complete or Premium: from the wash with antifouling up to structural repairs and osmosis treatment. What each includes is indicative.",
+    "cip.how.3t": "Tap the zones on the 3D model",
+    "cip.how.3d": "Turn the boat and pick the zones: underwater hull, topsides, transom, deck. The more zones you choose, the bigger the discount.",
+    "cip.how.4t": "Leave your contact details",
+    "cip.how.4d.h": "Send the request and get a code to check its status. <span class=\"ph\">Response time: to be confirmed.</span>",
+    "cip.how.cta": "Start with step 1",
+    "cip.int.lede": "Set the zones, the length and the package: the sentence tells you what the job starts from. For a closer estimate, pick the zones on the 3D model.",
+    "cip.int.disc.h": "The discount grows with every extra zone, up to a cap. <span class=\"ph\">Sample percentages.</span>",
+    "cip.int.pkg": "Three packages, from the simplest to the most complete.",
+    "cip.why.awards": "Awards",
+    "cip.why.ph.h": "<span class=\"ph\">Booth size and maximum boat length: to be confirmed with the workshop.</span>",
+    "cip.photo": "PHOTO · yard / boat in progress",
+    "cip.con.lede": "The workshop is in Olmo di Martellago, in the province of Venice.",
+    "cip.hero.cta": "Get a quote",
+    "cip.hero.cta2": "See the packages",
+    "cip.band.home": "Boat maintenance",
+    "cip.band.quote": "Boat quote",
+    "cip.bc.home": "Home",
+    "cip.bc.boats": "Boats",
+    "cip.hero.p1": "Your boat is a precious asset, and to keep it performing well for a long time, regular maintenance is essential.",
+    "cip.hero.p2": "We work on boats both above the waterline (topsides) and below it (underwater hull). Describe your boat, tap the zones on the 3D model and read an estimate straight away.",
+    "cip.hero.why": "Why choose us?",
+    "cip.hero.why1": "Experience and expertise",
+    "cip.hero.why2": "High-quality products",
+    "cip.hero.why3": "Personalised service",
+    "cip.srv.title": "Our services",
+    "cip.srv.lede": "We work on boats both on the topsides (above the waterline) and on the underwater hull.",
+    "cip.srv.hull": "Hull and deck maintenance",
+    "cip.srv.engine": "Engine maintenance",
+    "cip.why.lede": "Officina Carrozzeria Cipressina S.R.L. is a repair centre for cars and other vehicles, and also works on boats.",
+    "cip.why.equip": "Equipment",
+    "cip.why.f1": "Paint oven and drying booth",
+    "cip.why.f2": "3 preparation zones",
+    "cip.why.f3": "4 tintometers (paint mixing units)",
+    "cip.why.f4": "2 electronic colorimeters",
+    "cip.faq.title": "Frequently asked questions",
+    "cip.fab": "At your service"
+  },
+  "es": {
+    "cip.srv.h1": "Lavado completo y pulido",
+    "cip.srv.h2": "Repintado y reparaciones",
+    "cip.srv.h3": "Aplicación de antiincrustante",
+    "cip.srv.h4": "Reparación de grietas o daños estructurales",
+    "cip.srv.h5": "Revisión y mantenimiento de los accesorios exteriores",
+    "cip.srv.e1": "Revisión y cambio de aceite",
+    "cip.srv.e2": "Limpieza del sistema de refrigeración",
+    "cip.srv.e3": "Revisión y limpieza de motores de inyección diésel y gasolina",
+    "cip.srv.e4": "Sustitución de los filtros de combustible y aire",
+    "cip.srv.e5": "Inspección de la correa de transmisión",
+    "cip.srv.e6": "Verificación del sistema eléctrico y de las baterías",
+    "cip.srv.engineNote": "Hace poco hemos abierto una nueva sede operativa para intervenir en motores náuticos intraborda.",
+    "cip.how.1t": "Cuéntanos tu barco",
+    "cip.how.1d": "Tipo, astillero, modelo, año y eslora. Si conocemos el modelo, la eslora se rellena sola.",
+    "cip.how.2t": "Elige el paquete",
+    "cip.how.2d": "Base, Completo o Premium: desde el lavado con antiincrustante hasta las reparaciones estructurales y el tratamiento de ósmosis. La composición es orientativa.",
+    "cip.how.3t": "Toca las zonas en el modelo 3D",
+    "cip.how.3d": "Gira el barco y elige las zonas: obra viva, costados, espejo de popa, cubierta. Cuantas más zonas elijas, mayor será el descuento.",
+    "cip.how.4t": "Déjanos tus datos de contacto",
+    "cip.how.4d.h": "Envías la solicitud y recibes un código para consultar su estado. <span class=\"ph\">Plazo de respuesta: por confirmar.</span>",
+    "cip.how.cta": "Empieza por el paso 1",
+    "cip.int.lede": "Ajusta las zonas, la eslora y el paquete: la frase te dice desde cuánto empieza la intervención. Para una estimación más precisa, elige las zonas en el modelo 3D.",
+    "cip.int.disc.h": "El descuento crece con cada zona añadida, hasta un máximo. <span class=\"ph\">Porcentajes de ejemplo.</span>",
+    "cip.int.pkg": "Tres paquetes, del más sencillo al más completo.",
+    "cip.why.awards": "Reconocimientos",
+    "cip.why.ph.h": "<span class=\"ph\">Medidas de la cabina y eslora máxima del barco: por confirmar con el taller.</span>",
+    "cip.photo": "FOTO · astillero / barco en obras",
+    "cip.con.lede": "El taller está en Olmo di Martellago, en la provincia de Venecia.",
+    "cip.hero.cta": "Pide presupuesto",
+    "cip.hero.cta2": "Ver los paquetes",
+    "cip.band.home": "Mantenimiento de barcos",
+    "cip.band.quote": "Presupuesto para tu barco",
+    "cip.bc.home": "Inicio",
+    "cip.bc.boats": "Barcos",
+    "cip.hero.p1": "Tu barco es un bien valioso y, para garantizar su larga vida y su mejor rendimiento, es fundamental realizar un mantenimiento regular.",
+    "cip.hero.p2": "Intervenimos en barcos tanto en la obra muerta como en la obra viva. Cuéntanos tu barco, toca las zonas en el modelo 3D y lee enseguida una estimación.",
+    "cip.hero.why": "¿Por qué elegirnos?",
+    "cip.hero.why1": "Experiencia y competencia",
+    "cip.hero.why2": "Productos de alta calidad",
+    "cip.hero.why3": "Servicio personalizado",
+    "cip.srv.title": "Nuestros servicios",
+    "cip.srv.lede": "Intervenimos en barcos tanto en la obra muerta como en la obra viva.",
+    "cip.srv.hull": "Mantenimiento de casco y cubierta",
+    "cip.srv.engine": "Mantenimiento del motor",
+    "cip.why.lede": "Officina Carrozzeria Cipressina S.R.L. es un centro de reparación de coches y otros vehículos, y también interviene en barcos.",
+    "cip.why.equip": "Equipamiento",
+    "cip.why.f1": "Horno de pintura y cabina de secado",
+    "cip.why.f2": "3 zonas de preparación",
+    "cip.why.f3": "4 tintómetros",
+    "cip.why.f4": "2 colorímetros electrónicos",
+    "cip.faq.title": "Preguntas frecuentes",
+    "cip.fab": "Estoy a tu disposición"
+  },
+  "fr": {
+    "cip.srv.h1": "Lavage complet et polissage",
+    "cip.srv.h2": "Remise en peinture et réparations",
+    "cip.srv.h3": "Application d'antifouling",
+    "cip.srv.h4": "Réparation des fissures ou des dégâts structurels",
+    "cip.srv.h5": "Contrôle et entretien des accessoires extérieurs",
+    "cip.srv.e1": "Contrôle et vidange de l'huile",
+    "cip.srv.e2": "Nettoyage du circuit de refroidissement",
+    "cip.srv.e3": "Contrôle et nettoyage des moteurs à injection diesel et essence",
+    "cip.srv.e4": "Remplacement des filtres à carburant et à air",
+    "cip.srv.e5": "Inspection de la courroie de transmission",
+    "cip.srv.e6": "Vérification du système électrique et des batteries",
+    "cip.srv.engineNote": "Nous avons récemment ouvert un nouveau site opérationnel pour les interventions sur moteurs marins inboard.",
+    "cip.how.1t": "Décrivez votre bateau",
+    "cip.how.1d": "Type, chantier, modèle, année et longueur. Si nous connaissons le modèle, la longueur se remplit seule.",
+    "cip.how.2t": "Choisissez la formule",
+    "cip.how.2d": "Base, Complète ou Premium : du lavage avec antifouling jusqu'aux réparations structurelles et au traitement de l'osmose. Le contenu est indicatif.",
+    "cip.how.3t": "Touchez les zones sur le modèle 3D",
+    "cip.how.3d": "Faites tourner le bateau et choisissez les zones : œuvres vives, flancs, tableau arrière, pont. Plus vous en choisissez, plus la remise augmente.",
+    "cip.how.4t": "Laissez-nous vos coordonnées",
+    "cip.how.4d.h": "Vous envoyez la demande et recevez un code pour en suivre l'état. <span class=\"ph\">Délai de réponse : à confirmer.</span>",
+    "cip.how.cta": "Commencez par l'étape 1",
+    "cip.int.lede": "Réglez les zones, la longueur et la formule : la phrase vous indique le prix de départ. Pour une estimation plus précise, choisissez les zones sur le modèle 3D.",
+    "cip.int.disc.h": "La remise augmente à chaque zone supplémentaire, jusqu'à un plafond. <span class=\"ph\">Pourcentages d'exemple.</span>",
+    "cip.int.pkg": "Trois formules, de la plus simple à la plus complète.",
+    "cip.why.awards": "Distinctions",
+    "cip.why.ph.h": "<span class=\"ph\">Dimensions de la cabine et longueur maximale du bateau : à confirmer avec l'atelier.</span>",
+    "cip.photo": "PHOTO · chantier / bateau en cours de travaux",
+    "cip.con.lede": "L'atelier est à Olmo di Martellago, dans la province de Venise.",
+    "cip.hero.cta": "Demander un devis",
+    "cip.hero.cta2": "Voir les formules",
+    "cip.band.home": "Entretien des bateaux",
+    "cip.band.quote": "Devis bateau",
+    "cip.bc.home": "Accueil",
+    "cip.bc.boats": "Bateaux",
+    "cip.hero.p1": "Votre bateau est un bien précieux et, pour garantir sa longévité et ses meilleures performances, un entretien régulier est indispensable.",
+    "cip.hero.p2": "Nous intervenons sur les bateaux, aussi bien sur les œuvres mortes que sur les œuvres vives. Décrivez votre bateau, touchez les zones sur le modèle 3D et lisez aussitôt une estimation.",
+    "cip.hero.why": "Pourquoi nous choisir ?",
+    "cip.hero.why1": "Expérience et compétence",
+    "cip.hero.why2": "Produits de haute qualité",
+    "cip.hero.why3": "Service personnalisé",
+    "cip.srv.title": "Nos services",
+    "cip.srv.lede": "Nous intervenons sur les bateaux, aussi bien sur les œuvres mortes que sur les œuvres vives.",
+    "cip.srv.hull": "Entretien de la coque et du pont",
+    "cip.srv.engine": "Entretien du moteur",
+    "cip.why.lede": "Officina Carrozzeria Cipressina S.R.L. est un centre de réparation pour voitures et autres véhicules, qui intervient aussi sur les bateaux.",
+    "cip.why.equip": "Équipement",
+    "cip.why.f1": "Four de peinture et cabine de séchage",
+    "cip.why.f2": "3 zones de préparation",
+    "cip.why.f3": "4 machines à teinter",
+    "cip.why.f4": "2 colorimètres électroniques",
+    "cip.faq.title": "Questions fréquentes",
+    "cip.fab": "À votre disposition"
+  }
+};
+
+/* 3D theme: light water, green selection, blue hover, white topsides.
+   heroSpinPitch: the camera sits slightly below the waterline so the
+   antifouling shows together with the topsides (the hero has no water). */
+window.CIPRESSINA_CONFIG = (function () {
+  var theme = { water: "#cfe3f3", select: "#009642", hover: "#007bff", topsides: "#ffffff", bottom: "#1d3b8f", deck: "#e6ebf0" };
+  return { theme: theme, heroTheme: theme, heroSpinPitch: -10 };
+})();
+</script>
+
+<a class="skip-link" href="#contenuto" data-skip data-i18n="skip">Vai al contenuto</a>
+<div id="draftRibbon" role="note" data-i18n="ribbon">Bozza di design · prezzi, foto e alcuni dati sono segnaposto</div>
+
+<header id="siteHeader">
+  <div class="hdr">
+    <a class="logo" href="#" data-i18n-attr="aria-label:nav.home" aria-label="Cipressina Barche">
+      <!-- logo ricostruito, usare file originale -->
+      <svg viewBox="0 0 236 56" role="img" aria-hidden="true" focusable="false">
+        <path class="logo__blue" d="M30 4A24 24 0 0 0 30 52A30 30 0 0 1 30 4Z"/>
+        <path class="logo__green" d="M30 4A24 24 0 0 0 30 52A30 30 0 0 1 30 4Z" transform="translate(14 0)"/>
+        <text class="logo__word" x="68" y="21" font-size="10.5" textLength="162" lengthAdjust="spacingAndGlyphs">OFFICINA CARROZZERIA</text>
+        <text class="logo__word" x="67" y="48" font-size="29" textLength="164" lengthAdjust="spacingAndGlyphs">CIPRESSINA</text>
+      </svg>
+    </a>
+    <span class="hdr__spacer"></span>
+    <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+      <a href="#servizi" data-i18n="nav.servizi">Servizi</a>
+      <a href="#come-funziona" data-i18n="nav.come">Come funziona</a>
+      <a href="#interventi" data-i18n="nav.interventi">Interventi</a>
+      <a href="#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+      <a href="#contatti" data-i18n="nav.contatti">Contatti</a>
+    </nav>
+    <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false"><span class="flag flag-it" aria-hidden="true"></span><span>Italiano</span></button>
+        <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false"><span class="flag flag-en" aria-hidden="true"></span><span>English</span></button>
+        <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false"><span class="flag flag-es" aria-hidden="true"></span><span>Español</span></button>
+        <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false"><span class="flag flag-fr" aria-hidden="true"></span><span>Français</span></button>
+      </div></div>
+    <a class="btn" href="#preventivo" data-i18n="nav.quote">Preventivo</a>
+    <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel" aria-label="Apri il menu"></button>
+  </div>
+  <div id="navPanel">
+    <a href="#servizi" data-i18n="nav.servizi">Servizi</a>
+    <a href="#come-funziona" data-i18n="nav.come">Come funziona</a>
+    <a href="#interventi" data-i18n="nav.interventi">Interventi</a>
+    <a href="#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+    <a href="#contatti" data-i18n="nav.contatti">Contatti</a>
+    <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
+    <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false"><span class="flag flag-it" aria-hidden="true"></span><span>Italiano</span></button>
+        <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false"><span class="flag flag-en" aria-hidden="true"></span><span>English</span></button>
+        <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false"><span class="flag flag-es" aria-hidden="true"></span><span>Español</span></button>
+        <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false"><span class="flag flag-fr" aria-hidden="true"></span><span>Français</span></button>
+      </div></div>
+    <a class="btn" href="#preventivo" data-i18n="nav.quote">Preventivo</a>
+  </div>
+</header>
+
+<div id="contenuto" tabindex="-1">
+
+<!-- ========================= VIEW: HOME ========================= -->
+<main id="view-home">
+  <div class="band">
+    <h1 class="band__title" tabindex="-1" data-i18n="cip.band.home">Manutenzione Barche</h1>
+    <p class="crumbs"><a href="#"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="cip.bc.boats">Barche</span></p>
+  </div>
+
+  <section id="hero" class="container intro">
+    <div class="intro__text">
+      <p class="lead" data-i18n="cip.hero.p1"></p>
+      <p data-i18n="cip.hero.p2"></p>
+      <p class="intro__cta">
+        <a class="btn" href="#preventivo" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
+        <a class="btn btn--outline" href="#interventi" data-i18n="cip.hero.cta2">Vedi i pacchetti</a>
+      </p>
+      <h2 data-i18n="cip.hero.why">Perché scegliere noi?</h2>
+      <ul class="tick-list">
+        <li data-i18n="cip.hero.why1"></li>
+        <li data-i18n="cip.hero.why2"></li>
+        <li data-i18n="cip.hero.why3"></li>
+      </ul>
+    </div>
+
+    <div class="intro__boat">
+      <div id="heroBoat" data-boat-type="cabinato">
+        <svg class="hero-poster" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" role="img" data-i18n-attr="aria-label:hero.boatAlt">
+          <path class="p-top" d="M50 118H350L334 146H66Z"/>
+          <path d="M66 146H334L314 176H86Z" style="fill:var(--hero-bottom,#1d3b8f)"/>
+          <path class="p-cab" d="M122 118L146 84H262L296 118Z"/>
+          <path class="p-glass" d="M158 94H214L228 112H146Z"/>
+        </svg>
+        <canvas id="heroCanvas"></canvas>
+      </div>
+      <p id="heroSwatchLabel" class="label" data-i18n="hero.swatchLabel"></p>
+      <div id="heroSwatches" role="radiogroup" aria-labelledby="heroSwatchLabel"></div>
+      <p class="fan-caption" aria-live="polite">
+        <span id="heroSwatchChip"></span>
+        <span class="sr-only" data-i18n="hero.swatchChosen"></span>
+        <strong id="heroSwatchName"></strong>
+      </p>
+      <p class="note" data-i18n="hero.swatchNote"></p>
+    </div>
+  </section>
+
+  <!-- ===== Servizi ===== -->
+  <section id="servizi" class="sec">
+    <div class="container">
+      <h2 data-i18n="cip.srv.title">I nostri servizi</h2>
+      <p class="lede" data-i18n="cip.srv.lede"></p>
+      <div class="cols" style="margin-top:24px">
+        <div>
+          <h3 data-i18n="cip.srv.hull">Manutenzione scafo e coperta</h3>
+          <ul class="bul">
+            <li data-i18n="cip.srv.h1"></li>
+            <li data-i18n="cip.srv.h2"></li>
+            <li data-i18n="cip.srv.h3"></li>
+            <li data-i18n="cip.srv.h4"></li>
+            <li data-i18n="cip.srv.h5"></li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i18n="cip.srv.engine">Manutenzione del motore</h3>
+          <ul class="bul">
+            <li data-i18n="cip.srv.e1"></li>
+            <li data-i18n="cip.srv.e2"></li>
+            <li data-i18n="cip.srv.e3"></li>
+            <li data-i18n="cip.srv.e4"></li>
+            <li data-i18n="cip.srv.e5"></li>
+            <li data-i18n="cip.srv.e6"></li>
+          </ul>
+          <p class="srv-note" data-i18n="cip.srv.engineNote"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Come funziona ===== -->
+  <section id="come-funziona" class="sec sec--panel">
+    <div class="container">
+      <h2 data-i18n="nav.come">Come funziona</h2>
+      <ol class="steps">
+        <li><h3 data-i18n="cip.how.1t">Racconta la barca</h3><p data-i18n="cip.how.1d"></p></li>
+        <li><h3 data-i18n="cip.how.2t">Scegli il pacchetto</h3><p data-i18n="cip.how.2d"></p></li>
+        <li><h3 data-i18n="cip.how.3t">Tocca le zone sul modello 3D</h3><p data-i18n="cip.how.3d"></p></li>
+        <li><h3 data-i18n="cip.how.4t">Lasciaci i contatti</h3><p data-i18n-html="cip.how.4d.h"></p></li>
+      </ol>
+      <p class="steps__end"><a class="btn" href="#preventivo" data-i18n="cip.how.cta">Inizia dal passo 1</a></p>
+    </div>
+  </section>
+
+  <!-- ===== Interventi ===== -->
+  <section id="interventi" class="sec">
+    <div class="container">
+      <h2 data-i18n="nav.interventi">Interventi</h2>
+      <p class="lede" data-i18n="cip.int.lede"></p>
+
+      <!-- The price sentence. Static content is the true default result
+           (2 zones, 8 m, Pacchetto Completo) so the page is right without JS. -->
+      <form id="quoteLine" class="qline" novalidate>
+        <p class="qline__s">
+          <span data-i18n="ql.pre">Intervenire su</span>
+          <label class="sr-only" for="qlCount" data-i18n="ql.countLabel">Numero di zone</label>
+          <select id="qlCount">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <span id="qlWord">zone</span>
+          <span data-i18n="ql.mid1">di una barca lunga</span>
+          <label class="sr-only" for="qlLoa" data-i18n="ql.loaLabel">Lunghezza della barca</label>
+          <select id="qlLoa">
+            <option value="5">5 m</option>
+            <option value="6">6 m</option>
+            <option value="8" selected>8 m</option>
+            <option value="10">10 m</option>
+            <option value="12">12 m</option>
+            <option value="15">15 m</option>
+          </select>
+          <span data-i18n="ql.afterLoa"></span>
+          <span data-i18n="ql.mid2">con il</span>
+          <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
+          <select id="qlTier">
+            <option value="base" data-i18n="tier.base.name">Pacchetto Base</option>
+            <option value="completo" data-i18n="tier.completo.name" selected>Pacchetto Completo</option>
+            <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
+          </select>
+          <span data-i18n="ql.post">costa da</span>
+          <span class="ph"><output id="qlTotal">1.292 €</output></span>
+        </p>
+        <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+        <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
+      </form>
+
+      <div class="disc">
+        <h3 data-i18n="disc.title">Più zone, meno paghi</h3>
+        <p class="disc__lede" data-i18n-html="cip.int.disc.h"></p>
+        <ul id="discountList">
+          <li class="discount-step"><span class="discount-step__zones">2 zone</span> <strong class="discount-step__rate">5%</strong></li>
+          <li class="discount-step"><span class="discount-step__zones">3 zone</span> <strong class="discount-step__rate">7%</strong></li>
+          <li class="discount-step"><span class="discount-step__zones">4 zone</span> <strong class="discount-step__rate">9%</strong></li>
+          <li class="discount-step"><span class="discount-step__zones">5 o più zone</span> <strong class="discount-step__rate">10%</strong></li>
+        </ul>
+      </div>
+
+      <h3 class="pkgs-title" data-i18n="cip.int.pkg">Tre pacchetti, dal più semplice al più completo.</h3>
+      <div class="pkgs">
+        <article class="pkg">
+          <h3 data-i18n="tier.base.name">Pacchetto Base</h3>
+          <p class="pkg__price"><span class="ph" data-tier-from="base">da 60 € al metro</span></p>
+          <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
+          <a class="btn btn--outline" href="#preventivo" data-tier-choose="base" data-i18n="tier.choose">Scegli questo pacchetto</a>
+        </article>
+        <article class="pkg pkg--c">
+          <p class="pkg__badge" data-i18n-html="tier.badge.h"></p>
+          <h3 data-i18n="tier.completo.name">Pacchetto Completo</h3>
+          <p class="pkg__price"><span class="ph" data-tier-from="completo">da 85 € al metro</span></p>
+          <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
+          <a class="btn" href="#preventivo" data-tier-choose="completo" data-i18n="tier.choose">Scegli questo pacchetto</a>
+        </article>
+        <article class="pkg">
+          <h3 data-i18n="tier.premium.name">Pacchetto Premium</h3>
+          <p class="pkg__price"><span class="ph" data-tier-from="premium">da 120 € al metro</span></p>
+          <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
+          <a class="btn btn--outline" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose">Scegli questo pacchetto</a>
+        </article>
+      </div>
+      <p class="pkgs__note note" data-i18n-html="tier.note.h"></p>
+    </div>
+  </section>
+
+  <!-- ===== Chi siamo ===== -->
+  <section id="chi-siamo" class="sec sec--panel">
+    <div class="container about">
+      <div>
+        <h2 data-i18n="nav.chi">Chi siamo</h2>
+        <p class="lede" data-i18n="cip.why.lede"></p>
+        <h3 data-i18n="cip.why.equip">Attrezzature</h3>
+        <ul class="bul">
+          <li data-i18n="cip.why.f1"></li>
+          <li data-i18n="cip.why.f2"></li>
+          <li data-i18n="cip.why.f3"></li>
+          <li data-i18n="cip.why.f4"></li>
+        </ul>
+        <p class="why__ph" data-i18n-html="cip.why.ph.h"></p>
+        <h3 data-i18n="cip.why.awards">Riconoscimenti</h3>
+        <ul class="awards">
+          <li>Mercurio d'oro</li>
+          <li>Alfiere Economico</li>
+          <li>Venezia che Lavora</li>
+          <li>Lavoro e Progresso</li>
+        </ul>
+      </div>
+      <div class="photo" role="img" aria-label="FOTO">
+        <p class="photo__label" data-i18n="cip.photo">FOTO · cantiere / barca in lavorazione</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="domande" class="sec">
+    <div class="container faq">
+      <h2 data-i18n="cip.faq.title">Domande frequenti</h2>
+      <details><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q4"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q5"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q6"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q7"></summary><p data-i18n-html="faq.a.h"></p></details>
+      <details><summary data-i18n="faq.q8"></summary><p data-i18n-html="faq.a.h"></p></details>
+    </div>
+  </section>
+
+  <!-- ===== Contatti ===== -->
+  <section id="contatti" class="sec sec--panel">
+    <div class="container contacts">
+      <h2 data-i18n="nav.contatti">Contatti</h2>
+      <p class="lede" data-i18n="cip.con.lede"></p>
+      <dl>
+        <div class="row">
+          <dt data-i18n="contact.address">Indirizzo</dt>
+          <dd>
+            <span id="contactAddress">Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</span>
+            <button type="button" data-copy="#contactAddress" data-i18n="btn.copy">Copia</button><br>
+            <a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=Via+Nazario+Sauro+15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map">Apri in Google Maps</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt data-i18n="contact.phone">Telefono</dt>
+          <dd><span id="contactPhone">041 907941</span>
+            <button type="button" data-copy="#contactPhone" data-i18n="btn.copy">Copia</button></dd>
+        </div>
+        <div class="row">
+          <dt data-i18n="contact.email">Email</dt>
+          <dd><span id="contactEmail">info@carrozzeriacipressina.it</span>
+            <button type="button" data-copy="#contactEmail" data-i18n="btn.copy">Copia</button></dd>
+        </div>
+        <div class="row">
+          <dt data-i18n="contact.whatsapp">WhatsApp</dt>
+          <dd data-i18n-html="contact.whatsappTbc.h"></dd>
+        </div>
+        <div class="row">
+          <dt data-i18n="contact.hours">Orari</dt>
+          <dd data-i18n-html="contact.hoursTbc.h"></dd>
+        </div>
+      </dl>
+      <p class="contacts__cta">
+        <a class="btn" href="#preventivo" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
+        <a class="link-arrow" href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<!-- ========================= VIEW: WIZARD ========================= -->
+<section id="view-wizard" hidden>
+  <div class="band">
+    <p class="band__title" data-i18n="cip.band.quote">Preventivo barca</p>
+    <p class="crumbs"><a href="#"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="cip.band.quote">Preventivo barca</span></p>
+  </div>
+
+  <nav class="wiz-progress" data-i18n-attr="aria-label:wiz.progress">
+    <ol id="wizProgress">
+      <li data-step="1"><span data-i18n="prog.1">Barca</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="2"><span data-i18n="prog.2">Intervento</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="3"><span data-i18n="prog.3">Zone</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="4"><span data-i18n="prog.4">Contatti</span><span class="sr-only" data-progress-sr></span></li>
+    </ol>
+  </nav>
+
+  <div class="page">
+
+    <!-- STEP 1 -->
+    <form class="step" data-step="1" novalidate hidden>
+      <h1 data-i18n="step1.title">Dati della barca</h1>
+      <p data-i18n="step1.sub"></p>
+
+      <fieldset>
+        <legend data-i18n="step1.cardBoat">Barca</legend>
+        <div class="fields">
+          <div class="field wide">
+            <span id="boatTypeLabel" class="flabel" data-i18n="fld.boatType"></span>
+            <div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="gommone" aria-labelledby="typeName-gommone" aria-describedby="typeSub-gommone">
+                <span class="type-media"><img data-type-thumb="gommone" src="models/thumbs/gommone.webp" alt=""><span data-type-icon="gommone"></span></span>
+                <span id="typeName-gommone" class="type-name" data-i18n="type.gommone"></span>
+                <span id="typeSub-gommone" class="type-sub" data-i18n="type.sub.gommone"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="open" aria-labelledby="typeName-open" aria-describedby="typeSub-open">
+                <span class="type-media"><img data-type-thumb="open" src="models/thumbs/open.webp" alt=""><span data-type-icon="open"></span></span>
+                <span id="typeName-open" class="type-name" data-i18n="type.open"></span>
+                <span id="typeSub-open" class="type-sub" data-i18n="type.sub.open"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="cabinato" aria-labelledby="typeName-cabinato" aria-describedby="typeSub-cabinato">
+                <span class="type-media"><img data-type-thumb="cabinato" src="models/thumbs/cabinato.webp" alt=""><span data-type-icon="cabinato"></span></span>
+                <span id="typeName-cabinato" class="type-name" data-i18n="type.cabinato"></span>
+                <span id="typeSub-cabinato" class="type-sub" data-i18n="type.sub.cabinato"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="flybridge" aria-labelledby="typeName-flybridge" aria-describedby="typeSub-flybridge">
+                <span class="type-media"><img data-type-thumb="flybridge" src="models/thumbs/flybridge.webp" alt=""><span data-type-icon="flybridge"></span></span>
+                <span id="typeName-flybridge" class="type-name" data-i18n="type.flybridge"></span>
+                <span id="typeSub-flybridge" class="type-sub" data-i18n="type.sub.flybridge"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="vela" aria-labelledby="typeName-vela" aria-describedby="typeSub-vela">
+                <span class="type-media"><img data-type-thumb="vela" src="models/thumbs/vela.webp" alt=""><span data-type-icon="vela"></span></span>
+                <span id="typeName-vela" class="type-name" data-i18n="type.vela"></span>
+                <span id="typeSub-vela" class="type-sub" data-i18n="type.sub.vela"></span>
+              </button>
+            </div>
+            <p id="boatTypeHint" class="field__hint" data-i18n="type.note"></p>
+            <p id="boatTypeError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="builder" data-i18n="fld.builder"></label>
+            <input id="builder" type="text" list="builderList" autocomplete="off">
+            <datalist id="builderList"></datalist>
+            <p id="builderHint" class="field__hint" data-i18n="hint.builder"></p>
+            <p id="builderError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="model" data-i18n="fld.model"></label>
+            <input id="model" type="text" list="modelList" autocomplete="off">
+            <datalist id="modelList"></datalist>
+            <p id="modelHint" class="field__hint" data-i18n="hint.model"></p>
+            <a id="modelSource" href="#" target="_blank" rel="noopener" hidden></a>
+            <p id="modelAutofill" class="field__hint" role="status" aria-live="polite"></p>
+            <p id="modelError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="year" data-i18n="fld.year"></label>
+            <input id="year" type="text" inputmode="numeric" autocomplete="off">
+            <p id="yearError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="loa" data-i18n="fld.loa"></label>
+            <div class="affixed"><input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix">m</span></div>
+            <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
+            <p id="loaError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field wide">
+            <span id="registeredLabel" class="flabel" data-i18n="fld.registered"></span>
+            <div id="registered" role="radiogroup" aria-labelledby="registeredLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="registrata" data-i18n="opt.registrata"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="natante" data-i18n="opt.natante"></button>
+            </div>
+            <p id="registeredNote" role="status" hidden data-i18n-html="note.natante10.h"></p>
+            <p id="registeredError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field" hidden>
+            <label for="registration" data-i18n="fld.registration"></label>
+            <input id="registration" type="text" autocapitalize="characters" autocomplete="off">
+            <p id="registrationHint" class="field__hint" data-i18n-html="hint.registration.h"></p>
+            <p id="registrationError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field wide">
+            <span id="berthKindLabel" class="flabel" data-i18n="fld.berthKind"></span>
+            <div id="berthKind" role="radiogroup" aria-labelledby="berthKindLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="acqua" data-i18n="opt.berth.acqua"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="terra" data-i18n="opt.berth.terra"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="carrello" data-i18n="opt.berth.carrello"></button>
+            </div>
+            <p id="berthKindError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="location"><span data-i18n="fld.location"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="location" type="text">
+            <p id="locationHint" class="field__hint" data-i18n="hint.location"></p>
+          </div>
+
+          <div class="field">
+            <label for="engineHours"><span data-i18n="fld.engineHours"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="engineHours" type="text" inputmode="numeric" autocomplete="off">
+            <p id="engineHoursHint" class="field__hint" data-i18n="hint.engineHours"></p>
+            <p id="engineHoursError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="boatName"><span data-i18n="fld.boatName"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="boatName" type="text">
+          </div>
+
+          <div class="field">
+            <label for="colorCode"><span data-i18n="fld.colorCode"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="colorCode" type="text">
+            <p id="colorCodeHint" class="field__hint" data-i18n-html="hint.colorCode.h"></p>
+          </div>
+
+          <div id="boatSummary" hidden>
+            <span class="type-media"><img id="boatSummaryThumb" data-type-thumb="" alt="" hidden><span id="boatSummaryIcon"></span></span>
+            <span id="boatSummaryText"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend data-i18n="step1.cardOwner">Proprietario</legend>
+        <div class="fields">
+          <div class="field">
+            <label for="firstName" data-i18n="fld.firstName"></label>
+            <input id="firstName" type="text" autocomplete="given-name">
+            <p id="firstNameError" class="field__error" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="lastName" data-i18n="fld.lastName"></label>
+            <input id="lastName" type="text" autocomplete="family-name">
+            <p id="lastNameError" class="field__error" role="alert" hidden></p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <!-- STEP 2 -->
+    <section class="step" data-step="2" hidden>
+      <h1 data-i18n="step2.title">Livello di intervento</h1>
+      <p data-i18n="step2.sub"></p>
+      <div class="field">
+        <div id="tier" role="radiogroup" data-i18n-attr="aria-label:step2.title">
+          <button type="button" role="radio" aria-checked="false" data-value="base">
+            <strong data-i18n="tier.base.name"></strong>
+            <span class="ph" data-tier-from="base"></span>
+            <span class="t-item" data-i18n="tier.base.i1"></span>
+            <span class="t-item" data-i18n="tier.base.i2"></span>
+          </button>
+          <button type="button" role="radio" aria-checked="false" data-value="completo">
+            <strong data-i18n="tier.completo.name"></strong>
+            <span class="t-badge" data-i18n-html="tier.badge.h"></span>
+            <span class="ph" data-tier-from="completo"></span>
+            <span class="t-item" data-i18n="tier.completo.i1"></span>
+            <span class="t-item" data-i18n="tier.completo.i2"></span>
+          </button>
+          <button type="button" role="radio" aria-checked="false" data-value="premium">
+            <strong data-i18n="tier.premium.name"></strong>
+            <span class="ph" data-tier-from="premium"></span>
+            <span class="t-item" data-i18n="tier.premium.i1"></span>
+            <span class="t-item" data-i18n="tier.premium.i2"></span>
+            <span class="t-item" data-i18n="tier.premium.i3"></span>
+          </button>
+        </div>
+        <p id="tierError" class="field__error" role="alert" hidden></p>
+      </div>
+      <p class="tier-note" data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" data-step="3" hidden>
+      <h1 data-i18n="step3.title">Quali zone?</h1>
+      <p data-i18n="step3.sub"></p>
+
+      <div class="step3">
+        <div class="step3__main">
+          <div id="boatView3d">
+            <div id="boatCanvasWrap">
+              <canvas id="boatCanvas" data-i18n-attr="aria-label:viewer.label"></canvas>
+              <span id="zoneHover" aria-hidden="true"></span>
+              <div id="boatOverlay">
+                <p id="boatLoading" data-i18n="viewer.loading"></p>
+                <p id="boatError" role="alert" hidden></p>
+              </div>
+            </div>
+            <div class="viewer-tools">
+              <div id="boatViewButtons" role="group" data-i18n-attr="aria-label:viewer.views">
+                <button type="button" data-view="prua" aria-pressed="false" data-i18n="view.prua"></button>
+                <button type="button" data-view="poppa" aria-pressed="false" data-i18n="view.poppa"></button>
+                <button type="button" data-view="sinistra" aria-pressed="false" data-i18n="view.sinistra"></button>
+                <button type="button" data-view="destra" aria-pressed="false" data-i18n="view.destra"></button>
+                <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
+                <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
+              </div>
+              <button type="button" id="waterToggle"></button>
+            </div>
+            <p class="viewer-hint" data-i18n="viewer.hint"></p>
+          </div>
+
+          <div id="antifoulingBlock" hidden>
+            <p id="antifoulingLabel" class="flabel"><span data-i18n="af.label"></span> <span data-i18n="fld.optional"></span></p>
+            <div id="antifoulingSwatches" role="radiogroup" aria-labelledby="antifoulingLabel"></div>
+            <p id="antifoulingCaption" class="fan-caption" hidden><span id="antifoulingChip" class="swatch-chip"></span> <span class="sr-only" data-i18n="hero.swatchChosen"></span> <strong id="antifoulingName"></strong></p>
+            <p class="note" data-i18n-html="af.note.h"></p>
+          </div>
+
+          <details id="zonesPicker">
+            <summary data-i18n="zones.picker">Scegli le zone da un elenco</summary>
+            <fieldset>
+              <legend data-i18n="zones.pickerLegend"></legend>
+              <div id="zonesChecklist"></div>
+            </fieldset>
+          </details>
+        </div>
+
+        <aside id="zonesSummary" tabindex="-1">
+          <h2 data-i18n="sum.title">Zone selezionate</h2>
+          <p id="zonesCount"></p>
+          <p id="zonesEmpty" data-i18n="sum.empty"></p>
+          <ul id="zonesList"></ul>
+          <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
+          <p id="zonesNudge" hidden></p>
+          <div id="estimate" hidden>
+            <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
+            <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
+            <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
+            <p id="estNote"></p>
+          </div>
+          <p class="est-ph" data-i18n-html="sum.placeholder.h"></p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <form class="step" data-step="4" novalidate hidden>
+      <h1 data-i18n="step4.title">Contatti</h1>
+      <p data-i18n-html="step4.sub.h"></p>
+
+      <div class="fields">
+        <div class="field">
+          <label for="region" data-i18n="fld.region"></label>
+          <select id="region" autocomplete="off"></select>
+          <p id="regionError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="province" data-i18n="fld.province"></label>
+          <select id="province"></select>
+          <p id="provinceError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="provinceText" data-i18n="fld.province"></label>
+          <input id="provinceText" type="text" autocomplete="off">
+          <p id="provinceTextError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="country" data-i18n="fld.country"></label>
+          <input id="country" type="text" autocomplete="country-name">
+          <p id="countryError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="phone" data-i18n="fld.phone"></label>
+          <div class="affixed"><span class="affix">+39</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel-national"></div>
+          <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
+          <p id="phoneError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
+          <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
+          <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field wide">
+          <label for="email" data-i18n="fld.email"></label>
+          <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+          <p id="emailHint" class="field__hint" data-i18n="hint.email"></p>
+          <p id="emailError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field wide">
+          <label for="notes"><span data-i18n="fld.notes"></span> <span data-i18n="fld.optional"></span></label>
+          <textarea id="notes" rows="4" data-i18n-attr="placeholder:ph.notes"></textarea>
+        </div>
+      </div>
+      <p class="note" style="margin-top:28px" data-i18n-html="privacy.h"></p>
+    </form>
+
+    <!-- SUCCESS -->
+    <section id="success" hidden>
+      <h1 data-i18n="success.title">Richiesta inviata!</h1>
+      <p class="lede" data-i18n="success.lede"></p>
+      <p class="label" style="margin-top:32px"><span data-i18n="success.code"></span> <span class="ph" data-i18n="success.demo"></span></p>
+      <div class="code">
+        <strong id="successCode"></strong>
+        <button type="button" id="successCopy" data-copy="#successCode" data-i18n="btn.copy">Copia</button>
+      </div>
+      <p class="note" data-i18n-html="success.demoNote.h"></p>
+      <div class="actions">
+        <a class="link-arrow" href="#stato" data-i18n="success.lookup">Verifica la tua richiesta</a>
+        <button type="button" id="resetBtn" data-i18n="btn.reset">Nuova richiesta</button>
+      </div>
+    </section>
+
+    <div id="wizardFoot">
+      <p id="stepHint" role="status" hidden></p>
+      <button type="button" id="stepBack" hidden data-i18n="btn.back">Indietro</button>
+      <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= VIEW: LOOKUP ========================= -->
+<section id="view-lookup" hidden>
+  <div class="band">
+    <h1 class="band__title" tabindex="-1" data-i18n="lookup.title">Verifica la tua richiesta</h1>
+    <p class="crumbs"><a href="#"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="lookup.title">Verifica la tua richiesta</span></p>
+  </div>
+  <div class="page">
+    <p data-i18n="lookup.sub"></p>
+    <form id="lookupForm" novalidate>
+      <label for="lookupId" data-i18n="lookup.label"></label>
+      <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+      <button type="submit" id="lookupSubmit" data-i18n="lookup.submit">Verifica</button>
+      <p id="lookupError" role="alert" hidden></p>
+    </form>
+    <div id="lookupResult" hidden>
+      <dl>
+        <dt data-i18n="lookup.res.code"></dt><dd id="resultId"></dd>
+        <dt data-i18n="lookup.res.boat"></dt><dd id="resultBoat"></dd>
+        <dt data-i18n="lookup.res.name"></dt><dd id="resultName"></dd>
+        <dt data-i18n="lookup.res.status"></dt><dd><span class="ph" id="resultStatus"></span></dd>
+      </dl>
+      <p class="note" data-i18n-html="lookup.demoNote.h"></p>
+    </div>
+    <p class="back"><a class="link-arrow" href="#" data-i18n="nav.home">Cipressina Barche</a></p>
+  </div>
+</section>
+
+</div><!-- /#contenuto -->
+
+<a id="waFab" class="fab" href="#contatti" data-i18n-attr="aria-label:fab.label" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.5A9.5 9.5 0 0 0 3.9 16.9L2.6 21.5l4.7-1.2A9.5 9.5 0 1 0 12 2.5Zm0 1.8a7.7 7.7 0 1 1-4 14.3l-.3-.2-2.7.7.7-2.6-.2-.3A7.7 7.7 0 0 1 12 4.3Zm-3 3.7c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.800 2.900 4.400 3.900 2.200.9 2.600.7 3.100.7.500 0 1.500-.6 1.700-1.200.2-.6.2-1.100.2-1.200-.1-.1-.3-.2-.6-.4l-1.800-.9c-.2-.1-.4-.1-.6.1l-.8 1c-.1.200-.3.200-.6.100-.3-.1-1.100-.4-2.100-1.300-.8-.7-1.300-1.500-1.400-1.800-.1-.3 0-.4.1-.5l.4-.5c.1-.1.200-.3.300-.4.100-.2 0-.3 0-.4l-.8-2c-.2-.5-.4-.4-.6-.4Z"/></svg>
+  <span data-i18n="cip.fab">Sono a tua disposizione</span>
+</a>
+
+<footer id="siteFooter">
+  <div class="in">
+    <p class="name">Officina Carrozzeria Cipressina S.R.L.</p>
+    <p><span data-i18n="foot.vat">P.IVA</span> IT00762770279 · Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</p>
+    <p class="credits"><span data-i18n="foot.models">Modelli 3D</span>: «Zodiac boat» di RedC130; «Freedom 325», «285 Conquest», «2002 Grand Banks», «Irwin 38» di BoatUS Foundation. Da <a href="https://sketchfab.com" rel="noopener">Sketchfab</a>, licenza <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>, <span data-i18n="foot.modelsMod">modificati (zone, colori, loghi rimossi)</span>.</p>
+    <p>© <span id="footYear">2026</span> · <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a></p>
+  </div>
+</footer>
+
+<script src="shared/zones.js" defer></script>
+<script src="shared/regioni.js" defer></script>
+<script src="shared/i18n.js" defer></script>
+<script src="shared/app.js" defer></script>

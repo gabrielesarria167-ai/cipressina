@@ -1,0 +1,24 @@
+{
+ "group": "cabinato",
+ "source": "whaler-285-conquest",
+ "bow": "-Y",
+ "loa": 9.0,
+ "delete_materials": [
+  "registration"
+ ],
+ "wl": -0.85,
+ "boot": 0.06,
+ "floor": -1.45,
+ "strip_materials": {
+  "Detailed_032Textures_032": [
+   0.16,
+   0.17,
+   0.18
+  ],
+  "detailed_032textures_03202": [
+   0.16,
+   0.17,
+   0.18
+  ]
+ }
+}

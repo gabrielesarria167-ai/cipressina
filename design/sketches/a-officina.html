@@ -1,0 +1,1810 @@
+<title>Cipressina Barche · Officina</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   A · OFFICINA: the safe, faithful direction. White ground with a cool
+   blue-grey neutral; logo blue is the ink and the heading colour, green is
+   for the primary action and the selected state, #007bff only for links.
+   Source Sans 3 throughout, 800 uppercase headings echoing the wordmark.
+   The crescent pair from the logo is the section marker and the spinner.
+   4px radii, hairline grids.
+   ===================================================================== */
+
+/* ---------- Colour tokens (light) ---------- */
+:root {
+    --bg: #ffffff;
+    --bg-alt: #f1f4f9;
+    --card: #ffffff;
+    --card-alt: #f6f8fc;
+    --ink: #0e0e9e;            /* logo blue: headings, labels, borders of the brand */
+    --logo-blue: #0e0e9e;
+    --text: #232a44;
+    --muted: #586080;
+    --line: #d9deea;
+    --line-strong: #a3adc6;
+    --green: #009642;          /* logo green: selection, markers */
+    --green-soft: #e4f4ea;
+    --action: #008239;         /* green darkened until white text passes 4.5:1 */
+    --action-hover: #00692e;
+    --on-action: #ffffff;
+    --link: #0464cb;           /* the site's own primary-dark; passes 4.5:1 on white */
+    --link-hover: #007bff;     /* the site's UI blue, links only */
+    --error: #b00020;
+    --error-soft: #fdecef;
+    --ph-line: #d98a00;
+    --ph-bg: #fff3d6;
+    --ribbon-bg: #fff1c9;
+    --ribbon-text: #4a3200;
+    --focus: #0e0e9e;
+    --paper: #ffffff;          /* the paint-fan cards stay paper in both schemes */
+    --paper-ink: #1c2138;
+    --paper-edge: rgba(14, 14, 100, 0.22);
+    --viewer-bg: #edf1f8;
+    --overlay: rgba(237, 241, 248, 0.88);
+    --sea: #c9d6f2;
+    --poster-hull: #f4f6f8;
+    --poster-cabin: #e4e8ee;
+    --poster-line: #0e0e9e;
+    --shadow: 0 1px 2px rgba(14, 14, 100, 0.08), 0 10px 28px rgba(14, 14, 100, 0.08);
+    --footer-bg: #0e0e9e;
+    --footer-text: #eceeff;
+    --footer-muted: #b9bdf2;
+    color-scheme: light;
+}
+
+/* ---------- Colour tokens (dark): system preference unless the page is forced light ---------- */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0a0b24;
+        --bg-alt: #0f1131;
+        --card: #131540;
+        --card-alt: #181b4a;
+        --ink: #c4c7ff;
+        --logo-blue: #9396ff;
+        --text: #dee1f4;
+        --muted: #a3a9cb;
+        --line: #272b5f;
+        --line-strong: #4d5390;
+        --green: #2fbf6a;
+        --green-soft: #0f3322;
+        --action: #3bd37b;
+        --action-hover: #62e394;
+        --on-action: #04140a;
+        --link: #7db8ff;
+        --link-hover: #a9d0ff;
+        --error: #ff8fa0;
+        --error-soft: #3b1022;
+        --ph-line: #e5a93a;
+        --ph-bg: rgba(229, 169, 58, 0.15);
+        --ribbon-bg: #3a2b06;
+        --ribbon-text: #ffe2a0;
+        --focus: #a3b6ff;
+        --paper: #f1f3fb;
+        --paper-ink: #1c2138;
+        --paper-edge: rgba(0, 0, 0, 0.5);
+        --viewer-bg: #141747;
+        --overlay: rgba(20, 23, 71, 0.88);
+        --sea: #2a3a86;
+        --poster-hull: #e6eaf4;
+        --poster-cabin: #c9d0e4;
+        --poster-line: #c4c7ff;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.35);
+        --footer-bg: #05061a;
+        --footer-text: #e3e5fb;
+        --footer-muted: #9ba0cf;
+        color-scheme: dark;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0a0b24;
+    --bg-alt: #0f1131;
+    --card: #131540;
+    --card-alt: #181b4a;
+    --ink: #c4c7ff;
+    --logo-blue: #9396ff;
+    --text: #dee1f4;
+    --muted: #a3a9cb;
+    --line: #272b5f;
+    --line-strong: #4d5390;
+    --green: #2fbf6a;
+    --green-soft: #0f3322;
+    --action: #3bd37b;
+    --action-hover: #62e394;
+    --on-action: #04140a;
+    --link: #7db8ff;
+    --link-hover: #a9d0ff;
+    --error: #ff8fa0;
+    --error-soft: #3b1022;
+    --ph-line: #e5a93a;
+    --ph-bg: rgba(229, 169, 58, 0.15);
+    --ribbon-bg: #3a2b06;
+    --ribbon-text: #ffe2a0;
+    --focus: #a3b6ff;
+    --paper: #f1f3fb;
+    --paper-ink: #1c2138;
+    --paper-edge: rgba(0, 0, 0, 0.5);
+    --viewer-bg: #141747;
+    --overlay: rgba(20, 23, 71, 0.88);
+    --sea: #2a3a86;
+    --poster-hull: #e6eaf4;
+    --poster-cabin: #c9d0e4;
+    --poster-line: #c4c7ff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.35);
+    --footer-bg: #05061a;
+    --footer-text: #e3e5fb;
+    --footer-muted: #9ba0cf;
+    color-scheme: dark;
+}
+
+/* ---------- Functional CSS the app relies on (CONTRACT.md) ---------- */
+[hidden] { display: none !important; }
+#boatOverlay.hidden { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#heroBoat, #boatCanvasWrap { position: relative; }
+#heroBoat canvas, #boatCanvasWrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#heroBoat.is-3d .hero-poster { opacity: 0; }
+#navPanel { display: none; }
+#navPanel.is-open { display: block; }
+body.is-wizard #waFab { display: none; }
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+    --hh: 64px;                /* sticky header height */
+    --gut: 16px;
+    --fs-sans: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    scroll-padding-top: calc(var(--hh) + 16px);
+    -webkit-text-size-adjust: 100%;
+}
+@media (min-width: 720px) { :root { --gut: 24px; } }
+@media (min-width: 1100px) { :root { --gut: 32px; } }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 1.0625rem/1.55 var(--fs-sans);
+    overflow-x: clip;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+h1, h2, h3 {
+    color: var(--ink);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.012em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+h1:focus, [tabindex="-1"]:focus { outline: none; }
+a { color: var(--link); text-underline-offset: 3px; }
+a:hover { color: var(--link-hover); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: var(--gut); }
+
+.skip-link {
+    position: absolute; left: 8px; top: -64px; z-index: 100;
+    padding: 12px 16px; background: var(--ink); color: var(--bg);
+    border-radius: 4px; font-weight: 700;
+}
+.skip-link:focus { top: 8px; }
+
+/* Placeholder convention: dashed amber outline, in this palette */
+.ph {
+    outline: 1.5px dashed var(--ph-line);
+    outline-offset: 2px;
+    background: var(--ph-bg);
+    border-radius: 2px;
+    padding: 0 2px;
+    color: inherit;
+}
+
+/* The crescent pair: section marker + spinner */
+.mark { display: block; width: 18px; height: 24px; flex: none; }
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+    min-height: 48px; padding: 0 22px;
+    border: 2px solid transparent; border-radius: 4px;
+    font-weight: 800; font-size: 0.9375rem; letter-spacing: 0.05em; text-transform: uppercase;
+    text-decoration: none; text-align: center; cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn--primary { background: var(--action); border-color: var(--action); color: var(--on-action); }
+.btn--primary:hover { background: var(--action-hover); border-color: var(--action-hover); color: var(--on-action); }
+.btn--ghost { background: transparent; border-color: var(--ink); color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--bg); }
+.btn--sm { min-height: 40px; padding: 0 16px; font-size: 0.8125rem; }
+
+/* ---------- Ribbon ---------- */
+#draftRibbon {
+    padding: 6px var(--gut);
+    background: var(--ribbon-bg); color: var(--ribbon-text);
+    border-bottom: 1px solid var(--ph-line);
+    font-size: 0.8125rem; font-weight: 600; line-height: 1.35; text-align: center;
+}
+
+/* ---------- Header ---------- */
+#siteHeader {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    height: var(--hh);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+}
+.header__in { display: flex; align-items: center; gap: 12px; height: 100%; }
+.logo { display: block; flex: none; line-height: 0; color: var(--logo-blue); }
+.logo svg { height: 32px; width: auto; display: block; }
+.logo__top { font: 800 10px var(--fs-sans); fill: var(--logo-blue); }
+.logo__main { font: 800 25px var(--fs-sans); fill: var(--logo-blue); }
+#siteNav { display: none; }
+#siteNav a, #navPanel > a {
+    color: var(--ink); text-decoration: none;
+    font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase;
+}
+#siteNav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 2px; border-bottom: 3px solid transparent; }
+#siteNav a:hover { border-bottom-color: var(--green); color: var(--ink); }
+.lang { display: none; align-items: center; gap: 2px; }
+.lang button {
+    min-width: 32px; min-height: 32px; padding: 0 6px;
+    border: 0; border-radius: 4px; background: transparent;
+    color: var(--muted); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.04em;
+}
+.lang button:hover { color: var(--ink); }
+.lang button.is-active { color: var(--ink); box-shadow: inset 0 -3px var(--green); border-radius: 4px 4px 0 0; }
+.header__in .cta { display: none; margin-left: auto; }
+#menuToggle {
+    position: relative; flex: none; width: 44px; height: 44px; margin-left: auto;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink);
+}
+#menuToggle::before {
+    content: ""; position: absolute; left: 11px; top: 50%; width: 20px; height: 2px; margin-top: -1px;
+    background: currentColor; box-shadow: 0 -7px currentColor, 0 7px currentColor;
+    transition: transform 0.2s;
+}
+#menuToggle.is-open::before { box-shadow: none; transform: rotate(45deg); }
+#menuToggle.is-open::after {
+    content: ""; position: absolute; left: 11px; top: 50%; width: 20px; height: 2px; margin-top: -1px;
+    background: currentColor; transform: rotate(-45deg);
+}
+#navPanel {
+    position: absolute; top: 100%; left: 0; right: 0;
+    max-height: calc(100svh - var(--hh) - 40px); overflow: auto;
+    padding: 8px var(--gut) 20px;
+    background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: var(--shadow);
+}
+#navPanel.is-open { display: flex; flex-direction: column; }
+#navPanel > a { display: flex; align-items: center; min-height: 48px; border-top: 1px solid var(--line); font-size: 0.9375rem; }
+#navPanel > a:first-child { border-top: 0; }
+#navPanel > a.btn { margin-top: 12px; border: 2px solid var(--action); color: var(--on-action); justify-content: center; }
+#navPanel .lang { display: flex; padding-top: 14px; border-top: 1px solid var(--line); margin-top: 6px; }
+@media (min-width: 440px) { .header__in .cta { display: inline-flex; margin-right: 0; } .header__in .cta + #menuToggle { margin-left: 0; } #navPanel > a.btn { display: none; } }
+@media (min-width: 1080px) {
+    .logo svg { height: 38px; }
+    #siteNav { display: flex; gap: 22px; margin-left: 20px; }
+    .lang { display: flex; margin-left: auto; }
+    .header__in .cta { margin-left: 8px; }
+    #menuToggle, #navPanel, #navPanel.is-open { display: none; }
+}
+
+/* ---------- Home sections ---------- */
+.sec { padding: clamp(56px, 7vw, 104px) 0; }
+.sec--alt { background: var(--bg-alt); }
+.sec-head { max-width: 46rem; margin-bottom: clamp(28px, 4vw, 48px); }
+.sec h2 { font-size: clamp(1.7rem, 1.2rem + 1.9vw, 2.65rem); }
+.eyebrow {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    color: var(--ink); font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.lede { max-width: 40rem; margin-top: 16px; font-size: 1.1875rem; line-height: 1.5; }
+.sec[id], [id="domande"] { scroll-margin-top: calc(var(--hh) + 8px); }
+
+/* ---------- Hero: the autocolor fan deck, reborn for a boat ---------- */
+.hero { position: relative; padding: clamp(24px, 4vw, 56px) 0 clamp(40px, 5vw, 72px); overflow-x: clip; }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: center; }
+.hero__copy h1 { font-size: clamp(2.35rem, 1.5rem + 4.2vw, 4.2rem); line-height: 1; }
+.hero__copy .lede { margin-top: 18px; }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 26px; }
+.hero__actions a:not(.btn) { font-weight: 700; }
+@media (min-width: 1000px) {
+    .hero__grid { grid-template-columns: minmax(0, 25rem) minmax(0, 1fr); gap: 32px; }
+}
+.hero__label {
+    margin-bottom: 4px; color: var(--muted);
+    font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-align: center;
+}
+.hero__stage { container-type: inline-size; position: relative; isolation: isolate; min-width: 0; }
+
+.hero__stage { --u: min(1cqw, 1.12svh); --fh: clamp(220px, calc(40 * var(--u)), 500px); --S: clamp(300px, calc(76 * var(--u)), 780px); }
+#heroSwatches {
+    --n: 11;
+    --spread: 118deg;
+    position: relative;
+    height: var(--fh);
+    overflow: hidden;
+    /* the strips fade out at the pivot instead of ending on a hard edge */
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
+}
+.swatch {
+    position: absolute; left: 50%; bottom: -2%; z-index: var(--z, 1);
+    display: flex; flex-direction: column; gap: 3px;
+    width: clamp(40px, calc(8.7 * var(--u)), 98px); height: 88%;
+    padding: 6px 5px 0;
+    border: 0; border-radius: 4px 4px 0 0;
+    background: var(--paper); color: var(--paper-ink);
+    box-shadow: -1px 0 3px var(--paper-edge);
+    transform-origin: 50% 100%;
+    transform: translateX(-50%) rotate(calc(var(--spread) / -2 + var(--i) * var(--spread) / (var(--n) - 1)));
+    transition: height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: fan-open 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s backwards;
+}
+.swatch:hover { height: 92%; }
+.swatch.is-active { height: 98%; z-index: 30; box-shadow: 0 0 0 3px var(--green), 0 8px 22px var(--paper-edge); }
+.swatch:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; z-index: 31; }
+.swatch__name {
+    order: 1;
+    position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+/* Five bands of the paint, the full colour at the tip, then lighter toward the pivot */
+.swatch::before {
+    content: ""; order: 2; flex: 1 1 0; border-radius: 1px;
+    background: var(--sw);
+    background: linear-gradient(to bottom,
+        var(--sw) 0 19%,
+        color-mix(in srgb, var(--sw), #fff 18%) 19% 20%,
+        color-mix(in srgb, var(--sw), #fff 18%) 20% 39%,
+        color-mix(in srgb, var(--sw), #fff 36%) 39% 40%,
+        color-mix(in srgb, var(--sw), #fff 36%) 40% 59%,
+        color-mix(in srgb, var(--sw), #fff 54%) 59% 60%,
+        color-mix(in srgb, var(--sw), #fff 54%) 60% 79%,
+        color-mix(in srgb, var(--sw), #fff 72%) 79% 100%);
+}
+.swatch::before { background: linear-gradient(to bottom, var(--sw) 0 19%, color-mix(in srgb, var(--sw), #fff 18%) 20% 39%, color-mix(in srgb, var(--sw), #fff 36%) 40% 59%, color-mix(in srgb, var(--sw), #fff 54%) 60% 79%, color-mix(in srgb, var(--sw), #fff 72%) 80% 100%); }
+@keyframes fan-open { from { transform: translateX(-50%) rotate(0deg); } }
+
+/* Names fit inside the strips only when the stage is wide enough; below that the caption carries the name */
+@container (min-width: 600px) {
+    .swatch__name {
+        position: static; width: auto; height: auto; margin: 0; clip: auto; overflow: hidden;
+        padding: 2px 0 3px; font-size: 0.75rem; font-weight: 600; line-height: 1.15; text-align: center;
+        white-space: normal; overflow-wrap: anywhere; hyphens: auto;
+    }
+    .swatch.is-active .swatch__name { font-weight: 800; }
+}
+@container (max-width: 599px) {
+    #heroSwatches, #heroBoat { --fh: clamp(200px, 72cqw, 300px); --S: clamp(280px, 118cqw, 480px); }
+    #heroSwatches { --spread: 80deg; }
+    #heroBoat { margin-bottom: calc(var(--S) * -0.1); }
+    .swatch { width: clamp(34px, 12cqw, 52px); }
+}
+
+/* The 3D canvas is a square much larger than the boat inside it (boat3d.js
+   leaves room for the turntable), so it is centred on the lower part of the
+   fan, wider than the stage, and clipped by the hero. Clicks pass through. */
+#heroBoat {
+    z-index: 40;
+    width: var(--S); aspect-ratio: 1 / 1;
+    margin: calc(var(--fh) * -0.1 - var(--S) / 2) calc((100% - var(--S)) / 2) calc(var(--S) * -0.36);
+    pointer-events: none;
+    filter: drop-shadow(0 18px 14px rgba(14, 14, 100, 0.22));
+}
+.hero-poster { position: absolute; left: 28%; top: 34%; width: 44%; height: 32%; transition: opacity 0.5s; }
+.hero-poster .p-hull { fill: var(--poster-hull); stroke: var(--poster-line); stroke-width: 2; stroke-linejoin: round; }
+.hero-poster .p-cabin { fill: var(--poster-cabin); stroke: var(--poster-line); stroke-width: 2; stroke-linejoin: round; }
+.hero-poster .p-glass { fill: var(--poster-line); opacity: 0.35; }
+.hero-poster .p-bottom { stroke: var(--poster-line); stroke-width: 2; stroke-linejoin: round; }
+
+.fan-caption {
+    position: relative; z-index: 41;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 10px;
+    margin: 6px auto 0; font-size: 1rem;
+}
+#heroSwatchChip { display: inline-block; width: 18px; height: 18px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--sw); }
+.fan-caption strong { color: var(--ink); font-weight: 800; }
+.fan-note { position: relative; z-index: 41; margin-top: 4px; color: var(--muted); font-size: 0.875rem; text-align: center; }
+
+/* ---------- Servizi ---------- */
+.serv { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.serv > * { background: var(--card); padding: clamp(20px, 3vw, 32px); min-width: 0; }
+@media (min-width: 900px) {
+    .serv { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .serv__diagram { grid-row: span 2; }
+}
+.diagram { width: 100%; height: auto; display: block; }
+.diagram .d-hull { fill: var(--poster-hull); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.diagram .d-cabin { fill: var(--poster-cabin); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.diagram .d-live { fill: var(--sea); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.diagram .d-wl { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.diagram .d-brk { fill: none; stroke: var(--ink); stroke-width: 2; }
+.diagram text { fill: var(--ink); font: 800 12px var(--fs-sans); letter-spacing: 0.1em; text-transform: uppercase; }
+.diagram .d-leg { font-weight: 600; letter-spacing: 0.04em; fill: var(--muted); }
+.defs { margin-top: 20px; display: grid; gap: 14px; }
+.defs h3 { font-size: 0.9375rem; letter-spacing: 0.1em; margin-bottom: 2px; }
+.defs p { color: var(--text); }
+.svc-list { list-style: none; padding: 0; margin: 16px 0 0; counter-reset: svc; }
+.svc-list li {
+    counter-increment: svc; position: relative;
+    padding: 12px 0 12px 44px; border-top: 1px solid var(--line);
+}
+.svc-list li::before {
+    content: counter(svc, decimal-leading-zero); position: absolute; left: 0; top: 13px;
+    color: var(--ink); font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.08em;
+}
+.serv h3 { font-size: 1.15rem; }
+.serv__note { margin-top: 14px; color: var(--text); }
+.serv__act { margin-top: 20px; }
+
+/* ---------- Come funziona ---------- */
+.steps { list-style: none; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; counter-reset: st; }
+.steps li { counter-increment: st; background: var(--card); padding: 24px 22px 28px; min-width: 0; }
+.steps li::before {
+    content: counter(st); display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 18px;
+    border: 2px solid var(--ink); border-radius: 4px; color: var(--ink); font-weight: 800; font-size: 1.25rem;
+}
+.steps li:first-child::before { background: var(--ink); color: var(--bg); }
+.steps h3 { font-size: 1.05rem; margin-bottom: 8px; }
+@media (min-width: 640px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.how__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 28px; }
+
+/* ---------- Interventi ---------- */
+#quoteLine { padding: clamp(20px, 3vw, 32px); background: var(--card); border: 1px solid var(--line-strong); border-radius: 4px; box-shadow: var(--shadow); }
+.ql__sentence { font-size: clamp(1.2rem, 0.95rem + 1.3vw, 1.85rem); line-height: 2.15; color: var(--ink); font-weight: 600; }
+#quoteLine select {
+    appearance: none; -webkit-appearance: none;
+    min-height: 44px; padding: 0 34px 0 10px; margin: 0 2px;
+    border: 0; border-bottom: 3px solid var(--green); border-radius: 4px 4px 0 0;
+    background-color: var(--card-alt);
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 17px) 55%, calc(100% - 12px) 55%;
+    background-size: 5px 5px; background-repeat: no-repeat;
+    color: var(--ink); font: inherit; font-weight: 800; cursor: pointer;
+}
+#qlTotal { font-weight: 800; font-size: 1.15em; color: var(--ink); white-space: nowrap; }
+#qlBefore { margin-top: 4px; color: var(--muted); font-size: 0.9375rem; }
+#qlBefore s { color: var(--muted); }
+#quoteLine .btn { margin-top: 18px; }
+.int__sub { margin: clamp(36px, 5vw, 56px) 0 8px; font-size: 1.15rem; }
+.int__sublede { color: var(--text); margin-bottom: 18px; }
+#discountList {
+    list-style: none; padding: 0; display: grid; gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+}
+.discount-step { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; background: var(--card); }
+.discount-step__zones { color: var(--muted); font-size: 0.9375rem; }
+.discount-step__rate { color: var(--ink); font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
+.tiers { display: grid; gap: 1px; margin-top: clamp(28px, 4vw, 44px); background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+@media (min-width: 860px) { .tiers { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tier { display: flex; flex-direction: column; gap: 10px; padding: 24px 22px; background: var(--card); min-width: 0; }
+.tier--feat { box-shadow: inset 0 5px 0 var(--ink); padding-top: 29px; }
+.tier h3 { font-size: 1.2rem; }
+.tier__badge { font-size: 0.8125rem; font-weight: 700; }
+.tier__price { font-size: 1.5rem; font-weight: 800; color: var(--ink); line-height: 1.25; }
+.tier ul { list-style: none; padding: 0; margin: 4px 0 8px; flex: 1; }
+.tier li { position: relative; padding: 8px 0 8px 26px; border-top: 1px solid var(--line); }
+.tier li::before {
+    content: ""; position: absolute; left: 3px; top: 13px; width: 11px; height: 6px;
+    border-left: 3px solid var(--green); border-bottom: 3px solid var(--green); transform: rotate(-45deg);
+}
+.tier .btn { width: 100%; }
+.int__note { margin-top: 14px; color: var(--muted); font-size: 0.9375rem; }
+
+/* ---------- Chi siamo ---------- */
+.why { display: grid; gap: clamp(24px, 4vw, 48px); }
+@media (min-width: 900px) { .why { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; } }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.facts > div { padding: 20px 18px; background: var(--card); min-width: 0; }
+.facts dt { color: var(--ink); font-size: clamp(2rem, 1.4rem + 2vw, 2.9rem); font-weight: 800; line-height: 1; text-transform: uppercase; }
+.facts dd { margin-top: 8px; color: var(--text); }
+.why__fine { margin-top: 14px; font-size: 0.9375rem; color: var(--muted); }
+.photos { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 560px) and (max-width: 899px) { .photos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.photo {
+    position: relative; display: grid; place-items: center; min-height: 160px; aspect-ratio: 16 / 10; padding: 16px;
+    border: 1.5px dashed var(--ph-line); border-radius: 4px;
+    background: repeating-linear-gradient(135deg, var(--card-alt) 0 12px, var(--bg-alt) 12px 24px);
+    color: var(--muted); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.1em; text-align: center; text-transform: uppercase;
+}
+.photo span { background: var(--bg); padding: 4px 10px; border-radius: 2px; }
+.reasons { display: grid; gap: 1px; margin-top: clamp(28px, 4vw, 48px); background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+@media (min-width: 760px) { .reasons { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.reasons > div { padding: 22px; background: var(--card); min-width: 0; }
+.reasons h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.awards { margin-top: clamp(28px, 4vw, 44px); }
+.awards h3 { font-size: 0.9375rem; letter-spacing: 0.12em; }
+.awards ul { list-style: none; padding: 0; margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.awards li { padding: 8px 14px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink); font-weight: 700; background: var(--card); }
+
+/* ---------- FAQ ---------- */
+.faq { display: grid; gap: 28px; }
+@media (min-width: 900px) { .faq { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: 56px; } }
+.faq__list { border-bottom: 1px solid var(--line-strong); }
+details.q { border-top: 1px solid var(--line-strong); }
+details.q summary {
+    position: relative; display: flex; align-items: center; min-height: 56px; padding: 12px 44px 12px 0;
+    color: var(--ink); font-weight: 700; font-size: 1.0625rem; list-style: none; cursor: pointer;
+}
+details.q summary::-webkit-details-marker { display: none; }
+details.q summary::after {
+    content: ""; position: absolute; right: 4px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
+    background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+}
+details.q[open] summary::after { background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat; }
+details.q p { padding: 0 44px 20px 0; }
+
+/* ---------- Contatti ---------- */
+.contact { display: grid; gap: clamp(24px, 4vw, 48px); }
+@media (min-width: 900px) { .contact { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+.contact dl { border-top: 1px solid var(--line-strong); margin-top: 28px; }
+.contact dl > div { display: grid; gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 560px) { .contact dl > div { grid-template-columns: 9rem minmax(0, 1fr); align-items: baseline; } }
+.contact dt { color: var(--ink); font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.contact dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }
+.contact dd > span:first-child { overflow-wrap: anywhere; user-select: all; }
+button[data-copy] {
+    min-height: 32px; padding: 0 12px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink);
+    font-weight: 700; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+button[data-copy]:hover { border-color: var(--ink); }
+button[data-copy].is-copied { border-color: var(--green); background: var(--green-soft); }
+.contact__act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 28px; }
+
+/* ---------- Footer ---------- */
+#siteFooter { background: var(--footer-bg); color: var(--footer-text); padding: 40px 0 calc(40px + env(safe-area-inset-bottom, 0px)); }
+.foot { display: grid; gap: 24px; }
+@media (min-width: 760px) { .foot { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } }
+.foot a { color: var(--footer-text); }
+.foot a:hover { color: #fff; }
+.foot__legal { font-weight: 700; }
+.foot__muted { color: var(--footer-muted); font-size: 0.9375rem; margin-top: 4px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 4px 20px; align-content: start; }
+.foot nav a { display: inline-flex; align-items: center; min-height: 32px; font-weight: 600; text-decoration: none; }
+.foot nav a:hover { text-decoration: underline; }
+#siteFooter .ph { background: rgba(255, 243, 214, 0.15); }
+
+/* ---------- WhatsApp FAB ---------- */
+.fab {
+    position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40;
+    display: grid; place-items: center; width: 56px; height: 56px;
+    border-radius: 50%; background: var(--action); color: var(--on-action); box-shadow: var(--shadow);
+}
+.fab:hover { background: var(--action-hover); color: var(--on-action); }
+.fab svg { width: 28px; height: 28px; }
+
+/* =====================================================================
+   WIZARD + LOOKUP
+   ===================================================================== */
+#view-wizard, #view-lookup { --wz-w: 760px; padding-bottom: 72px; }
+#view-lookup { --wz-w: 600px; }
+body[data-step="2"] #view-wizard, body[data-step="3"] #view-wizard { --wz-w: 1120px; }
+#view-wizard > nav, #view-wizard > .step, #view-wizard > #success, #view-wizard > #wizardFoot,
+#view-lookup > * { padding-inline: max(var(--gut), calc((100% - var(--wz-w)) / 2)); }
+
+#view-wizard > nav {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hh)); z-index: 30;
+    padding-block: 12px; background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.progress { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: pg; }
+.progress li {
+    counter-increment: pg; flex: 0 1 auto; display: flex; align-items: center; gap: 8px; min-width: 0;
+    color: var(--muted); font-weight: 700; font-size: 0.875rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.progress li::before {
+    content: counter(pg); flex: none; display: grid; place-items: center; width: 28px; height: 28px;
+    border: 2px solid var(--line-strong); border-radius: 4px; font-size: 0.875rem; letter-spacing: 0;
+}
+.progress li:not(:last-child) { flex: 1 1 auto; }
+.progress li:not(:last-child)::after { content: ""; flex: 1 1 12px; height: 2px; min-width: 8px; background: var(--line-strong); }
+.progress li.is-current { color: var(--ink); }
+.progress li.is-current::before { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.progress li.is-done { color: var(--ink); }
+.progress li.is-done::before { content: "✓"; background: var(--green); border-color: var(--green); color: #fff; }
+.progress li.is-done:not(:last-child)::after { background: var(--green); }
+@media (max-width: 559px) {
+    .progress li:not(.is-current) > span[data-i18n] { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+.step > h1, #success > h1, #view-lookup > h1 { margin-top: 32px; font-size: clamp(1.8rem, 1.2rem + 2.4vw, 2.7rem); }
+.step > h1 + p, #view-lookup > h1 + p { margin-top: 10px; color: var(--muted); max-width: 40rem; }
+
+fieldset { min-width: 0; margin: 26px 0 0; padding: 22px 16px 10px; border: 1px solid var(--line-strong); border-radius: 4px; }
+@media (min-width: 720px) { fieldset { padding: 24px 24px 12px; } }
+legend { padding: 0 8px; color: var(--ink); font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px 20px; margin-bottom: 14px; }
+@media (min-width: 640px) { .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } .field--full { grid-column: 1 / -1; } }
+.field { min-width: 0; }
+.field > label, .lbl { display: block; margin-bottom: 6px; color: var(--ink); font-weight: 700; font-size: 0.9375rem; }
+.opt { color: var(--muted); font-weight: 400; font-size: 0.875rem; }
+.field input[type="text"], .field input[type="tel"], .field input[type="email"], .field select, .field textarea, #lookupId {
+    display: block; width: 100%; min-height: 48px; padding: 10px 12px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--text);
+    font: inherit; font-size: 1rem; line-height: 1.3;
+}
+.field textarea { min-height: 112px; resize: vertical; }
+.field input:hover, .field select:hover, .field textarea:hover, #lookupId:hover { border-color: var(--ink); }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible, #lookupId:focus-visible { border-color: var(--ink); }
+.field select, #region, #province {
+    appearance: none; -webkit-appearance: none; padding-right: 38px;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 19px) 55%, calc(100% - 14px) 55%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.field select:disabled { opacity: 0.6; cursor: not-allowed; }
+.field__hint { margin-top: 6px; color: var(--muted); font-size: 0.875rem; line-height: 1.4; }
+.field__error { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; color: var(--error); font-size: 0.9375rem; font-weight: 600; line-height: 1.35; }
+.field__error::before {
+    content: "!"; flex: none; display: grid; place-items: center; width: 18px; height: 18px; margin-top: 1px;
+    border: 2px solid currentColor; border-radius: 50%; font-size: 0.75rem; font-weight: 800; line-height: 1;
+}
+.field.is-invalid > label, .field.is-invalid > .lbl { color: var(--error); }
+.field.is-invalid :is(input, select, textarea) { border-color: var(--error); background: var(--error-soft); box-shadow: inset 4px 0 0 var(--error); }
+[role="radiogroup"][aria-invalid="true"] { outline: 2px solid var(--error); outline-offset: 5px; border-radius: 4px; }
+.input-row { position: relative; }
+.affix { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 12px; color: var(--muted); font-weight: 700; pointer-events: none; }
+.affix--end { right: 0; }
+.affix--start { left: 0; border-right: 1.5px solid var(--line); }
+.input-row .has-end { padding-right: 40px; }
+.input-row .has-start { padding-left: 64px; }
+.modelsrc { display: inline-block; margin-top: 6px; font-size: 0.8125rem; }
+
+/* Radiogroups: boat type, registered, tier */
+#boatType { display: grid; grid-template-columns: repeat(auto-fit, minmax(98px, 1fr)); gap: 8px; }
+#boatType [role="radio"] {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    min-height: 92px; padding: 12px 6px 10px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink);
+    font-weight: 700; font-size: 0.875rem; text-align: center;
+}
+[data-type-icon] { display: block; width: 66px; height: 28px; }
+[data-type-icon] svg { display: block; width: 100%; height: 100%; }
+#registered { display: flex; flex-wrap: wrap; gap: 8px; }
+#registered [role="radio"] {
+    position: relative; flex: 1 1 140px; min-height: 48px; padding: 0 16px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink); font-weight: 700;
+}
+[role="radio"]:hover { border-color: var(--ink); }
+[role="radio"].is-selected, [role="radio"][aria-checked="true"].tier-card {
+    border-color: var(--green); background: var(--green-soft); box-shadow: inset 0 0 0 1.5px var(--green);
+}
+#boatType [role="radio"].is-selected::after, #registered [role="radio"].is-selected::after, .tier-card.is-selected::after {
+    content: "✓"; position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--green); color: #fff; font-size: 0.6875rem; font-weight: 800; line-height: 1;
+}
+#registered [role="radio"].is-selected::after { top: 50%; margin-top: -9px; }
+#registeredNote { margin-top: 10px; padding: 10px 12px; border-left: 4px solid var(--ph-line); background: var(--card-alt); font-size: 0.9375rem; }
+#boatSummary { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 10px 14px; background: var(--card-alt); border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: 4px; color: var(--ink); font-weight: 700; }
+#boatSummaryIcon { flex: none; width: 56px; }
+#boatSummaryIcon svg { display: block; width: 100%; height: auto; }
+#boatSummaryText { min-width: 0; overflow-wrap: anywhere; }
+
+/* Step 2: tiers */
+#tier { display: grid; gap: 12px; margin-top: 26px; }
+@media (min-width: 800px) { #tier { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tier-card {
+    position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px 20px 20px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--text);
+    text-align: left; min-width: 0;
+}
+.tier-card strong { color: var(--ink); font-size: 1.15rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; padding-right: 26px; }
+.tier-card .tc-badge { font-size: 0.8125rem; font-weight: 700; }
+.tier-card .tc-price { color: var(--ink); font-size: 1.4rem; font-weight: 800; line-height: 1.25; }
+.tier-card .tc-item { position: relative; display: block; padding: 7px 0 7px 22px; border-top: 1px solid var(--line); font-size: 0.9375rem; }
+.tier-card .tc-item::before {
+    content: ""; position: absolute; left: 2px; top: 12px; width: 10px; height: 5px;
+    border-left: 3px solid var(--green); border-bottom: 3px solid var(--green); transform: rotate(-45deg);
+}
+.tier-card .tc-items { display: block; margin-top: 6px; }
+.step-note { margin-top: 16px; color: var(--muted); font-size: 0.9375rem; }
+
+/* Step 3: the viewer and the summary */
+.zones-layout { display: grid; gap: 22px; margin-top: 22px; }
+@media (min-width: 960px) { .zones-layout { grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); align-items: start; } #zonesSummary { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hh) + 76px); } }
+#boatView3d { min-width: 0; }
+#boatCanvasWrap {
+    aspect-ratio: 4 / 3; min-height: 300px; max-height: 640px; overflow: hidden;
+    background: var(--viewer-bg); border: 1px solid var(--line-strong); border-radius: 4px; touch-action: none;
+}
+#boatOverlay { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; background: var(--overlay); text-align: center; }
+#boatOverlay.hidden { display: none; }
+#boatLoading { color: var(--ink); font-weight: 700; }
+#boatError { max-width: 28rem; color: var(--error); font-weight: 600; }
+.spinner { width: 36px; height: 48px; animation: spin 1.1s linear infinite; }
+#boatOverlay:has(#boatError:not([hidden])) .spinner, #boatOverlay:has(#boatError:not([hidden])) #boatLoading { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#zoneHover {
+    position: absolute; left: 10px; top: 10px; z-index: 1; max-width: calc(100% - 20px); padding: 5px 10px;
+    border-radius: 4px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 0.875rem; pointer-events: none;
+}
+#zoneHover:empty { display: none; }
+.viewer-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+#boatViewButtons { display: flex; flex-wrap: wrap; gap: 6px; }
+#boatViewButtons button, #waterToggle {
+    min-height: 40px; padding: 0 14px;
+    border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink);
+    font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+#boatViewButtons button:hover, #waterToggle:hover { border-color: var(--ink); }
+#boatViewButtons button.is-active, #boatViewButtons button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+#waterToggle { margin-left: auto; border-style: dashed; }
+#waterToggle[data-water="on"] { border-style: solid; background: var(--card-alt); }
+.viewer-hint { margin-top: 10px; color: var(--muted); font-size: 0.9375rem; }
+#zonesSummary { padding: 20px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--card); min-width: 0; }
+#zonesSummary h2 { font-size: 1rem; letter-spacing: 0.1em; }
+#zonesCount { margin-top: 4px; color: var(--muted); font-weight: 600; }
+#zonesEmpty { margin-top: 12px; padding: 14px; border: 1.5px dashed var(--line-strong); border-radius: 4px; color: var(--muted); font-size: 0.9375rem; }
+#zonesList { list-style: none; margin: 12px 0 0; padding: 0; }
+.zone-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
+.zone-row__name { font-weight: 600; overflow-wrap: anywhere; }
+.zone-row__price { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.zone-row__remove { width: 32px; height: 32px; padding: 0; border: 1.5px solid var(--line-strong); border-radius: 4px; background: var(--card); color: var(--ink); font-size: 0.8125rem; line-height: 1; }
+.zone-row__remove:hover { border-color: var(--error); color: var(--error); }
+#zonesClear { margin-top: 10px; min-height: 36px; padding: 0 2px; border: 0; background: none; color: var(--link); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+#zonesNudge { margin-top: 14px; padding: 10px 12px; border: 1.5px dashed var(--line-strong); border-radius: 4px; font-size: 0.9375rem; }
+#zonesNudge.is-maxed { border-style: solid; border-color: var(--green); background: var(--green-soft); }
+#estimate { margin-top: 16px; padding-top: 14px; border-top: 2px solid var(--ink); }
+#estimate p { display: flex; justify-content: space-between; gap: 12px; margin: 4px 0; }
+#estimate p span:last-child, #estTotal { font-variant-numeric: tabular-nums; }
+#estTotal { color: var(--ink); font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
+#estimate p:has(#estTotal) { align-items: baseline; margin-top: 8px; color: var(--ink); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.875rem; }
+#estNote { display: block; margin-top: 8px; color: var(--muted); font-size: 0.875rem; }
+#estimate p#estNote { display: block; }
+#zonesSummary > p:last-child { margin-top: 14px; }
+#zonesPicker { margin-top: 22px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--card); }
+#zonesPicker > summary { display: flex; align-items: center; min-height: 52px; padding: 0 16px; color: var(--ink); font-weight: 700; cursor: pointer; }
+#zonesPicker[open] > summary { border-bottom: 1px solid var(--line); }
+#zonesPicker fieldset { margin: 14px; border: 0; padding: 0; }
+#zonesChecklist { display: grid; gap: 4px 20px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 40px; cursor: pointer; }
+.check input { width: 22px; height: 22px; flex: none; accent-color: var(--green); }
+
+/* Step 4 */
+.phone-row { position: relative; }
+.step > p:last-of-type[data-i18n-html="privacy.h"] { margin-top: 20px; font-size: 0.9375rem; color: var(--muted); }
+
+/* Success */
+#success { padding-top: 8px; }
+#success .code-card { margin-top: 22px; padding: 22px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--card); box-shadow: var(--shadow); }
+#success .code-label { color: var(--muted); font-weight: 600; }
+#successCode { display: block; margin: 6px 0 12px; color: var(--ink); font-size: clamp(1.8rem, 6.5vw, 2.8rem); font-weight: 800; letter-spacing: 0.14em; font-variant-numeric: tabular-nums; user-select: all; overflow-wrap: anywhere; }
+#success .success-note { margin-top: 18px; color: var(--muted); font-size: 0.9375rem; }
+#success .success-act { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 22px; }
+
+/* Wizard footer: sticky bottom bar */
+#wizardFoot {
+    position: sticky; bottom: 0; z-index: 30; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px;
+    margin-top: 32px; padding-top: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg); border-top: 1px solid var(--line-strong);
+}
+#stepHint { flex: 1 0 100%; margin: 0; color: var(--error); font-weight: 600; font-size: 0.9375rem; }
+#stepBack { min-height: 48px; padding: 0 20px; border: 2px solid var(--ink); border-radius: 4px; background: transparent; color: var(--ink); font-weight: 800; font-size: 0.9375rem; letter-spacing: 0.05em; text-transform: uppercase; }
+#stepBack:hover { background: var(--ink); color: var(--bg); }
+#stepNext { margin-left: auto; min-height: 48px; padding: 0 26px; border: 2px solid var(--action); border-radius: 4px; background: var(--action); color: var(--on-action); font-weight: 800; font-size: 0.9375rem; letter-spacing: 0.05em; text-transform: uppercase; }
+#stepNext:hover { background: var(--action-hover); border-color: var(--action-hover); }
+#stepNext[aria-disabled="true"] { background: var(--bg-alt); border-color: var(--line-strong); border-style: dashed; color: var(--muted); }
+#stepNext[aria-disabled="true"]:hover { border-color: var(--ink); color: var(--ink); }
+@media (max-width: 479px) { #stepNext { flex: 1 1 auto; } }
+
+/* Lookup */
+#lookupForm { display: grid; gap: 8px; margin-top: 24px; }
+#lookupForm > label { color: var(--ink); font-weight: 700; }
+.lookup-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.lookup-row #lookupId { flex: 1 1 200px; width: auto; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
+#lookupSubmit { min-height: 48px; padding: 0 24px; border: 2px solid var(--action); border-radius: 4px; background: var(--action); color: var(--on-action); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+#lookupSubmit:hover { background: var(--action-hover); border-color: var(--action-hover); }
+#lookupError { display: flex; gap: 8px; color: var(--error); font-weight: 600; }
+#lookupError::before { content: "!"; flex: none; display: grid; place-items: center; width: 18px; height: 18px; margin-top: 2px; border: 2px solid currentColor; border-radius: 50%; font-size: 0.75rem; font-weight: 800; line-height: 1; }
+#lookupId[aria-invalid="true"] { border-color: var(--error); background: var(--error-soft); }
+#lookupResult { margin-top: 26px; padding: 22px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--card); box-shadow: var(--shadow); }
+#lookupResult dl { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+#lookupResult dl > div { display: grid; gap: 2px 16px; padding: 10px 14px; background: var(--card); }
+@media (min-width: 520px) { #lookupResult dl > div { grid-template-columns: 8rem minmax(0, 1fr); } }
+#lookupResult dt { color: var(--muted); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.1em; text-transform: uppercase; }
+#lookupResult dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+#lookupResult > p { margin-top: 14px; color: var(--muted); font-size: 0.9375rem; }
+#view-lookup > p:last-child { margin-top: 28px; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script>
+/* Page copy for A · Officina. Italian is the master («tu»); EN/ES/FR are
+   drafts, traduzione da revisionare con un madrelingua. */
+window.CIPRESSINA_I18N_EXTRA = {
+    it: {
+        "a.hero.title": "Come appena varata.",
+        "a.hero.lede": "Lavoriamo sull'opera morta e sull'opera viva. Prova un colore di antivegetativa sul ventaglio, poi indica sul modello 3D le zone da trattare: il preventivo parte da lì.",
+        "a.hero.cta": "Calcola il preventivo",
+
+        "a.serv.title": "Cosa facciamo sulla tua barca",
+        "a.serv.lede": "Interventi su barche sia sull'opera morta sia sull'opera viva: sopra e sotto la linea di galleggiamento.",
+        "a.serv.dead": "Opera morta",
+        "a.serv.live": "Opera viva",
+        "a.serv.wl": "Linea di galleggiamento",
+        "a.serv.deadDef": "La parte dello scafo sopra la linea di galleggiamento: fiancate e specchio di poppa.",
+        "a.serv.liveDef": "La parte che può restare immersa: è qui che va l'antivegetativa.",
+        "a.serv.hull.title": "Scafo e coperta",
+        "a.serv.h1": "Lavaggio completo e lucidatura",
+        "a.serv.h2": "Riverniciatura e riparazioni",
+        "a.serv.h3": "Applicazione di antivegetativa",
+        "a.serv.h4": "Riparazione di crepe o danni strutturali",
+        "a.serv.h5": "Controllo e manutenzione degli accessori esterni",
+        "a.serv.quote": "Preventivo per lo scafo",
+        "a.serv.eng.title": "Manutenzione del motore",
+        "a.serv.eng.note": "Da poco abbiamo attivato una nuova sede operativa per interventi sui motori entrobordo nautici.",
+        "a.serv.e1": "Controllo e sostituzione dell'olio",
+        "a.serv.e2": "Pulizia del sistema di raffreddamento",
+        "a.serv.e3": "Controllo e pulizia dei motori a iniezione diesel e benzina",
+        "a.serv.e4": "Sostituzione del filtro carburante e aria",
+        "a.serv.e5": "Ispezione della cinghia di trasmissione",
+        "a.serv.e6": "Verifica del sistema elettrico e delle batterie",
+        "a.serv.engCta": "Per i motori, scrivici o chiamaci.",
+        "a.serv.engLink": "Vai ai contatti",
+
+        "a.how.title": "Il preventivo in quattro passi",
+        "a.how.lede": "Lo fai online, da telefono o da computer.",
+        "a.how.s1.t": "Descrivi la barca",
+        "a.how.s1.d": "Tipo, cantiere, modello, lunghezza e anno. Se il modello è nell'elenco, la lunghezza si compila da sola.",
+        "a.how.s2.t": "Scegli il pacchetto",
+        "a.how.s2.d": "Base, Completo o Premium: decidi quanto fare.",
+        "a.how.s3.t": "Tocca le zone in 3D",
+        "a.how.s3.d": "Giri la barca e tocchi le parti da trattare. Se preferisci, le scegli da un elenco.",
+        "a.how.s4.t": "Lascia i contatti",
+        "a.how.s4.d": "Nome, telefono ed email. Ricevi un codice per seguire la richiesta.",
+        "a.how.cta": "Inizia il preventivo",
+
+        "a.int.title": "Tre pacchetti, prezzo al metro",
+        "a.int.lede": "Il prezzo dipende dalla lunghezza della barca e dalle zone. Prova la frase qui sotto.",
+        "a.int.disc.lede": "Più zone scegli, meno paghi per ciascuna, fino a un massimo.",
+        "a.ph.pct": "percentuali segnaposto",
+        "a.ph.text": "testo da confermare",
+
+        "a.why.title": "Una carrozzeria vera, al lavoro sulla tua barca",
+        "a.why.lede": "Cipressina è una carrozzeria di Olmo di Martellago. Questa è l'attrezzatura dell'officina, come la presentiamo sul nostro sito.",
+        "a.why.f1.k": "Forno",
+        "a.why.f1.d": "di verniciatura e cabina di essiccazione",
+        "a.why.f2.d": "zone di preparazione",
+        "a.why.f3.d": "tintometri",
+        "a.why.f4.d": "colorimetri elettronici",
+        "a.why.fine": "Quali attrezzature si usano sulle barche e che dimensioni entrano in cabina: da confermare.",
+        "a.why.r.title": "Perché scegliere noi",
+        "a.why.r1": "Esperienza e competenza",
+        "a.why.r2": "Prodotti di alta qualità",
+        "a.why.r3": "Servizio personalizzato",
+        "a.why.awards": "Riconoscimenti",
+        "a.why.photo1": "FOTO · scafo in lavorazione",
+        "a.why.photo2": "FOTO · l'officina",
+
+        "a.faq.eyebrow": "Domande frequenti",
+        "a.faq.title": "Prima di affidarci la tua barca",
+        "a.faq.lede": "Le risposte arrivano dall'officina: finché non sono confermate, restano segnaposto.",
+
+        "a.cont.title": "Chiedi il preventivo o passa a trovarci",
+        "a.cont.lede": "Il modo più rapido è il preventivo online. Per tutto il resto, chiamaci o scrivici.",
+        "a.cont.photo": "FOTO · l'officina in Via N. Sauro"
+    },
+    en: {
+        "a.hero.title": "Like the day she was launched.",
+        "a.hero.lede": "We work on the topsides and on the underwater hull. Try an antifouling colour from the fan, then mark the zones to treat on the 3D model: your quote starts there.",
+        "a.hero.cta": "Get your quote",
+
+        "a.serv.title": "What we do on your boat",
+        "a.serv.lede": "We work on boats both on the topsides and on the underwater hull: above and below the waterline.",
+        "a.serv.dead": "Topsides",
+        "a.serv.live": "Underwater hull",
+        "a.serv.wl": "Waterline",
+        "a.serv.deadDef": "The part of the hull above the waterline: the sides and the transom.",
+        "a.serv.liveDef": "The part that can sit under water: this is where the antifouling goes.",
+        "a.serv.hull.title": "Hull and deck",
+        "a.serv.h1": "Full wash and polish",
+        "a.serv.h2": "Repainting and repairs",
+        "a.serv.h3": "Antifouling application",
+        "a.serv.h4": "Repair of cracks or structural damage",
+        "a.serv.h5": "Checks and maintenance of exterior fittings",
+        "a.serv.quote": "Quote for the hull",
+        "a.serv.eng.title": "Engine maintenance",
+        "a.serv.eng.note": "We recently opened a new operations site for work on marine inboard engines.",
+        "a.serv.e1": "Oil check and change",
+        "a.serv.e2": "Cooling system cleaning",
+        "a.serv.e3": "Checks and cleaning of diesel and petrol injection engines",
+        "a.serv.e4": "Fuel and air filter replacement",
+        "a.serv.e5": "Drive belt inspection",
+        "a.serv.e6": "Electrical system and battery check",
+        "a.serv.engCta": "For engines, write or call us.",
+        "a.serv.engLink": "Go to contact",
+
+        "a.how.title": "Your quote in four steps",
+        "a.how.lede": "You do it online, on your phone or computer.",
+        "a.how.s1.t": "Describe the boat",
+        "a.how.s1.d": "Type, builder, model, length and year. If the model is in the list, the length fills itself in.",
+        "a.how.s2.t": "Choose the package",
+        "a.how.s2.d": "Base, Complete or Premium: you decide how much to have done.",
+        "a.how.s3.t": "Tap the zones in 3D",
+        "a.how.s3.d": "Turn the boat and tap the parts to treat. If you prefer, pick them from a list.",
+        "a.how.s4.t": "Leave your details",
+        "a.how.s4.d": "Name, phone and email. You get a code to follow your request.",
+        "a.how.cta": "Start your quote",
+
+        "a.int.title": "Three packages, priced per metre",
+        "a.int.lede": "The price depends on the length of the boat and on the zones. Try the sentence below.",
+        "a.int.disc.lede": "The more zones you pick, the less you pay for each, up to a maximum.",
+        "a.ph.pct": "placeholder percentages",
+        "a.ph.text": "text to be confirmed",
+
+        "a.why.title": "A real body shop, working on your boat",
+        "a.why.lede": "Cipressina is a body shop in Olmo di Martellago. This is the workshop's equipment, as we present it on our website.",
+        "a.why.f1.k": "Oven",
+        "a.why.f1.d": "for painting, plus a drying booth",
+        "a.why.f2.d": "preparation areas",
+        "a.why.f3.d": "tinting machines",
+        "a.why.f4.d": "electronic colorimeters",
+        "a.why.fine": "Which equipment is used on boats and what boat sizes fit the booth: to be confirmed.",
+        "a.why.r.title": "Why choose us",
+        "a.why.r1": "Experience and expertise",
+        "a.why.r2": "High-quality products",
+        "a.why.r3": "Personalised service",
+        "a.why.awards": "Awards",
+        "a.why.photo1": "PHOTO · hull being worked on",
+        "a.why.photo2": "PHOTO · the workshop",
+
+        "a.faq.eyebrow": "FAQ",
+        "a.faq.title": "Before you trust us with your boat",
+        "a.faq.lede": "The answers come from the workshop: until they are confirmed, they stay placeholders.",
+
+        "a.cont.title": "Get a quote or drop by",
+        "a.cont.lede": "The quickest way is the online quote. For anything else, call or write to us.",
+        "a.cont.photo": "PHOTO · the workshop on Via N. Sauro"
+    },
+    es: {
+        "a.hero.title": "Como el día de su botadura.",
+        "a.hero.lede": "Trabajamos en la obra muerta y en la obra viva. Prueba un color de antiincrustante en el abanico y marca en el modelo 3D las zonas que hay que tratar: de ahí sale el presupuesto.",
+        "a.hero.cta": "Calcula el presupuesto",
+
+        "a.serv.title": "Qué hacemos en tu barco",
+        "a.serv.lede": "Intervenimos en barcos tanto en la obra muerta como en la obra viva: por encima y por debajo de la línea de flotación.",
+        "a.serv.dead": "Obra muerta",
+        "a.serv.live": "Obra viva",
+        "a.serv.wl": "Línea de flotación",
+        "a.serv.deadDef": "La parte del casco por encima de la línea de flotación: los costados y el espejo de popa.",
+        "a.serv.liveDef": "La parte que puede quedar sumergida: aquí va el antiincrustante.",
+        "a.serv.hull.title": "Casco y cubierta",
+        "a.serv.h1": "Lavado completo y pulido",
+        "a.serv.h2": "Repintado y reparaciones",
+        "a.serv.h3": "Aplicación de antiincrustante",
+        "a.serv.h4": "Reparación de grietas o daños estructurales",
+        "a.serv.h5": "Revisión y mantenimiento de los accesorios exteriores",
+        "a.serv.quote": "Presupuesto del casco",
+        "a.serv.eng.title": "Mantenimiento del motor",
+        "a.serv.eng.note": "Hemos abierto hace poco una nueva sede operativa para intervenir en motores intraborda náuticos.",
+        "a.serv.e1": "Revisión y cambio de aceite",
+        "a.serv.e2": "Limpieza del sistema de refrigeración",
+        "a.serv.e3": "Revisión y limpieza de motores de inyección diésel y gasolina",
+        "a.serv.e4": "Sustitución del filtro de combustible y de aire",
+        "a.serv.e5": "Inspección de la correa de transmisión",
+        "a.serv.e6": "Verificación del sistema eléctrico y de las baterías",
+        "a.serv.engCta": "Para los motores, escríbenos o llámanos.",
+        "a.serv.engLink": "Ir a contacto",
+
+        "a.how.title": "Tu presupuesto en cuatro pasos",
+        "a.how.lede": "Lo haces en línea, desde el móvil o el ordenador.",
+        "a.how.s1.t": "Describe el barco",
+        "a.how.s1.d": "Tipo, astillero, modelo, eslora y año. Si el modelo está en la lista, la eslora se rellena sola.",
+        "a.how.s2.t": "Elige el paquete",
+        "a.how.s2.d": "Base, Completo o Premium: decides cuánto hacer.",
+        "a.how.s3.t": "Toca las zonas en 3D",
+        "a.how.s3.d": "Giras el barco y tocas las partes que hay que tratar. Si lo prefieres, las eliges de una lista.",
+        "a.how.s4.t": "Deja tus datos",
+        "a.how.s4.d": "Nombre, teléfono y correo. Recibes un código para seguir la solicitud.",
+        "a.how.cta": "Empieza el presupuesto",
+
+        "a.int.title": "Tres paquetes, precio por metro",
+        "a.int.lede": "El precio depende de la eslora del barco y de las zonas. Prueba la frase de abajo.",
+        "a.int.disc.lede": "Cuantas más zonas eliges, menos pagas por cada una, hasta un máximo.",
+        "a.ph.pct": "porcentajes provisionales",
+        "a.ph.text": "texto por confirmar",
+
+        "a.why.title": "Un taller de carrocería de verdad, al servicio de tu barco",
+        "a.why.lede": "Cipressina es un taller de carrocería de Olmo di Martellago. Este es el equipamiento del taller, tal como lo presentamos en nuestra web.",
+        "a.why.f1.k": "Horno",
+        "a.why.f1.d": "de pintura y cabina de secado",
+        "a.why.f2.d": "zonas de preparación",
+        "a.why.f3.d": "máquinas tintométricas",
+        "a.why.f4.d": "colorímetros electrónicos",
+        "a.why.fine": "Qué equipamiento se usa en los barcos y qué tamaños caben en la cabina: por confirmar.",
+        "a.why.r.title": "Por qué elegirnos",
+        "a.why.r1": "Experiencia y competencia",
+        "a.why.r2": "Productos de alta calidad",
+        "a.why.r3": "Servicio personalizado",
+        "a.why.awards": "Reconocimientos",
+        "a.why.photo1": "FOTO · casco en trabajo",
+        "a.why.photo2": "FOTO · el taller",
+
+        "a.faq.eyebrow": "Preguntas frecuentes",
+        "a.faq.title": "Antes de confiarnos tu barco",
+        "a.faq.lede": "Las respuestas vienen del taller: hasta que se confirmen, siguen siendo provisionales.",
+
+        "a.cont.title": "Pide tu presupuesto o pásate por el taller",
+        "a.cont.lede": "Lo más rápido es el presupuesto en línea. Para todo lo demás, llámanos o escríbenos.",
+        "a.cont.photo": "FOTO · el taller en Via N. Sauro"
+    },
+    fr: {
+        "a.hero.title": "Comme au jour de sa mise à l'eau.",
+        "a.hero.lede": "Nous intervenons sur les œuvres mortes et sur les œuvres vives. Essayez une couleur d'antifouling sur l'éventail, puis indiquez sur le modèle 3D les zones à traiter : le devis part de là.",
+        "a.hero.cta": "Calculer le devis",
+
+        "a.serv.title": "Ce que nous faisons sur votre bateau",
+        "a.serv.lede": "Nous intervenons sur les bateaux, tant sur les œuvres mortes que sur les œuvres vives : au-dessus et au-dessous de la ligne de flottaison.",
+        "a.serv.dead": "Œuvres mortes",
+        "a.serv.live": "Œuvres vives",
+        "a.serv.wl": "Ligne de flottaison",
+        "a.serv.deadDef": "La partie de la coque au-dessus de la ligne de flottaison : les flancs et le tableau arrière.",
+        "a.serv.liveDef": "La partie qui peut rester immergée : c'est là que va l'antifouling.",
+        "a.serv.hull.title": "Coque et pont",
+        "a.serv.h1": "Lavage complet et polissage",
+        "a.serv.h2": "Remise en peinture et réparations",
+        "a.serv.h3": "Application d'antifouling",
+        "a.serv.h4": "Réparation de fissures ou de dégâts structurels",
+        "a.serv.h5": "Contrôle et entretien des accessoires extérieurs",
+        "a.serv.quote": "Devis pour la coque",
+        "a.serv.eng.title": "Entretien du moteur",
+        "a.serv.eng.note": "Nous avons récemment ouvert un nouveau site opérationnel pour les interventions sur les moteurs marins in-bord.",
+        "a.serv.e1": "Contrôle et vidange de l'huile",
+        "a.serv.e2": "Nettoyage du circuit de refroidissement",
+        "a.serv.e3": "Contrôle et nettoyage des moteurs à injection diesel et essence",
+        "a.serv.e4": "Remplacement du filtre à carburant et à air",
+        "a.serv.e5": "Inspection de la courroie de transmission",
+        "a.serv.e6": "Vérification du circuit électrique et des batteries",
+        "a.serv.engCta": "Pour les moteurs, écrivez-nous ou appelez-nous.",
+        "a.serv.engLink": "Aller aux contacts",
+
+        "a.how.title": "Votre devis en quatre étapes",
+        "a.how.lede": "Vous le faites en ligne, sur téléphone ou ordinateur.",
+        "a.how.s1.t": "Décrivez le bateau",
+        "a.how.s1.d": "Type, chantier, modèle, longueur et année. Si le modèle figure dans la liste, la longueur se remplit seule.",
+        "a.how.s2.t": "Choisissez la formule",
+        "a.how.s2.d": "Base, Complète ou Premium : vous décidez de l'ampleur des travaux.",
+        "a.how.s3.t": "Touchez les zones en 3D",
+        "a.how.s3.d": "Faites pivoter le bateau et touchez les parties à traiter. Si vous préférez, choisissez-les dans une liste.",
+        "a.how.s4.t": "Laissez vos coordonnées",
+        "a.how.s4.d": "Nom, téléphone et e-mail. Vous recevez un code pour suivre la demande.",
+        "a.how.cta": "Commencer le devis",
+
+        "a.int.title": "Trois formules, prix au mètre",
+        "a.int.lede": "Le prix dépend de la longueur du bateau et des zones. Essayez la phrase ci-dessous.",
+        "a.int.disc.lede": "Plus vous choisissez de zones, moins chacune coûte, jusqu'à un maximum.",
+        "a.ph.pct": "pourcentages provisoires",
+        "a.ph.text": "texte à confirmer",
+
+        "a.why.title": "Une vraie carrosserie, au service de votre bateau",
+        "a.why.lede": "Cipressina est une carrosserie d'Olmo di Martellago. Voici l'équipement de l'atelier, tel que nous le présentons sur notre site.",
+        "a.why.f1.k": "Four",
+        "a.why.f1.d": "de peinture et cabine de séchage",
+        "a.why.f2.d": "zones de préparation",
+        "a.why.f3.d": "machines à teinter",
+        "a.why.f4.d": "colorimètres électroniques",
+        "a.why.fine": "Quel équipement sert sur les bateaux et quelles tailles entrent dans la cabine : à confirmer.",
+        "a.why.r.title": "Pourquoi nous choisir",
+        "a.why.r1": "Expérience et compétence",
+        "a.why.r2": "Produits de haute qualité",
+        "a.why.r3": "Service personnalisé",
+        "a.why.awards": "Distinctions",
+        "a.why.photo1": "PHOTO · coque en cours de travail",
+        "a.why.photo2": "PHOTO · l'atelier",
+
+        "a.faq.eyebrow": "Questions fréquentes",
+        "a.faq.title": "Avant de nous confier votre bateau",
+        "a.faq.lede": "Les réponses viennent de l'atelier : tant qu'elles ne sont pas confirmées, elles restent provisoires.",
+
+        "a.cont.title": "Demandez un devis ou passez nous voir",
+        "a.cont.lede": "Le plus rapide est le devis en ligne. Pour le reste, appelez-nous ou écrivez-nous.",
+        "a.cont.photo": "PHOTO · l'atelier, Via N. Sauro"
+    }
+};
+/* 3D theme: green select, blue hover, light water. The hero has no water
+   (the app mounts it with showWater:false) so the antifouling shows. */
+window.CIPRESSINA_CONFIG = {
+    theme: { water: "#a9cde4", select: "#009642", hover: "#2f55ff", topsides: "#f4f6f8", bottom: "#1d3b8f", deck: "#e1e6ee" },
+    heroTheme: { water: "#a9cde4", select: "#009642", hover: "#2f55ff", topsides: "#f6f8fb", bottom: "#1d3b8f", deck: "#e1e6ee" },
+    heroSpinPitch: -10
+};
+</script>
+
+<!-- Logo ricostruito, usare file originale: two overlapping crescents, blue left, green right -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="crescents" viewBox="8 0 24 32">
+        <path style="fill:var(--logo-blue)" d="M24 2A14 14 0 0 0 24 30A20 20 0 0 1 24 2z"/>
+        <path style="fill:var(--green)" d="M16 2A14 14 0 0 1 16 30A20 20 0 0 0 16 2z"/>
+    </symbol>
+</svg>
+
+<a class="skip-link" href="#contenuto" data-skip data-i18n="skip"></a>
+<div id="draftRibbon" role="note" data-i18n="ribbon"></div>
+
+<header id="siteHeader">
+    <div class="wrap header__in">
+        <a class="logo" href="#" data-i18n-attr="aria-label:nav.home">
+            <svg viewBox="0 0 176 38" aria-hidden="true" focusable="false">
+                <use href="#crescents" x="0" y="3" width="27" height="32"/>
+                <text class="logo__top" x="34" y="12" textLength="142" lengthAdjust="spacing">OFFICINA CARROZZERIA</text>
+                <text class="logo__main" x="33" y="33" textLength="143" lengthAdjust="spacingAndGlyphs">CIPRESSINA</text>
+            </svg>
+        </a>
+        <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+            <a href="#servizi" data-i18n="nav.servizi"></a>
+            <a href="#come-funziona" data-i18n="nav.come"></a>
+            <a href="#interventi" data-i18n="nav.interventi"></a>
+            <a href="#chi-siamo" data-i18n="nav.chi"></a>
+            <a href="#contatti" data-i18n="nav.contatti"></a>
+        </nav>
+        <div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+            <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+            <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+            <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+            <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false">FR</button>
+        </div>
+        <a class="cta btn btn--primary btn--sm" href="#preventivo" data-i18n="nav.quote"></a>
+        <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel"></button>
+    </div>
+    <div id="navPanel">
+        <a href="#servizi" data-i18n="nav.servizi"></a>
+        <a href="#come-funziona" data-i18n="nav.come"></a>
+        <a href="#interventi" data-i18n="nav.interventi"></a>
+        <a href="#chi-siamo" data-i18n="nav.chi"></a>
+        <a href="#contatti" data-i18n="nav.contatti"></a>
+        <a href="#stato" data-i18n="lookup.title"></a>
+        <a class="btn btn--primary" href="#preventivo" data-i18n="nav.quote"></a>
+        <div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+            <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+            <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+            <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+            <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false">FR</button>
+        </div>
+    </div>
+</header>
+
+<div id="contenuto" tabindex="-1">
+
+<!-- ====================== VIEW: HOME ====================== -->
+<main id="view-home">
+
+    <section id="hero" class="hero">
+        <div class="wrap hero__grid">
+            <div class="hero__copy">
+                <h1 data-i18n="a.hero.title">Come appena varata.</h1>
+                <p class="lede" data-i18n="a.hero.lede"></p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#preventivo" data-i18n="a.hero.cta"></a>
+                    <a href="#stato" data-i18n="lookup.title"></a>
+                </div>
+            </div>
+
+            <div class="hero__stage">
+                <p id="heroSwatchLabel" class="hero__label" data-i18n="hero.swatchLabel"></p>
+                <div id="heroSwatches" role="radiogroup" aria-labelledby="heroSwatchLabel"></div>
+                <div id="heroBoat" data-boat-type="cabinato">
+                    <svg class="hero-poster" viewBox="0 0 320 200" role="img" data-i18n-attr="aria-label:hero.boatAlt">
+                        <path class="p-hull" d="M22 104H300L284 134H50Q32 124 22 104Z"/>
+                        <path class="p-cabin" d="M96 104L122 66H214L240 104Z"/>
+                        <path class="p-glass" d="M132 74H208L222 98H118Z"/>
+                        <path class="p-bottom" style="fill:var(--hero-bottom,#1d3b8f)" d="M50 134H284L268 160Q160 172 72 160Q58 150 50 134Z"/>
+                    </svg>
+                    <canvas id="heroCanvas"></canvas>
+                </div>
+                <p class="fan-caption" aria-live="polite">
+                    <span id="heroSwatchChip"></span>
+                    <span class="sr-only" data-i18n="hero.swatchChosen"></span>
+                    <strong id="heroSwatchName"></strong>
+                </p>
+                <p class="fan-note" data-i18n="hero.swatchNote"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="servizi" class="sec sec--alt">
+        <div class="wrap">
+            <div class="sec-head">
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="nav.servizi"></span></p>
+                <h2 data-i18n="a.serv.title"></h2>
+                <p class="lede" data-i18n="a.serv.lede"></p>
+            </div>
+            <div class="serv">
+                <div class="serv__diagram">
+                    <svg class="diagram" viewBox="0 0 500 200" aria-hidden="true" focusable="false">
+                        <path class="d-live" d="M58 112H312L292 148Q200 164 122 152Q80 142 58 112Z"/>
+                        <path class="d-hull" d="M22 74H324L312 112H58Q34 98 22 74Z"/>
+                        <path class="d-cabin" d="M112 74L140 42H232L258 74Z"/>
+                        <path class="d-live" d="M150 52H226L242 70H134Z" style="opacity:.55"/>
+                        <line class="d-wl" x1="6" y1="112" x2="494" y2="112"/>
+                        <path class="d-brk" d="M340 74H346V111H340"/>
+                        <path class="d-brk" d="M340 115H346V150H340"/>
+                        <text x="356" y="97" data-i18n="a.serv.dead">Opera morta</text>
+                        <text x="356" y="137" data-i18n="a.serv.live">Opera viva</text>
+                        <text class="d-leg" x="6" y="188" style="text-transform:none" data-i18n="a.serv.wl">Linea di galleggiamento</text>
+                    </svg>
+                    <div class="defs">
+                        <div><h3 data-i18n="a.serv.dead"></h3><p data-i18n="a.serv.deadDef"></p></div>
+                        <div><h3 data-i18n="a.serv.live"></h3><p data-i18n="a.serv.liveDef"></p></div>
+                    </div>
+                </div>
+                <div>
+                    <h3 data-i18n="a.serv.hull.title"></h3>
+                    <ul class="svc-list">
+                        <li data-i18n="a.serv.h1"></li>
+                        <li data-i18n="a.serv.h2"></li>
+                        <li data-i18n="a.serv.h3"></li>
+                        <li data-i18n="a.serv.h4"></li>
+                        <li data-i18n="a.serv.h5"></li>
+                    </ul>
+                    <p class="serv__act"><a class="btn btn--ghost" href="#preventivo" data-i18n="a.serv.quote"></a></p>
+                </div>
+                <div>
+                    <h3 data-i18n="a.serv.eng.title"></h3>
+                    <ul class="svc-list">
+                        <li data-i18n="a.serv.e1"></li>
+                        <li data-i18n="a.serv.e2"></li>
+                        <li data-i18n="a.serv.e3"></li>
+                        <li data-i18n="a.serv.e4"></li>
+                        <li data-i18n="a.serv.e5"></li>
+                        <li data-i18n="a.serv.e6"></li>
+                    </ul>
+                    <p class="serv__note" data-i18n="a.serv.eng.note"></p>
+                    <p class="serv__note"><span data-i18n="a.serv.engCta"></span> <a href="#contatti" data-i18n="a.serv.engLink"></a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="come-funziona" class="sec">
+        <div class="wrap">
+            <div class="sec-head">
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="nav.come"></span></p>
+                <h2 data-i18n="a.how.title"></h2>
+                <p class="lede" data-i18n="a.how.lede"></p>
+            </div>
+            <ol class="steps">
+                <li><h3 data-i18n="a.how.s1.t"></h3><p data-i18n="a.how.s1.d"></p></li>
+                <li><h3 data-i18n="a.how.s2.t"></h3><p data-i18n="a.how.s2.d"></p></li>
+                <li><h3 data-i18n="a.how.s3.t"></h3><p data-i18n="a.how.s3.d"></p></li>
+                <li><h3 data-i18n="a.how.s4.t"></h3><p data-i18n="a.how.s4.d"></p></li>
+            </ol>
+            <div class="how__foot">
+                <a class="btn btn--primary" href="#preventivo" data-i18n="a.how.cta"></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="interventi" class="sec sec--alt">
+        <div class="wrap">
+            <div class="sec-head">
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="nav.interventi"></span></p>
+                <h2 data-i18n="a.int.title"></h2>
+                <p class="lede" data-i18n="a.int.lede"></p>
+            </div>
+
+            <!-- The price sentence: the static content is the true default result (2 zones, 8 m, Completo) -->
+            <form id="quoteLine" novalidate>
+                <p class="ql__sentence">
+                    <span data-i18n="ql.pre">Intervenire su</span>
+                    <label class="sr-only" for="qlCount" data-i18n="ql.countLabel">Numero di zone</label>
+                    <select id="qlCount">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                    <span id="qlWord">zone</span>
+                    <span data-i18n="ql.mid1">di una barca lunga</span>
+                    <label class="sr-only" for="qlLoa" data-i18n="ql.loaLabel">Lunghezza della barca</label>
+                    <select id="qlLoa">
+                        <option value="5">5 m</option>
+                        <option value="6">6 m</option>
+                        <option value="8" selected>8 m</option>
+                        <option value="10">10 m</option>
+                        <option value="12">12 m</option>
+                        <option value="15">15 m</option>
+                    </select>
+                    <span data-i18n="ql.afterLoa"></span>
+                    <span data-i18n="ql.mid2">con il</span>
+                    <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
+                    <select id="qlTier">
+                        <option value="base" data-i18n="tier.base.name">Pacchetto Base</option>
+                        <option value="completo" data-i18n="tier.completo.name" selected>Pacchetto Completo</option>
+                        <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
+                    </select>
+                    <span data-i18n="ql.post">costa da</span>
+                    <span class="ph"><output id="qlTotal">1.292 €</output></span>
+                </p>
+                <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+                <button type="submit" class="btn btn--primary" data-i18n="ql.cta">Seleziona le zone in 3D</button>
+            </form>
+
+            <div class="tiers">
+                <article class="tier">
+                    <h3 data-i18n="tier.base.name"></h3>
+                    <p class="tier__price"><span class="ph" data-tier-from="base">da 60 € al metro</span></p>
+                    <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
+                    <a class="btn btn--ghost" href="#preventivo" data-tier-choose="base" data-i18n="tier.choose"></a>
+                </article>
+                <article class="tier tier--feat">
+                    <h3 data-i18n="tier.completo.name"></h3>
+                    <p class="tier__badge" data-i18n-html="tier.badge.h"></p>
+                    <p class="tier__price"><span class="ph" data-tier-from="completo">da 85 € al metro</span></p>
+                    <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
+                    <a class="btn btn--primary" href="#preventivo" data-tier-choose="completo" data-i18n="tier.choose"></a>
+                </article>
+                <article class="tier">
+                    <h3 data-i18n="tier.premium.name"></h3>
+                    <p class="tier__price"><span class="ph" data-tier-from="premium">da 120 € al metro</span></p>
+                    <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
+                    <a class="btn btn--ghost" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
+                </article>
+            </div>
+            <p class="int__note" data-i18n-html="tier.note.h"></p>
+
+            <h3 class="int__sub" data-i18n="disc.title"></h3>
+            <p class="int__sublede"><span data-i18n="a.int.disc.lede"></span> <span class="ph" data-i18n="a.ph.pct"></span></p>
+            <ul id="discountList">
+                <li class="discount-step"><span class="discount-step__zones">2 zone</span><strong class="discount-step__rate">5%</strong></li>
+                <li class="discount-step"><span class="discount-step__zones">3 zone</span><strong class="discount-step__rate">7%</strong></li>
+                <li class="discount-step"><span class="discount-step__zones">4 zone</span><strong class="discount-step__rate">9%</strong></li>
+                <li class="discount-step"><span class="discount-step__zones">5 o più zone</span><strong class="discount-step__rate">10%</strong></li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="chi-siamo" class="sec">
+        <div class="wrap">
+            <div class="sec-head">
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="nav.chi"></span></p>
+                <h2 data-i18n="a.why.title"></h2>
+                <p class="lede" data-i18n="a.why.lede"></p>
+            </div>
+            <div class="why">
+                <div>
+                    <dl class="facts">
+                        <div><dt data-i18n="a.why.f1.k">Forno</dt><dd data-i18n="a.why.f1.d"></dd></div>
+                        <div><dt>3</dt><dd data-i18n="a.why.f2.d"></dd></div>
+                        <div><dt>4</dt><dd data-i18n="a.why.f3.d"></dd></div>
+                        <div><dt>2</dt><dd data-i18n="a.why.f4.d"></dd></div>
+                    </dl>
+                    <p class="why__fine"><span class="ph" data-i18n="a.why.fine"></span></p>
+                </div>
+                <div class="photos">
+                    <div class="photo" role="img" data-i18n-attr="aria-label:a.why.photo1"><span data-i18n="a.why.photo1"></span></div>
+                    <div class="photo" role="img" data-i18n-attr="aria-label:a.why.photo2"><span data-i18n="a.why.photo2"></span></div>
+                </div>
+            </div>
+            <h3 class="int__sub" data-i18n="a.why.r.title"></h3>
+            <div class="reasons" style="margin-top:0">
+                <div><h3 data-i18n="a.why.r1"></h3><p><span class="ph" data-i18n="a.ph.text"></span></p></div>
+                <div><h3 data-i18n="a.why.r2"></h3><p><span class="ph" data-i18n="a.ph.text"></span></p></div>
+                <div><h3 data-i18n="a.why.r3"></h3><p><span class="ph" data-i18n="a.ph.text"></span></p></div>
+            </div>
+            <div class="awards">
+                <h3 data-i18n="a.why.awards"></h3>
+                <ul>
+                    <li>Mercurio d'oro</li>
+                    <li>Alfiere Economico</li>
+                    <li>Venezia che Lavora</li>
+                    <li>Lavoro e Progresso</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="domande" class="sec sec--alt">
+        <div class="wrap faq">
+            <div class="sec-head" style="margin-bottom:0">
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="a.faq.eyebrow"></span></p>
+                <h2 data-i18n="a.faq.title"></h2>
+                <p class="lede" data-i18n="a.faq.lede"></p>
+            </div>
+            <div class="faq__list">
+                <details class="q"><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q4"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q5"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q6"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q7"></summary><p data-i18n-html="faq.a.h"></p></details>
+                <details class="q"><summary data-i18n="faq.q8"></summary><p data-i18n-html="faq.a.h"></p></details>
+            </div>
+        </div>
+    </section>
+
+    <section id="contatti" class="sec">
+        <div class="wrap contact">
+            <div>
+                <p class="eyebrow"><svg class="mark" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg><span data-i18n="nav.contatti"></span></p>
+                <h2 data-i18n="a.cont.title"></h2>
+                <p class="lede" data-i18n="a.cont.lede"></p>
+                <dl>
+                    <div>
+                        <dt data-i18n="contact.address"></dt>
+                        <dd><span id="contactAddress">Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</span>
+                            <button type="button" data-copy="#contactAddress" data-i18n="btn.copy"></button>
+                            <a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Nazario+Sauro+15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map"></a></dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="contact.phone"></dt>
+                        <dd><span id="contactPhone">041 907941</span>
+                            <button type="button" data-copy="#contactPhone" data-i18n="btn.copy"></button></dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="contact.email"></dt>
+                        <dd><span id="contactEmail">info@carrozzeriacipressina.it</span>
+                            <button type="button" data-copy="#contactEmail" data-i18n="btn.copy"></button></dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="contact.whatsapp"></dt>
+                        <dd data-i18n-html="contact.whatsappTbc.h"></dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="contact.hours"></dt>
+                        <dd data-i18n-html="contact.hoursTbc.h"></dd>
+                    </div>
+                </dl>
+                <div class="contact__act">
+                    <a class="btn btn--primary" href="#preventivo" data-i18n="a.hero.cta">Calcola il preventivo</a>
+                    <a href="#stato" data-i18n="lookup.title"></a>
+                </div>
+            </div>
+            <div class="photo" role="img" data-i18n-attr="aria-label:a.cont.photo" style="aspect-ratio:4/3"><span data-i18n="a.cont.photo"></span></div>
+        </div>
+    </section>
+</main>
+
+<!-- ====================== VIEW: WIZARD ====================== -->
+<section id="view-wizard" hidden>
+
+    <nav data-i18n-attr="aria-label:wiz.progress">
+        <ol id="wizProgress" class="progress">
+            <li data-step="1"><span data-i18n="prog.1"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="2"><span data-i18n="prog.2"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="3"><span data-i18n="prog.3"></span><span class="sr-only" data-progress-sr></span></li>
+            <li data-step="4"><span data-i18n="prog.4"></span><span class="sr-only" data-progress-sr></span></li>
+        </ol>
+    </nav>
+
+    <!-- STEP 1: the boat and its owner -->
+    <form class="step" data-step="1" novalidate hidden>
+        <h1 data-i18n="step1.title" tabindex="-1"></h1>
+        <p data-i18n="step1.sub"></p>
+
+        <fieldset>
+            <legend data-i18n="step1.cardBoat"></legend>
+            <div class="fields">
+
+                <div class="field field--full">
+                    <span id="boatTypeLabel" class="lbl" data-i18n="fld.boatType"></span>
+                    <div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">
+                        <button type="button" role="radio" aria-checked="false" data-value="gommone"><span data-type-icon="gommone"></span><span data-i18n="type.gommone"></span></button>
+                        <button type="button" role="radio" aria-checked="false" data-value="open"><span data-type-icon="open"></span><span data-i18n="type.open"></span></button>
+                        <button type="button" role="radio" aria-checked="false" data-value="cabinato"><span data-type-icon="cabinato"></span><span data-i18n="type.cabinato"></span></button>
+                        <button type="button" role="radio" aria-checked="false" data-value="flybridge"><span data-type-icon="flybridge"></span><span data-i18n="type.flybridge"></span></button>
+                        <button type="button" role="radio" aria-checked="false" data-value="vela"><span data-type-icon="vela"></span><span data-i18n="type.vela"></span></button>
+                    </div>
+                    <p id="boatTypeError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="builder" data-i18n="fld.builder"></label>
+                    <input id="builder" type="text" list="builderList" autocomplete="off">
+                    <datalist id="builderList"></datalist>
+                    <p id="builderHint" class="field__hint" data-i18n="hint.builder"></p>
+                    <p id="builderError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="model" data-i18n="fld.model"></label>
+                    <input id="model" type="text" list="modelList" autocomplete="off">
+                    <datalist id="modelList"></datalist>
+                    <p id="modelHint" class="field__hint" data-i18n="hint.model"></p>
+                    <a id="modelSource" class="modelsrc" href="#" target="_blank" rel="noopener" hidden></a>
+                    <p id="modelError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="year" data-i18n="fld.year"></label>
+                    <input id="year" type="text" inputmode="numeric" autocomplete="off">
+                    <p id="yearError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="loa" data-i18n="fld.loa"></label>
+                    <div class="input-row">
+                        <input id="loa" class="has-end" type="text" inputmode="decimal" autocomplete="off"><span class="affix affix--end">m</span>
+                    </div>
+                    <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
+                    <p id="loaError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field field--full">
+                    <span id="registeredLabel" class="lbl" data-i18n="fld.registered"></span>
+                    <div id="registered" role="radiogroup" aria-labelledby="registeredLabel">
+                        <button type="button" role="radio" aria-checked="false" data-value="registrata" data-i18n="opt.registrata"></button>
+                        <button type="button" role="radio" aria-checked="false" data-value="natante" data-i18n="opt.natante"></button>
+                    </div>
+                    <p id="registeredNote" role="status" hidden data-i18n-html="note.natante10.h"></p>
+                    <p id="registeredError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field" hidden>
+                    <label for="registration" data-i18n="fld.registration"></label>
+                    <input id="registration" type="text" autocapitalize="characters" autocomplete="off">
+                    <p id="registrationHint" class="field__hint" data-i18n-html="hint.registration.h"></p>
+                    <p id="registrationError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="engineHours"><span data-i18n="fld.engineHours"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                    <input id="engineHours" type="text" inputmode="numeric" autocomplete="off">
+                    <p id="engineHoursHint" class="field__hint" data-i18n="hint.engineHours"></p>
+                    <p id="engineHoursError" class="field__error" role="alert" hidden></p>
+                </div>
+
+                <div class="field">
+                    <label for="location"><span data-i18n="fld.location"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                    <input id="location" type="text">
+                    <p id="locationHint" class="field__hint" data-i18n="hint.location"></p>
+                </div>
+
+                <div class="field">
+                    <label for="boatName"><span data-i18n="fld.boatName"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                    <input id="boatName" type="text">
+                </div>
+
+                <div class="field">
+                    <label for="colorCode"><span data-i18n="fld.colorCode"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                    <input id="colorCode" type="text">
+                    <p id="colorCodeHint" class="field__hint" data-i18n-html="hint.colorCode.h"></p>
+                </div>
+            </div>
+
+            <div id="boatSummary" hidden>
+                <span id="boatSummaryIcon"></span>
+                <span id="boatSummaryText"></span>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n="step1.cardOwner"></legend>
+            <div class="fields">
+                <div class="field">
+                    <label for="firstName" data-i18n="fld.firstName"></label>
+                    <input id="firstName" type="text" autocomplete="given-name">
+                    <p id="firstNameError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field">
+                    <label for="lastName" data-i18n="fld.lastName"></label>
+                    <input id="lastName" type="text" autocomplete="family-name">
+                    <p id="lastNameError" class="field__error" role="alert" hidden></p>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <!-- STEP 2: the tier -->
+    <section class="step" data-step="2" hidden>
+        <h1 data-i18n="step2.title" tabindex="-1"></h1>
+        <p data-i18n="step2.sub"></p>
+        <div class="field">
+            <div id="tier" role="radiogroup" data-i18n-attr="aria-label:step2.title">
+                <button type="button" class="tier-card" role="radio" aria-checked="false" data-value="base">
+                    <strong data-i18n="tier.base.name"></strong>
+                    <span class="tc-price"><span class="ph" data-tier-from="base"></span></span>
+                    <span class="tc-items"><span class="tc-item" data-i18n="tier.base.i1"></span><span class="tc-item" data-i18n="tier.base.i2"></span></span>
+                </button>
+                <button type="button" class="tier-card" role="radio" aria-checked="false" data-value="completo">
+                    <strong data-i18n="tier.completo.name"></strong>
+                    <span class="tc-badge" data-i18n-html="tier.badge.h"></span>
+                    <span class="tc-price"><span class="ph" data-tier-from="completo"></span></span>
+                    <span class="tc-items"><span class="tc-item" data-i18n="tier.completo.i1"></span><span class="tc-item" data-i18n="tier.completo.i2"></span></span>
+                </button>
+                <button type="button" class="tier-card" role="radio" aria-checked="false" data-value="premium">
+                    <strong data-i18n="tier.premium.name"></strong>
+                    <span class="tc-price"><span class="ph" data-tier-from="premium"></span></span>
+                    <span class="tc-items"><span class="tc-item" data-i18n="tier.premium.i1"></span><span class="tc-item" data-i18n="tier.premium.i2"></span><span class="tc-item" data-i18n="tier.premium.i3"></span></span>
+                </button>
+            </div>
+            <p id="tierError" class="field__error" role="alert" hidden></p>
+        </div>
+        <p class="step-note" data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <!-- STEP 3: zones -->
+    <section class="step" data-step="3" hidden>
+        <h1 data-i18n="step3.title" tabindex="-1"></h1>
+        <p data-i18n="step3.sub"></p>
+
+        <div class="zones-layout">
+            <div id="boatView3d">
+                <div id="boatCanvasWrap">
+                    <canvas id="boatCanvas" data-i18n-attr="aria-label:viewer.label"></canvas>
+                    <span id="zoneHover" aria-hidden="true"></span>
+                    <div id="boatOverlay">
+                        <svg class="spinner" viewBox="8 0 24 32" aria-hidden="true"><use href="#crescents"/></svg>
+                        <p id="boatLoading" data-i18n="viewer.loading"></p>
+                        <p id="boatError" role="alert" hidden></p>
+                    </div>
+                </div>
+                <div class="viewer-bar">
+                    <div id="boatViewButtons" role="group" data-i18n-attr="aria-label:viewer.views">
+                        <button type="button" data-view="prua" aria-pressed="false" data-i18n="view.prua"></button>
+                        <button type="button" data-view="poppa" aria-pressed="false" data-i18n="view.poppa"></button>
+                        <button type="button" data-view="sinistra" aria-pressed="false" data-i18n="view.sinistra"></button>
+                        <button type="button" data-view="destra" aria-pressed="false" data-i18n="view.destra"></button>
+                        <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
+                        <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
+                    </div>
+                    <button type="button" id="waterToggle"></button>
+                </div>
+                <p class="viewer-hint" data-i18n="viewer.hint"></p>
+            </div>
+
+            <aside id="zonesSummary" tabindex="-1">
+                <h2 data-i18n="sum.title"></h2>
+                <p id="zonesCount"></p>
+                <p id="zonesEmpty" data-i18n="sum.empty"></p>
+                <ul id="zonesList"></ul>
+                <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
+                <p id="zonesNudge" hidden></p>
+                <div id="estimate" hidden>
+                    <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
+                    <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
+                    <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
+                    <p id="estNote"></p>
+                </div>
+                <p data-i18n-html="sum.placeholder.h"></p>
+            </aside>
+        </div>
+
+        <details id="zonesPicker">
+            <summary data-i18n="zones.picker"></summary>
+            <fieldset>
+                <legend data-i18n="zones.pickerLegend"></legend>
+                <div id="zonesChecklist"></div>
+            </fieldset>
+        </details>
+    </section>
+
+    <!-- STEP 4: contacts -->
+    <form class="step" data-step="4" novalidate hidden>
+        <h1 data-i18n="step4.title" tabindex="-1"></h1>
+        <p data-i18n-html="step4.sub.h"></p>
+
+        <fieldset>
+            <legend data-i18n="prog.4"></legend>
+            <div class="fields">
+                <div class="field">
+                    <label for="region" data-i18n="fld.region"></label>
+                    <select id="region" autocomplete="off"></select>
+                    <p id="regionError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field">
+                    <label for="province" data-i18n="fld.province"></label>
+                    <select id="province"></select>
+                    <p id="provinceError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field" hidden>
+                    <label for="provinceText" data-i18n="fld.province"></label>
+                    <input id="provinceText" type="text" autocomplete="off">
+                    <p id="provinceTextError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field" hidden>
+                    <label for="country" data-i18n="fld.country"></label>
+                    <input id="country" type="text" autocomplete="country-name">
+                    <p id="countryError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field">
+                    <label for="phone" data-i18n="fld.phone"></label>
+                    <div class="input-row">
+                        <span class="affix affix--start">+39</span><input id="phone" class="has-start" type="tel" inputmode="tel" autocomplete="tel-national">
+                    </div>
+                    <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
+                    <p id="phoneError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field" hidden>
+                    <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
+                    <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
+                    <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field">
+                    <label for="email" data-i18n="fld.email"></label>
+                    <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+                    <p id="emailHint" class="field__hint" data-i18n="hint.email"></p>
+                    <p id="emailError" class="field__error" role="alert" hidden></p>
+                </div>
+                <div class="field field--full">
+                    <label for="notes"><span data-i18n="fld.notes"></span> <span class="opt" data-i18n="fld.optional"></span></label>
+                    <textarea id="notes" rows="4" data-i18n-attr="placeholder:ph.notes"></textarea>
+                </div>
+            </div>
+        </fieldset>
+        <p data-i18n-html="privacy.h"></p>
+    </form>
+
+    <!-- SUCCESS -->
+    <section id="success" hidden>
+        <h1 data-i18n="success.title" tabindex="-1"></h1>
+        <p data-i18n="success.lede" style="margin-top:10px;color:var(--muted)"></p>
+        <div class="code-card">
+            <p class="code-label"><span data-i18n="success.code"></span> <span class="ph" data-i18n="success.demo"></span></p>
+            <strong id="successCode"></strong>
+            <button type="button" id="successCopy" data-copy="#successCode" data-i18n="btn.copy"></button>
+        </div>
+        <p class="success-note" data-i18n-html="success.demoNote.h"></p>
+        <div class="success-act">
+            <a href="#stato" data-i18n="success.lookup"></a>
+            <button type="button" id="resetBtn" class="btn btn--ghost" data-i18n="btn.reset"></button>
+        </div>
+    </section>
+
+    <div id="wizardFoot">
+        <p id="stepHint" role="status" hidden></p>
+        <button type="button" id="stepBack" hidden data-i18n="btn.back"></button>
+        <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+    </div>
+</section>
+
+<!-- ====================== VIEW: LOOKUP ====================== -->
+<section id="view-lookup" hidden>
+    <h1 data-i18n="lookup.title" tabindex="-1"></h1>
+    <p data-i18n="lookup.sub"></p>
+    <form id="lookupForm" novalidate>
+        <label for="lookupId" data-i18n="lookup.label"></label>
+        <div class="lookup-row">
+            <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+            <button type="submit" id="lookupSubmit" data-i18n="lookup.submit"></button>
+        </div>
+        <p id="lookupError" role="alert" hidden></p>
+    </form>
+    <div id="lookupResult" hidden tabindex="-1">
+        <dl>
+            <div><dt data-i18n="lookup.res.code"></dt><dd id="resultId"></dd></div>
+            <div><dt data-i18n="lookup.res.boat"></dt><dd id="resultBoat"></dd></div>
+            <div><dt data-i18n="lookup.res.name"></dt><dd id="resultName"></dd></div>
+            <div><dt data-i18n="lookup.res.status"></dt><dd><span class="ph" id="resultStatus"></span></dd></div>
+        </dl>
+        <p data-i18n-html="lookup.demoNote.h"></p>
+    </div>
+    <p><a href="#" data-i18n="nav.home"></a></p>
+</section>
+
+</div><!-- /#contenuto -->
+
+<a id="waFab" class="fab" href="#contatti" data-i18n-attr="aria-label:fab.label">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.200zm4.500-6.100c-.2-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.100l-.8 1c-.1.200-.3.200-.5.100a6.700 6.700 0 0 1-3.300-2.900c-.2-.4.200-.4.700-1.300.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.100-.7.300-.2.300-.9.900-.9 2.200s.9 2.500 1.100 2.700c.1.200 1.800 2.800 4.400 3.900 1.600.7 2.300.7 3.100.6.500-.1 1.500-.6 1.700-1.200.2-.6.200-1.100.2-1.200-.1-.1-.3-.2-.5-.3z"/></svg>
+</a>
+
+<footer id="siteFooter">
+    <div class="wrap foot">
+        <div>
+            <p class="foot__legal">Officina Carrozzeria Cipressina S.R.L. · <span data-i18n="foot.vat"></span> IT00762770279</p>
+            <p class="foot__muted">Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</p>
+            <p class="foot__muted">© <span id="footYear">2026</span></p>
+        </div>
+        <nav data-i18n-attr="aria-label:nav.label">
+            <a href="#servizi" data-i18n="nav.servizi"></a>
+            <a href="#come-funziona" data-i18n="nav.come"></a>
+            <a href="#interventi" data-i18n="nav.interventi"></a>
+            <a href="#chi-siamo" data-i18n="nav.chi"></a>
+            <a href="#contatti" data-i18n="nav.contatti"></a>
+            <a href="#stato" data-i18n="lookup.title"></a>
+        </nav>
+    </div>
+</footer>
+
+<script src="shared/zones.js" defer></script>
+<script src="shared/regioni.js" defer></script>
+<script src="shared/i18n.js" defer></script>
+<script src="shared/app.js" defer></script>

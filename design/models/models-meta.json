@@ -1,0 +1,82 @@
+{
+  "gommone": {
+    "source": "zodiac-redc130",
+    "propulsion": "outboard",
+    "waterline_note": "y=0 is the static waterline, set at about the lower edge of the tubes (hull keel line 0.20 m below it, V-hull; hull panels are mostly hidden under the tubes). Estimated, not from a boot stripe.",
+    "order": [
+      "bottom",
+      "topside_port",
+      "topside_starboard",
+      "tube_port",
+      "tube_starboard",
+      "console",
+      "deck",
+      "transom",
+      "outboard"
+    ]
+  },
+  "open": {
+    "source": "grady-freedom-325",
+    "propulsion": "outboard",
+    "waterline_note": "y=0 estimated at ~33% of hull depth above the keel line (keel 0.59 m below y=0); boot band +-6 cm around it. T-top is kept as deco_hardtop (gelcoat), not a zone.",
+    "order": [
+      "bottom",
+      "boot",
+      "topside_port",
+      "topside_starboard",
+      "transom",
+      "deck",
+      "console",
+      "outboard"
+    ]
+  },
+  "cabinato": {
+    "source": "whaler-285-conquest",
+    "propulsion": "outboard",
+    "waterline_note": "y=0 estimated at ~31% of hull depth above the keel line (keel 0.53 m below y=0, cockpit sole just above y=0); boot band +-6 cm.",
+    "order": [
+      "bottom",
+      "boot",
+      "topside_port",
+      "topside_starboard",
+      "transom",
+      "deck",
+      "cabin",
+      "hardtop",
+      "outboard"
+    ]
+  },
+  "flybridge": {
+    "source": "grand-banks-2002",
+    "propulsion": "inboard",
+    "waterline_note": "y=0 estimated at ~30% of hull depth above the keel line (keel 0.81 m below y=0) near the colour change of the original paint; boot band +-7 cm. Twin screws: node 'propeller' holds both props, shafts and struts.",
+    "order": [
+      "bottom",
+      "boot",
+      "topside_port",
+      "topside_starboard",
+      "transom",
+      "deck",
+      "cabin",
+      "flybridge",
+      "propeller",
+      "rudder"
+    ]
+  },
+  "vela": {
+    "source": "irwin-38",
+    "propulsion": "inboard",
+    "waterline_note": "y=0 set at the original antifouling/boot-stripe colour change (hull bottom 0.74 m below y=0, fin keel bottom 1.25 m below = draft). Boot band +-7 cm. Fin keel split from the bottom; sails deleted, mast, boom and rigging kept as deco_ nodes (mast top 15.7 m).",
+    "order": [
+      "bottom",
+      "boot",
+      "topside_port",
+      "topside_starboard",
+      "transom",
+      "deck",
+      "cabin",
+      "keel",
+      "rudder"
+    ]
+  }
+}

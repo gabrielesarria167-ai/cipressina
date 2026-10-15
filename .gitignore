@@ -1,0 +1,7 @@
+# Downloaded Sketchfab originals (~230 MB): re-download from the links in
+# design/models/CREDITS.md into design/models/src/<type>/<slug>/model.glb.
+design/models/src/
+# Intermediate pipeline output
+design/models/out/
+__pycache__/
+.DS_Store

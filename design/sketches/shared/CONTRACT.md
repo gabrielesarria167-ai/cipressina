@@ -1,0 +1,275 @@
+# DOM contract: what a skin must produce for `shared/app.js`
+
+Three skins (A Officina, B Cantiere, C Laguna) differ in markup layout, CSS and home copy only. All behaviour lives in `shared/*.js`. This file is the whole interface between the two sides. `design/sketches/reference.html` is a complete, unstyled page that follows it and is tested; copy from it.
+
+Words: **R** = required (the logic breaks or degrades without it), **O** = optional (used when present, silently skipped otherwise). "App writes" means JS sets it and the skin only styles it.
+
+## 0. Load order and page shell
+
+```html
+<!-- inside <head>, before the content: the import map from brief.md (R) -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<!-- optional, plain data, before the scripts: this page's own copy and 3D theme -->
+<script>
+window.CIPRESSINA_I18N_EXTRA = { it: {"home.hero.title": "…"}, en: {…}, es: {…}, fr: {…} };
+window.CIPRESSINA_CONFIG = { theme: { water, select, hover, topsides, bottom, deck }, heroTheme: { … }, heroSpinPitch: -10 };
+</script>
+<!-- at the end of <body>, in this order (R) -->
+<script src="shared/zones.js" defer></script>
+<script src="shared/regioni.js" defer></script>
+<script src="shared/i18n.js" defer></script>
+<script src="shared/app.js" defer></script>
+```
+
+- `boat3d.js` is imported by `app.js` (dynamic `import()`, absolute URL derived from `app.js`'s own `src`, so it resolves to `design/sketches/boat3d.js`; an external classic script's `import()` is relative to the script, not the document). Override: `window.CIPRESSINA_BOAT3D_URL`.
+- The page must be served over http(s): ES modules do not load from `file://`.
+- `CIPRESSINA_CONFIG.theme` / `heroTheme` are passed to `mountBoat3D({theme})` for the wizard viewer and the hero. `heroTheme.bottom` also sets the colour of the «Originale» swatch. (O)
+- `CIPRESSINA_CONFIG.heroSpinPitch` (number, degrees, optional) is passed to the hero's `mountBoat3D({spinPitch})`: the camera pitch of the turntable. Positive looks down from above (default 14); negative puts the camera below the waterline looking slightly up, which shows the bottom (opera viva) together with the topsides, like a boat on a cradle seen from the ground. The hero has no water, so use about `-10` to preview antifouling colours. Clamped to -30..60. With `prefers-reduced-motion` the static picture uses the same pitch when it is set. (O)
+- Home copy: either `CIPRESSINA_I18N_EXTRA` before the scripts or `CIPRESSINA_I18N.extend({it:{…},…})` any time after `i18n.js`. Both apply immediately.
+- The page is complete without JS (home view visible, wizard and lookup `hidden`). The reference default for the price sentence is the true result of the default selection.
+
+## 1. Global rules
+
+### Required CSS (functional, not decorative)
+```css
+[hidden]            { display: none !important; }   /* author display:flex etc. would otherwise defeat the attribute */
+#boatOverlay.hidden { display: none; }              /* boat3d.js toggles the CLASS "hidden" on the overlay */
+.sr-only            { /* visually hidden, still read */ }
+#heroBoat, #boatCanvasWrap { position: relative; /* and a real height/aspect-ratio: the canvas follows its size */ }
+#heroBoat canvas, #boatCanvasWrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#heroBoat.is-3d .hero-poster { /* hide or crossfade the SVG poster once 3D is up */ }
+#navPanel { /* closed by default; shown when .is-open */ }
+```
+Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="true"]` on `#stepNext` styled as inactive but **still clickable** (it must not be `disabled`), `scroll-margin-top` / `scroll-padding-top` for the sticky header and the sticky progress bar.
+
+### State hooks (App writes; skins style)
+| Hook | Where | Meaning |
+|---|---|---|
+| `body.is-home` / `.is-wizard` / `.is-lookup` | `<body>` | current view. e.g. `body.is-wizard #waFab { display:none }` hides the FAB on the wizard (success included) |
+| `body[data-route]` = `home` \| `wizard` \| `lookup` | `<body>` | same, as an attribute |
+| `body[data-step]` = `1`..`4` \| `success` | `<body>`, wizard only | e.g. widen the card on steps 2–3 (`body[data-step="3"]`) |
+| `.is-active` | hero swatches, language buttons, `.step`, `[data-view]` buttons (boat3d) | selected / current |
+| `.is-selected` | boat-type, registered, berthKind and tier radios | selected |
+| `.is-current` / `.is-done` + `aria-current="step"` | `#wizProgress li` | progress state |
+| `.is-invalid` | `.field` wrapper | field has an error |
+| `[aria-invalid="true"]` | the control (or the radiogroup) | field has an error |
+| `.is-maxed` | `#zonesNudge` | maximum discount reached (solid instead of dashed) |
+| `.is-open` + `aria-expanded` | `#menuToggle`, `#navPanel` | mobile menu open |
+| `.is-copied` | `[data-copy]` button | «Copiato!» for 2 s |
+| `.is-3d` / `.is-fallback` | `#heroBoat` | 3D mounted / import or WebGL failed (SVG poster stays) |
+| `[hidden]` | anything | JS shows and hides with the attribute |
+| `[aria-checked]`, `[aria-pressed]` | radios / view buttons | a11y state, also stylable |
+| `[data-water="on|off"]` | `#waterToggle` | water visible or not |
+| `[data-status="…"]` | `#resultStatus` | lookup status id |
+
+### Placeholders
+`<span class="ph">…</span>` marks anything unconfirmed. Each skin styles `.ph` (dashed amber outline) in its own palette. JS never creates `.ph` itself, except in the lookup result (sample boat and name). Strings with a `.ph` come from the keys ending in `.h` (trusted HTML), used with `data-i18n-html`.
+
+### i18n attributes
+- `data-i18n="key"` sets `textContent`. Put it on a leaf element (the contents are replaced).
+- `data-i18n-html="key.h"` sets `innerHTML` (only the shared `.h` keys, which contain `<span class="ph">`).
+- `data-i18n-attr="aria-label:key;placeholder:key2"` sets attributes.
+- `data-i18n-params='{"n":4}'` optional parameters for the three above.
+- **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#waterToggle`, `#menuToggle`, `#zonesCount`, `#zonesNudge`, `#estimate *`, `#qlWord`, `#qlBefore`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
+- Shared keys: see `shared/i18n.js` (nav, buttons, wizard, fields, errors, tiers, viewer, summary, price sentence, success, lookup, statuses, contact labels, FAQ questions + `faq.a.h`, boat types `type.<id>`, swatches `sw.<id>`, ribbon, footer `foot.vat`). Page copy goes under the page's own key prefix.
+
+## 2. Chrome (every view)
+
+| Element | Id / attribute | R/O | Notes |
+|---|---|---|---|
+| Skip link | `<a class="skip-link" href="#contenuto" data-skip data-i18n="skip">` | R | `data-skip` stops the router from treating `#contenuto` as a home anchor |
+| Content target | `#contenuto` with `tabindex="-1"` | R | wraps the three views |
+| Draft ribbon | `#draftRibbon` `data-i18n="ribbon"` | R | on every view: put it outside the views, in the shell |
+| Header | `#siteHeader` | O | sticky. `top: env(safe-area-inset-top, 0px)` |
+| Logo link | `href="#"` (home), `data-i18n-attr="aria-label:nav.home"` | R | |
+| Nav links | `<a href="#servizi">` … `#come-funziona`, `#interventi`, `#chi-siamo`, `#contatti` | R | plain hashes `[A-Za-z0-9-]` only |
+| CTA | `<a href="#preventivo" data-i18n="nav.quote">` | R | `#preventivo` is the wizard |
+| Language switcher | `<button type="button" data-lang="it|en|es|fr" lang="…" aria-label="Italiano" aria-pressed>` ×4 inside a `role="group"` labelled `lang.label` | R | repeatable (header and menu panel); App writes `.is-active` and `aria-pressed`. A `<select data-lang-select>` also works |
+| Menu toggle | `button#menuToggle` (`aria-controls="navPanel"`, `aria-expanded`) | R | App writes `aria-label` («Apri/Chiudi il menu»), `.is-open`; give it an icon through CSS |
+| Menu panel | `#navPanel` (links as above, may repeat the language switcher) | R | closes on link click, outside click, Escape (focus returns to the toggle) |
+| FAB | `<a id="waFab" href="#contatti" data-i18n-attr="aria-label:fab.label">` | R | WhatsApp number is `.ph`: it points at `#contatti`. Hide it with `body.is-wizard #waFab` |
+| Footer year | `#footYear` | O | App writes the current year (put the current year as the static fallback) |
+| Copy buttons | `<span id="x">text</span><button type="button" data-copy="#x" data-i18n="btn.copy">` | R for phone, email, address | copies that element's text, on failure selects it; the text must be visible and selectable |
+
+## 3. Views
+
+Three containers, switched with `hidden` by the router: `#view-home` (visible by default), `#view-wizard` (`hidden`), `#view-lookup` (`hidden`). Each contains an `<h1>`, which receives focus (`tabindex="-1"`) when the view opens (not on first load). In the wizard the focus goes to the `<h1>` of the current step (or the success panel).
+
+Router: `#preventivo` → wizard, `#stato` → lookup, `""` → home, any other plain hash → home then scroll to that id. The step is in `history.state`, not in the URL.
+
+### 3.1 Home
+
+| Element | Id / attribute | R/O |
+|---|---|---|
+| Hero boat host | `#heroBoat` with `data-boat-type="cabinato"` (any boat type) | R for the 3D hero |
+| …inside it, SVG poster | `<svg class="hero-poster">` whose bottom path uses `style="fill:var(--hero-bottom,#1d3b8f)"` | R (the fallback if 3D fails) |
+| …inside it, canvas | `<canvas id="heroCanvas">` | R |
+| Swatch radiogroup | `#heroSwatches` `role="radiogroup" aria-labelledby="heroSwatchLabel"`, **empty**: App renders the 11 strips | R |
+| Swatch label | `#heroSwatchLabel` (`data-i18n="hero.swatchLabel"`) | R |
+| Caption | `#heroSwatchChip` (App sets `--sw`), `#heroSwatchName` (App sets the name), inside an `aria-live="polite"` element | O |
+| Note «colori indicativi» | `data-i18n="hero.swatchNote"` | R (brief) |
+
+App renders each swatch as `<button type="button" class="swatch" role="radio" aria-checked data-value="<id>" data-color="#hex" title="<maker>" style="--sw:#hex;--i:0..10;--n:11;--z:…">` + `<span class="swatch__name" data-i18n="sw.<id>">`, `aria-label` = the colour name. The middle one (index 5) is «Originale» and starts selected. `--i` index, `--n` count, `--z` z-index peaking in the middle: the fan geometry hooks. App sets `--hero-bottom` (hex) on `#heroBoat`. Do not hide the name with `display:none` / `visibility:hidden` (clip it with the `.sr-only` technique instead). Pre-authored strips are kept if the group is not empty: each then needs `role="radio"`, `data-value`, `data-color`.
+
+Price sentence (the true default result as static HTML):
+
+| Element | Id | Notes |
+|---|---|---|
+| Form | `form#quoteLine` | submit sets the wizard finish + length, goes to `#preventivo` |
+| Count | `select#qlCount` | options `value` 1..6 |
+| Length | `select#qlLoa` | options `value` in metres (5, 6, 8, 10, 12, 15), text «8 m» |
+| Tier | `select#qlTier` | options `base`, `completo`, `premium`, text via `data-i18n="tier.<id>.name"` |
+| Word | `#qlWord` | App writes «zona/zone» |
+| Total | `#qlTotal` (an `<output>`/span) | App writes the formatted price. Wrap in `.ph` |
+| Before | `#qlBefore` | App writes `<s>1.360 €</s> senza lo sconto del 5% …`, hidden when no discount |
+| Sentence pieces | `data-i18n` keys `ql.pre`, `ql.mid1`, `ql.afterLoa`, `ql.mid2`, `ql.post`; visually-hidden labels `ql.countLabel`, `ql.loaLabel`, `ql.tierLabel`; button `ql.cta` | R, in this order: pre, count, word, mid1, loa, afterLoa, mid2, tier, post, total |
+
+Tiers and discount list:
+
+| Element | Hook | Notes |
+|---|---|---|
+| Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 60 € al metro» (the topsides price per metre). Wrap in `.ph` |
+| Tier choose link | `<a href="#preventivo" data-tier-choose="base">` | O: preselects the finish in the wizard |
+| Discount list | `ul#discountList` | App replaces the children with `li.discount-step > span.discount-step__zones + strong.discount-step__rate`, from `DISCOUNT_STEPS`. Static `<li>`s inside are the no-JS fallback |
+
+Other sections (Servizi, Come funziona, Interventi, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+
+Contacts section: address, phone and email each as visible text + copy button (§2); `https://www.google.com/maps/search/?api=1&query=Via+Nazario+Sauro+15+Olmo+di+Martellago` link (`contact.map`); WhatsApp and hours as `.ph` (`contact.whatsappTbc.h`, `contact.hoursTbc.h`).
+
+### 3.2 Wizard (`#view-wizard`)
+
+```html
+<section id="view-wizard" hidden>
+  <nav data-i18n-attr="aria-label:wiz.progress">
+    <ol id="wizProgress">
+      <li data-step="1"><span data-i18n="prog.1"></span><span class="sr-only" data-progress-sr></span></li>  <!-- ×4 -->
+    </ol>
+  </nav>
+  <form class="step" data-step="1" novalidate hidden> <h1 data-i18n="step1.title"></h1> … </form>
+  <section class="step" data-step="2" hidden> <h1>…</h1> … </section>
+  <section class="step" data-step="3" hidden> <h1>…</h1> … </section>
+  <form class="step" data-step="4" novalidate hidden> <h1>…</h1> … </form>
+  <section id="success" hidden> … </section>
+  <div id="wizardFoot">
+    <p id="stepHint" role="status" hidden></p>
+    <button type="button" id="stepBack" hidden data-i18n="btn.back"></button>
+    <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+  </div>
+</section>
+```
+- Steps 1 and 4 are `<form class="step" novalidate>` (Enter in a field = the main button, no native submit); steps 2 and 3 are `<section class="step">`. All start `hidden`. App writes `.is-active` and `hidden`.
+- `#wizProgress li[data-step]`: App writes `.is-current`, `.is-done`, `aria-current="step"` and the sr-only text.
+- `#stepNext` text is App's («Salva e continua» / «Continua» / «Invia richiesta» / «Invio in corso…»). `#stepBack` is hidden on step 1. App hides `#wizProgress` and `#wizardFoot` and `#stepNext` on success.
+- Do not use HTML `pattern`, `required` or `maxlength` on wizard fields: the rules table in `app.js` is the single source (it sets `maxlength` itself).
+
+**Field pattern (R for every field)**: a wrapper `.field` containing exactly one control (or one radiogroup), its label, an optional hint and an error:
+
+```html
+<div class="field">
+  <label for="year" data-i18n="fld.year"></label>
+  <input id="year" type="text" inputmode="numeric" autocomplete="off">
+  <p id="yearHint" class="field__hint" data-i18n="…"></p>           <!-- O -->
+  <p id="yearError" class="field__error" role="alert" hidden></p>    <!-- R for required fields; App writes the text -->
+</div>
+```
+Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedby` from the ones that exist. Optional fields: label has an extra `<span data-i18n="fld.optional">`. Conditional fields are hidden by App through the `hidden` attribute **on their `.field`**.
+
+**Radiogroup pattern** (boat type, registered, berthKind, tier; the antifouling strips use it with `.is-active`): `<div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">` with `<button type="button" role="radio" aria-checked="false" data-value="…">` children. One Tab stop, arrows/Home/End move and select. A type card holds a picture slot, the name and a sub-label (what the type also covers):
+```html
+<button type="button" role="radio" aria-checked="false" data-value="gommone" aria-labelledby="typeName-gommone" aria-describedby="typeSub-gommone">
+  <span class="type-media"><img data-type-thumb="gommone" src="models/thumbs/gommone.webp" alt=""><span data-type-icon="gommone"></span></span>
+  <span id="typeName-gommone" data-i18n="type.gommone"></span>
+  <span id="typeSub-gommone" data-i18n="type.sub.gommone"></span>
+</button>
+```
+- `[data-type-icon]` (App injects the SVG silhouette, `currentColor`) is the fallback. `img[data-type-thumb]` and its `[data-type-icon]` **must share a parent**: App shows the picture and hides the icon (`hidden` attribute on both) only once the image has loaded; if the file is missing or fails, the icon stays. Do not use `loading="lazy"` on these images (a hidden lazy image never loads, so it would never replace the icon). Thumbnail folder: `models/thumbs/<type>.webp`, relative to the page (override: `CIPRESSINA_CONFIG.thumbDir`, trailing slash).
+- Sub-label keys `type.sub.<id>` (shared); the note under the cards is `type.note` (use `#boatTypeHint`, so App adds it to `aria-describedby`).
+
+**Step 1 controls**
+
+| Id | Kind | Values / notes |
+|---|---|---|
+| `boatType` | radiogroup | `data-value` = `gommone`, `open`, `cabinato`, `flybridge`, `vela` |
+| `builder` | `input type=text list="builderList"` | + `<datalist id="builderList">` (empty, App fills) |
+| `model` | `input type=text list="modelList"` | + `<datalist id="modelList">` (empty, App fills; filtered by builder) |
+| `modelSource` | `<a target="_blank" rel="noopener" hidden>` | O. App writes «dati da beneteau.com» and `href` when a known model pre-fills length/type |
+| `modelAutofill` | `<p class="field__hint" role="status" aria-live="polite">`, **empty and never `hidden`** | O. App writes «Tipo e lunghezza compilati dal catalogo, verifica i dati.» when a builder + model match fills the type and/or the length, and clears it when the customer changes either by hand or the model no longer matches (the text is written into an always-present live region so it is announced) |
+| `year` | text, `inputmode=numeric` | |
+| `loa` | text, `inputmode=decimal` | the «m» suffix is the skin's static text |
+| `registered` | radiogroup | `data-value` = `registrata`, `natante` |
+| `berthKind` | radiogroup, **required** | «Dove si trova la barca?». `data-value` = `acqua`, `terra`, `carrello` (labels `opt.berth.*`); error `#berthKindError` (`err.berthKind`); goes in the payload as `berthKind`. Sits before `location` |
+| `registeredNote` | `<p role="status" hidden data-i18n-html="note.natante10.h">` | O. App toggles `hidden` (natante and LOA > 10 m) |
+| `registration` | text | its `.field` is hidden unless `registrata` |
+| `engineHours`, `location`, `boatName`, `colorCode` | text | optional (`engineHours` also has an error element); `colorCode` hint uses `hint.colorCode.h`. `location` is labelled «Porto o località» (`fld.location`) |
+| `firstName`, `lastName` | text | |
+| `boatSummary` (`hidden`), `boatSummaryIcon`, `boatSummaryThumb`, `boatSummaryText` | O | App fills the type silhouette + «Beneteau Oceanis 40.1 · 12,87 m · 2019». `boatSummaryThumb` is `<img id="boatSummaryThumb" data-type-thumb="" alt="" hidden>` in the same parent as `boatSummaryIcon`: App sets its `data-type-thumb` and `src` per type, with the same fallback to the silhouette |
+
+**Step 2**: `#tier` radiogroup, `data-value` = `base`, `completo`, `premium`. Each card: name `data-i18n="tier.<id>.name"`, `<span data-tier-from="<id>">`, items `tier.<id>.i1…`, the «Più scelto» badge `tier.badge.h` on `completo`, and the «composizione indicativa» note `tier.note.h` once. Error `#tierError` (O).
+
+**Step 3**
+
+| Id | Kind | R/O | Notes |
+|---|---|---|---|
+| `boatView3d` | wrapper | O | |
+| `boatCanvasWrap` | `position:relative` box with size | R | `canvasWrapEl`; the canvas follows its size |
+| `boatCanvas` | `<canvas>` | R | App replaces it with a fresh clone on a type change (same attributes, so put `aria-label` via `data-i18n-attr="aria-label:viewer.label"` on it) |
+| `boatOverlay` | child of the wrap | R | boat3d adds class `hidden` when ready, removes it on failure |
+| `boatLoading`, `boatError` | children of the overlay | R | `boatError` is `hidden` + `role="alert"`; App/boat3d write its text |
+| `boatViewButtons` | `role="group"` | R | contains `button[data-view="prua|poppa|sinistra|destra|alto|sotto"]` (text `view.<name>`); boat3d writes `.is-active` and `aria-pressed` |
+| `waterToggle` | button | R | App writes its label («Nascondi/Mostra acqua») |
+| `zoneHover` | any element, `aria-hidden` | O | App writes the hovered zone's name |
+| `zonesSummary` | `tabindex="-1"` container | R | focus lands here when the list empties |
+| `zonesCount`, `zonesEmpty`, `zonesList` (`<ul>`), `zonesClear` (button, `hidden`) | | R | rows: `li.zone-row[data-zone] > span.zone-row__name + span.zone-row__price + button.zone-row__remove[data-zone-remove]` |
+| `zonesNudge` | | R | `hidden` when empty; `.is-maxed` at the cap |
+| `estimate` (`hidden`) | | R | children: `estSubtotalRow` (hidden without discount) > `estSubtotal`; `estDiscountRow` > `estDiscountLabel` + `estDiscount`; `estTotal` (`aria-live="polite"`); `estNote` |
+| placeholder tag | `<span class="ph" data-i18n-html="sum.placeholder.h">` | R (brief): next to the estimate |
+| `antifoulingBlock` | wrapper, `hidden` | O | Optional «Colore antivegetativa (indicativo)». App shows it only while zone `bottom` is selected |
+| `antifoulingSwatches` | `role="radiogroup" aria-labelledby="antifoulingLabel"`, **empty** | O | App renders the same 11 `.swatch` buttons as `#heroSwatches` (same `Z.SWATCHES`, `sw.<id>` names, `aria-label`), roving tabindex, `.is-active` + `aria-checked`. «Originale» is the wizard theme's `bottom` colour. Choosing one calls `setColors({ bottom: hex })` on the wizard viewer (nothing is painted when the viewer failed; the choice is still kept), stores `state.antifoulingColor` (the swatch id), shows its name in the `bottom` row of `zonesList` (`span.zone-row__sub`) and sends `antifoulingColor` in the payload. Deselecting `bottom` clears it |
+| `antifoulingLabel`, `antifoulingCaption` (`hidden`), `antifoulingChip` (App sets `--sw`), `antifoulingName` | | O | label, and the «colore scelto» caption (shown once a colour is chosen). Put the «colori indicativi» note (`af.note.h`, `.ph`) next to them |
+| `zonesPicker` | `<details>` with `<summary data-i18n="zones.picker">` | R | auto-opens on 3D failure or when the main button is pressed with no zone |
+| `zonesChecklist` | empty `<div>` inside it | R | App renders `label.check > input[type=checkbox][value=<zone>] + span` |
+
+**Step 4**
+
+| Id | Kind | Notes |
+|---|---|---|
+| `region` | `<select>`, **empty** | App renders the placeholder, the 20 regions and «Estero / Fuori Italia» (`value="__estero"`) |
+| `province` | `<select>`, empty | filled for Veneto, FVG, Emilia-Romagna, Lombardia, Trentino-AA; disabled until a region is chosen |
+| `provinceText` | text, its `.field` `hidden` | shown for the 15 free-text regions |
+| `country` | text, its `.field` `hidden` | shown for «Estero» |
+| `phone` | `type=tel` | the fixed «+39» prefix is the skin's static text; its `.field` is hidden for «Estero» |
+| `phoneIntl` | `type=tel`, its `.field` `hidden` | shown for «Estero» |
+| `email` | `type=email` | |
+| `notes` | `<textarea>` | `data-i18n-attr="placeholder:ph.notes"` |
+| privacy line | `data-i18n-html="privacy.h"` | `.ph` |
+
+**Success** (inside the wizard view, `#success`, `hidden`): `<h1 data-i18n="success.title">`, `data-i18n="success.lede"`, label `success.code` + a `.ph` `success.demo`, `#successCode` (App writes the 10 digits; keep it selectable), `button#successCopy[data-copy="#successCode"]`, `success.demoNote.h`, `<a href="#stato">` (`success.lookup`), `button#resetBtn` («Nuova richiesta»).
+
+### 3.3 Lookup (`#view-lookup`)
+
+```html
+<section id="view-lookup" hidden>
+  <h1 data-i18n="lookup.title"></h1>
+  <form id="lookupForm" novalidate>
+    <label for="lookupId" data-i18n="lookup.label"></label>
+    <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+    <button type="submit" id="lookupSubmit" data-i18n="lookup.submit"></button>
+    <p id="lookupError" role="alert" hidden></p>
+  </form>
+  <div id="lookupResult" hidden>   <!-- App focuses it (tabindex -1) -->
+    <dl>… <dd id="resultId"> <dd id="resultBoat"> <dd id="resultName"> <dd><span class="ph" id="resultStatus"></span></dd></dl>
+    <p data-i18n-html="lookup.demoNote.h"></p>
+  </div>
+</section>
+```
+`#lookupSubmit` text is swapped to «Verifica in corso…» while busy and restored. Any 10 digits give a demo status (`.ph`); the code just «sent» in this session shows its own boat and name.
+
+## 4. What the JS does that a skin can rely on
+
+- Prices are always `it-IT` euros (`1.250 €`) in every UI language, always next to a `.ph`.
+- Language: default `navigator.language` if it/en/es/fr, else `it`; the choice persists in `localStorage["cipressina.lang"]` (try/catch). `<html lang>` follows. Everything JS writes re-renders on language change (event `cipressina:lang` on `document`).
+- Errors show on blur and clear as soon as the value is valid; the main button is never disabled; a click on an incomplete step marks every missing field, focuses the first, and writes `#stepHint`.
+- Changing the boat type clears the zones, announces it (a polite live region the app creates), destroys the 3D viewer and mounts a fresh one on the next visit to step 3.
+- 3D failure (import twice, WebGL, build) opens `#zonesPicker` and shows the error in `#boatError`; the quote can always be finished from the checklist.
+- Reduced motion: scripted scrolling is instant; the hero does not spin.
+- Window events: `popstate` and `hashchange` drive the router; the wizard uses `history.pushState({view:"wizard", step})` with URL `#preventivo`.

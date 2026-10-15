@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>boat3d: pagina di prova</title>
+
+<!-- The host page declares the import map: boat3d.js only says
+     `import ... from 'three'` and `three/addons/...`. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+  :root { --ink: #14202b; --line: #d5dde5; --accent: #1d3b8f; --select: #1aa64a; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font: 15px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--ink);
+    background: linear-gradient(180deg, #eaf1f7 0%, #f7f9fb 55%, #ffffff 100%); min-height: 100vh;
+  }
+  header { padding: 14px 20px 6px; }
+  h1 { margin: 0; font-size: 18px; }
+  .sub { margin: 2px 0 0; color: #5b6b7a; font-size: 13px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; padding: 10px 20px 24px; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; }
+  .toolbar label { font-size: 13px; color: #44566a; }
+  select, button {
+    font: inherit; padding: 6px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); cursor: pointer;
+  }
+  button:hover { border-color: #9fb2c6; }
+  button.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .views { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .swatch { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,.25); }
+  #stage {
+    position: relative; width: 100%; aspect-ratio: 16 / 10; min-height: 300px; border-radius: 14px; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 30%, #f9fcff 0%, #dbe8f2 100%); border: 1px solid var(--line);
+  }
+  #stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #stage canvas.hoverable { cursor: pointer; }
+  #overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(255,255,255,.7); text-align: center; padding: 20px; }
+  #overlay.hidden { display: none; }
+  #tip {
+    position: absolute; pointer-events: none; padding: 3px 9px; border-radius: 6px; background: rgba(20,32,43,.88); color: #fff;
+    font-size: 12px; transform: translate(12px, 14px); display: none; white-space: nowrap;
+  }
+  aside { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; align-self: start; }
+  aside h2 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: #5b6b7a; }
+  #selected { list-style: none; margin: 0; padding: 0; }
+  #selected li { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #eef2f6; }
+  #selected li b { font-weight: 600; }
+  #selected li button { padding: 1px 8px; font-size: 12px; }
+  #empty { color: #8a98a6; font-size: 13px; }
+  .hint { font-size: 12px; color: #7a8896; margin-top: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Carrozzeria Cipressina: visualizzatore 3D barche (prova)</h1>
+  <p class="sub">Tocca una zona per selezionarla. Trascina per girare la barca. URL: <code>?type=vela&amp;view=sotto&amp;sel=keel,rudder&amp;water=0&amp;spin=1&amp;pitch=-10&amp;url=models/prova.glb</code> (<code>url</code> sostituisce il file del modello: un indirizzo sbagliato prova il percorso d'errore)</p>
+</header>
+
+<div class="layout">
+  <main>
+    <div class="toolbar">
+      <label>Tipo
+        <select id="type">
+          <option value="gommone">Gommone</option>
+          <option value="open">Open</option>
+          <option value="cabinato">Cabinato</option>
+          <option value="flybridge">Flybridge</option>
+          <option value="vela">Barca a vela</option>
+        </select>
+      </label>
+      <span class="views" id="views" role="group" aria-label="Vista">
+        <button type="button" data-view="prua">Prua</button>
+        <button type="button" data-view="poppa">Poppa</button>
+        <button type="button" data-view="sinistra">Sinistra</button>
+        <button type="button" data-view="destra">Destra</button>
+        <button type="button" data-view="alto">Alto</button>
+        <button type="button" data-view="sotto">Sotto</button>
+      </span>
+      <button type="button" id="reset">Vista iniziale</button>
+      <label><input type="checkbox" id="water" checked> Acqua</label>
+    </div>
+    <div class="toolbar" id="colors">
+      <span class="swatch">Colori:</span>
+      <button type="button" data-c='{"topsides":"#f4f6f8","bottom":"#1d3b8f","deck":"#e9e4da","boot":"#1d3b8f"}'><span class="swatch"><i style="background:#f4f6f8"></i>Bianco/blu</span></button>
+      <button type="button" data-c='{"topsides":"#14181d","bottom":"#7a1018","deck":"#cdbf9d","boot":"#c9a24a"}'><span class="swatch"><i style="background:#14181d"></i>Nero/rosso</span></button>
+      <button type="button" data-c='{"topsides":"#9c1b22","bottom":"#14181d","deck":"#e9e4da","boot":"#f4f6f8"}'><span class="swatch"><i style="background:#9c1b22"></i>Rosso</span></button>
+      <button type="button" data-c='{"topsides":"#1c3f7a","bottom":"#2b2b2b","deck":"#d8d2c4","boot":"#f4f6f8"}'><span class="swatch"><i style="background:#1c3f7a"></i>Blu navy</span></button>
+      <button type="button" data-c='{"topsides":"#e8c21a","bottom":"#1d3b8f","deck":"#e9e4da","boot":"#14181d"}'><span class="swatch"><i style="background:#e8c21a"></i>Giallo</span></button>
+    </div>
+
+    <div id="stage">
+      <canvas id="canvas"></canvas>
+      <div id="overlay"><span id="loading">Caricamento modello 3D…</span><span id="error" hidden></span></div>
+      <div id="tip"></div>
+    </div>
+  </main>
+
+  <aside>
+    <h2>Zone selezionate (<span id="count">0</span>)</h2>
+    <ul id="selected"></ul>
+    <div id="empty">Nessuna zona selezionata.</div>
+    <button type="button" id="clear" style="margin-top:10px">Deseleziona tutto</button>
+    <p class="hint">La selezione vive qui, nella pagina (un <code>Set</code>): il visualizzatore la legge con <code>isPartSelected</code> e la modifica con <code>onPartToggle</code>.</p>
+  </aside>
+</div>
+
+<script type="module">
+  const params = new URLSearchParams(location.search);
+  const typeEl = document.getElementById('type');
+  const stage = document.getElementById('stage');
+  const tipEl = document.getElementById('tip');
+  const viewsEl = document.getElementById('views');
+  const waterEl = document.getElementById('water');
+  const listEl = document.getElementById('selected');
+  const emptyEl = document.getElementById('empty');
+  const countEl = document.getElementById('count');
+
+  const mod = await import('./boat3d.js');
+  const { BOAT_TYPES, BOAT_MODELS, mountBoat3D } = mod;
+
+  // Host-owned selection: the viewer never keeps its own.
+  const selection = new Set();
+  let viewer = null;
+  let canvasEl = document.getElementById('canvas');
+  let currentColors = null;
+
+  const labelOf = (id) => BOAT_MODELS[typeEl.value].defaultLabelsIt[id] || id;
+
+  function renderList() {
+    listEl.innerHTML = '';
+    for (const id of selection) {
+      const li = document.createElement('li');
+      li.innerHTML = '<span><b></b> <small style="color:#8a98a6"></small></span><button type="button">x</button>';
+      li.querySelector('b').textContent = labelOf(id);
+      li.querySelector('small').textContent = id;
+      li.querySelector('button').addEventListener('click', () => { selection.delete(id); renderList(); viewer && viewer.refreshSelection(); });
+      listEl.appendChild(li);
+    }
+    countEl.textContent = String(selection.size);
+    emptyEl.style.display = selection.size ? 'none' : '';
+  }
+
+  function mount(type, first) {
+    if (viewer) viewer.destroy();
+    // A destroyed viewer drops its WebGL context for good: swap in a new canvas.
+    const fresh = document.createElement('canvas');
+    fresh.id = 'canvas';
+    canvasEl.replaceWith(fresh);
+    canvasEl = fresh;
+    document.getElementById('overlay').classList.remove('hidden');
+
+    viewer = mountBoat3D({
+      boatType: type,
+      canvasEl,
+      canvasWrapEl: stage,
+      overlayEl: document.getElementById('overlay'),
+      errorEl: document.getElementById('error'),
+      loadingLabelEl: document.getElementById('loading'),
+      modelUrl: params.get('url') || undefined,
+      buttonsEl: viewsEl,
+      isPartSelected: (id) => selection.has(id),
+      onPartToggle: (id) => { selection.has(id) ? selection.delete(id) : selection.add(id); renderList(); },
+      onHover: (id) => {
+        tipEl.style.display = id ? 'block' : 'none';
+        if (id) tipEl.textContent = labelOf(id);
+      },
+      onLoadError: () => console.warn('onLoadError called'),
+      spin: first && params.get('spin') === '1',
+      spinPitch: params.has('pitch') ? Number(params.get('pitch')) : undefined,
+      showWater: waterEl.checked,
+    });
+    if (currentColors) viewer.setColors(currentColors);
+    window.viewer = viewer;
+  }
+
+  canvasEl = document.getElementById('canvas');
+  stage.addEventListener('pointermove', (e) => {
+    const r = stage.getBoundingClientRect();
+    tipEl.style.left = (e.clientX - r.left) + 'px';
+    tipEl.style.top = (e.clientY - r.top) + 'px';
+  });
+
+  // URL params: ?type=&view=&sel=&water=&spin=&pitch=&url=&colors=
+  const initialType = BOAT_TYPES.includes(params.get('type')) ? params.get('type') : 'open';
+  typeEl.value = initialType;
+  if (params.get('water') === '0') waterEl.checked = false;
+  (params.get('sel') || '').split(',').filter(Boolean).forEach((id) => {
+    if (BOAT_MODELS[initialType].parts.includes(id)) selection.add(id);
+  });
+  mount(initialType, true);
+  renderList();
+  const initialView = params.get('view');
+  // `true`: jump instead of flying, so a scripted screenshot is not mid-flight.
+  if (initialView) viewer.setView(initialView, true);
+  const initialColors = params.get('colors');
+  if (initialColors) {
+    try { currentColors = JSON.parse(initialColors); viewer.setColors(currentColors); } catch (e) { /* ignore a malformed param */ }
+  }
+
+  typeEl.addEventListener('change', () => { selection.clear(); renderList(); mount(typeEl.value, false); });
+  waterEl.addEventListener('change', () => viewer.setWaterVisible(waterEl.checked));
+  document.getElementById('reset').addEventListener('click', () => viewer.resetView());
+  document.getElementById('clear').addEventListener('click', () => { selection.clear(); renderList(); viewer.refreshSelection(); });
+  document.getElementById('colors').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-c]');
+    if (!btn) return;
+    currentColors = JSON.parse(btn.dataset.c);
+    viewer.setColors(currentColors);
+  });
+</script>
+</body>
+</html>

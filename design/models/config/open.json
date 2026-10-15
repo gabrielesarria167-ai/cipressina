@@ -1,0 +1,19 @@
+{
+ "group": "open",
+ "source": "grady-freedom-325",
+ "bow": "-Y",
+ "loa": 9.9,
+ "delete_materials": [
+  "Registration.001"
+ ],
+ "wl": 0.6,
+ "boot": 0.06,
+ "floor": -0.3,
+ "strip_materials": {
+  "Base.000": [
+   0.72,
+   0.73,
+   0.75
+  ]
+ }
+}
