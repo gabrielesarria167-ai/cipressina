@@ -136,7 +136,7 @@ Other sections (Servizi, Come funziona, Interventi, Galleria, Perché noi, FAQ, 
 
 Gallery (O): each `a[data-lightbox="<group>"]` (`barche`, `sede`) links to the full photo and wraps its thumbnail `img`, whose `alt` becomes the caption. With `dialog#lightbox` > `#lightboxImg`, `#lightboxCaption`, `#lightboxCount` (`lb.count`), `#lightboxPrev`, `#lightboxNext` and `#lightboxClose`, App opens the photos in the dialog, previous / next within the group; without it the links simply open the file.
 
-Contacts section: address, phone and email each as visible text + copy button (§2); `https://www.google.com/maps/search/?api=1&query=Via+Nazario+Sauro+15+Olmo+di+Martellago` link (`contact.map`); WhatsApp and hours as `.ph` (`contact.whatsappTbc.h`, `contact.hoursTbc.h`).
+Contacts section: address, phone and email each as visible text + copy button (§2); `https://www.google.com/maps/search/?api=1&query=Viale+Nazario+Sauro+13-15+Olmo+di+Martellago` link (`contact.map`); WhatsApp as a `wa.me` link; opening hours as plain text (`contact.openingHours.h`).
 
 ### 3.2 Wizard (`#view-wizard`)
 
