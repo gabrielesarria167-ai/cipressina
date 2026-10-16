@@ -192,7 +192,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 
 | Id | Kind | Values / notes |
 |---|---|---|
-| `boatType` | radiogroup | `data-value` = `gommone`, `open`, `cabinato`, `flybridge`, `vela` |
+| `boatType` | radiogroup | `data-value` = `gommone`, `open`, `cabinato`, `yacht`, `vela` |
 | `builder` | `input type=text list="builderList"` | + `<datalist id="builderList">` (empty, App fills) |
 | `model` | `input type=text list="modelList"` | + `<datalist id="modelList">` (empty, App fills; filtered by builder) |
 | `modelSource` | `<a target="_blank" rel="noopener" hidden>` | O. App writes «dati da beneteau.com» and `href` when a known model pre-fills length/type |

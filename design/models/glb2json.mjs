@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const DIR = new URL('../../models/', import.meta.url).pathname;
-const types = process.argv.slice(2).length ? process.argv.slice(2) : ['gommone', 'open', 'cabinato', 'flybridge', 'vela'];
+const types = process.argv.slice(2).length ? process.argv.slice(2) : ['gommone', 'open', 'cabinato', 'yacht', 'vela'];
 for (const t of types) {
   const buf = fs.readFileSync(path.join(DIR, t + '.glb'));
   if (buf.readUInt32LE(0) !== 0x46546c67) throw new Error(t + ': not a GLB');

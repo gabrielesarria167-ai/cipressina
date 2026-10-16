@@ -214,11 +214,11 @@
         "Sport cruiser, hard-top, sterndrive",
         "Sport cruiser, hard-top, intra-fueraborda",
         "Sport cruiser, hard-top, inbord à embase");
-    R("type.sub.flybridge",
-        "Motoryacht, navetta, trawler",
-        "Motor yacht, navetta, trawler",
-        "Yate a motor, navetta, trawler",
-        "Yacht à moteur, navetta, trawler");
+    R("type.sub.yacht",
+        "Motoryacht, flybridge, navetta, trawler",
+        "Motor yacht, flybridge, navetta, trawler",
+        "Yate a motor, flybridge, navetta, trawler",
+        "Yacht à moteur, flybridge, navetta, trawler");
     R("type.sub.vela",
         "Cabinata, monoscafo",
         "Cabin sailboat, monohull",

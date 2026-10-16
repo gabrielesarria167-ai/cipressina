@@ -4,7 +4,7 @@
 
    The sibling of autocolor's carVisual.js. Every boat is a real model: one
    meshopt-compressed GLB per boat type (models/<type>.glb), loaded with
-   GLTFLoader. Five boats: gommone (RIB), open, cabinato, flybridge and vela.
+   GLTFLoader. Five boats: gommone (RIB), open, cabinato, yacht and vela.
 
    It keeps carVisual's design principles:
 
@@ -17,7 +17,7 @@
      - It draws on demand (see requestRender), not in a permanent loop,
        except on the turntable of a hero viewer (`spin`).
      - Camera distance and clipping planes come from the loaded model's own
-       bounding box, never from constants, so a 6 m RIB and a 16 m flybridge
+       bounding box, never from constants, so a 6 m RIB and an 18 m yacht
        are framed by the same code.
      - The GLB download is watched: a 15 s stall timer re-armed on every
        progress event, and one retry on a fresh URL (`?reintento=2`).
@@ -57,7 +57,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
    `frameMaxY` (optional) leaves everything above that height out of the
    camera framing: a tall mast would shrink the hull to a toy.
 ------------------------------------------------------------------------- */
-export const BOAT_TYPES = ['gommone', 'open', 'cabinato', 'flybridge', 'vela'];
+export const BOAT_TYPES = ['gommone', 'open', 'cabinato', 'yacht', 'vela'];
 
 const LABELS_IT = {
   bottom: 'Opera viva (carena)',
@@ -105,9 +105,11 @@ export const BOAT_MODELS = {
   cabinato: modelEntry('cabinato',
     ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'hardtop', 'outboard'],
     { loa: 11.0, beam: 3.6 }),
-  flybridge: modelEntry('flybridge',
-    ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'flybridge', 'propeller', 'rudder'],
-    { loa: 16.0, beam: 4.5 }),
+  // A flybridge motor yacht. The source model has no props, shafts or rudder.
+  yacht: modelEntry('yacht',
+    ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'flybridge'],
+    { loa: 18.0, beam: 4.75 },
+    { cabin: 'Sovrastruttura' }),
   vela: modelEntry('vela',
     ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'keel', 'rudder'],
     { loa: 12.0, beam: 3.8 },

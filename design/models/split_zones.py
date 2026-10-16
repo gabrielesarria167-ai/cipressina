@@ -40,8 +40,9 @@ def mk_mat(name):
 def set_single_material(o, mname):
     o.data.materials.clear()
     o.data.materials.append(mk_mat(mname))
-    # drop uv layers (no textures on painted zones)
+    # drop uv layers (no textures on painted zones) and vertex colours (GLTFLoader would multiply them in)
     for uv in list(o.data.uv_layers): o.data.uv_layers.remove(uv)
+    for ca in list(o.data.color_attributes): o.data.color_attributes.remove(ca)
 
 def hull_zones(hull, wl, L, boot=0.0, transom_frac=0.10, transom_nx=0.55, topside_nout=0.15, deck_name='deck'):
     """hull: object holding the hull shell faces (world coords already normalised, +X bow, +Y port).
@@ -214,12 +215,60 @@ def build_vela(P, cfg):
     collect(zones, parts, hz)
     return zones, [parts['']] if parts.get('') else [], {'propulsion': 'inboard'}
 
-BUILDERS = {'vela': build_vela, 'flybridge': build_flybridge, 'gommone': build_gommone, 'open': build_open, 'cabinato': build_cabinato}
+def face_vcolor(o):
+    """mean vertex colour (rgb) per face; None if the mesh has no colour attribute."""
+    me = o.data
+    if not me.color_attributes: return None
+    ca = me.color_attributes[0]
+    if ca.domain == 'POINT':
+        a = np.empty(len(me.vertices) * 4, np.float32); ca.data.foreach_get('color', a); a = a.reshape(-1, 4)
+        idx = np.empty(len(me.polygons) * 3, np.int32); me.polygons.foreach_get('vertices', idx)
+        return a[idx.reshape(-1, 3)].mean(1)[:, :3]
+    a = np.empty(len(me.loops) * 4, np.float32); ca.data.foreach_get('color', a)
+    return a.reshape(-1, 3, 4).mean(1)[:, :3]
+
+def build_yacht(P, cfg):
+    """OBJ-converted model: one untextured white material for most of the boat, colours in vertex colours.
+    Hull = the black faces of the two hull meshes (split at midships in the source). Superstructure = white faces
+    of the plain materials, split by height: flybridge above fly_z, deck = up-facing faces below foredeck_z,
+    cabin = the rest above the sheer. No props or rudders in the model."""
+    wl = cfg['wl']; cen = P.cen; nr = P.nr
+    vc = face_vcolor(P.o)
+    lab = np.full(len(cen), '', dtype=object)
+    dark = vc.max(1) < 0.1
+    white = vc.min(1) > 0.9
+    hull_src = np.isin(P.src, ['Object_12', 'Object_3'])
+    lab[hull_src & dark] = 'HULL'
+    plain = np.isin(P.matname, ['Default_0', 'White_0', 'material_0', 'Mat_12'])   # Mat_12 = swim platform + fore hull
+    sup = (lab == '') & plain & white
+    z = cen[:, 2]
+    sheer = 2.2   # top of the black hull (z here is still source height x scale; keel line at -0.24)
+    lab[sup & (z >= cfg['fly_z'])] = 'flybridge'
+    # normals of this OBJ conversion point either way, so test |n|
+    lab[sup & (z > wl) & (np.abs(nr[:, 2]) > 0.8) & (z < cfg['foredeck_z'])] = 'deck'
+    lab[sup & (lab == '') & (z < cfg['fly_z']) & (z > sheer)] = 'cabin'
+    # the white stern wall (garage door) above the swim platform is the transom; the black hull only wraps its corners
+    lab[sup & (np.abs(nr[:, 0]) > 0.6) & (cen[:, 0] < cen[:, 0].min() + 1.8) & (z > wl) & (z < sheer + 0.1)] = 'transom'
+    mark_below(P, lab, cfg['floor'])
+    parts = split_off(P.o, lab)
+    zones = {}
+    # hull faces above the waterline that hull_zones does not call topside (spray-rail tops) stay on their own side
+    hz = hull_zones(parts['HULL'], wl, cfg['loa'], boot=cfg.get('boot', 0.07), deck_name='HULLTOP')
+    top = hz.pop('HULLTOP', None)
+    if top is not None:
+        c = face_data(top)[0]
+        for k, v in split_off(top, np.where(c[:, 1] > 0, 'topside_port', 'topside_starboard')).items():
+            if k and v is not None: zones.setdefault(k, []).append(v)
+    collect(zones, parts, hz)
+    return zones, [parts['']] if parts.get('') else [], {'propulsion': 'inboard'}
+
+BUILDERS = {'vela': build_vela, 'flybridge': build_flybridge, 'yacht': build_yacht, 'gommone': build_gommone, 'open': build_open, 'cabinato': build_cabinato}
 
 # ------------------------------------------------------------------------------------------------
 ORDER = {
     'vela': ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'keel', 'rudder'],
     'flybridge': ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'flybridge', 'propeller', 'rudder'],
+    'yacht': ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'flybridge'],
     'cabinato': ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'cabin', 'hardtop', 'outboard'],
     'open': ['bottom', 'boot', 'topside_port', 'topside_starboard', 'transom', 'deck', 'console', 'outboard'],
     'gommone': ['bottom', 'topside_port', 'topside_starboard', 'tube_port', 'tube_starboard', 'console', 'deck', 'transom', 'outboard'],

@@ -61,8 +61,8 @@
     "bytes": 1938360,
     "missing": []
   },
-  "flybridge": {
-    "source": "grand-banks-2002",
+  "yacht": {
+    "source": "yatch-dannzjs",
     "parts": [
       "bottom",
       "boot",
@@ -71,16 +71,14 @@
       "transom",
       "deck",
       "cabin",
-      "flybridge",
-      "propeller",
-      "rudder"
+      "flybridge"
     ],
     "extra_zone_like_nodes": [],
-    "loa_m": 12.8,
-    "waterline_note": "y=0 estimated at ~30% of hull depth above the keel line (keel 0.81 m below y=0) near the colour change of the original paint; boot band +-7 cm. Twin screws: node 'propeller' holds both props, shafts and struts.",
+    "loa_m": 18,
+    "waterline_note": "y=0 estimated ~0.8 m above the keel line (keel 0.24 m below y=0), just above the transom's bottom edge; the model has one black hull colour, so no paint line to read. Boot band +-7 cm. No props, shafts or rudders in the source model. Stern flag, display stands, ground sheet and the transom name lettering removed.",
     "propulsion": "inboard",
-    "tris": 240009,
-    "bytes": 2417020,
+    "tris": 240516,
+    "bytes": 1909360,
     "missing": []
   },
   "vela": {

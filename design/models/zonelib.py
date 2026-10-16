@@ -183,6 +183,26 @@ def stage1(t):
     for o in list(objs):
         if o.name.startswith('Icosphere') or o.name in cfg.get('delete_objects', []) or mat_name(o) in cfg.get('delete_materials', []) or len(o.data.polygons) == 0:
             delete(o); objs.remove(o)
+    # keep_box: {axis: [min, max]} in the source's own (imported) coords; faces centred outside it are dropped
+    # (flags, display stands, a ground sheet glued into the hull mesh). null = open end.
+    # drop_boxes: [{axis: [min, max], "mats": [...]?}], faces centred inside any box (of those materials) are dropped.
+    def inside(cen, box):
+        m = np.ones(len(cen), bool)
+        for ax in 'xyz':
+            if ax not in box: continue
+            a, b = box[ax]; k = 'xyz'.index(ax)
+            if a is not None: m &= cen[:, k] >= a
+            if b is not None: m &= cen[:, k] <= b
+        return m
+    keep, drops = cfg.get('keep_box'), cfg.get('drop_boxes', [])
+    if keep or drops:
+        for o in list(objs):
+            cen = face_data(o)[0]
+            out = ~inside(cen, keep) if keep else np.zeros(len(cen), bool)
+            for d in drops:
+                if 'mats' not in d or mat_name(o) in d['mats']: out |= inside(cen, d)
+            if out.all(): delete(o); objs.remove(o)
+            elif out.any(): delete(extract(o, out, 'tmp_crop'))
     # rotate so bow -> +X
     ang = {'+X': 0, '+Y': -90, '-X': 180, '-Y': 90}[cfg['bow']]
     R = Matrix.Rotation(math.radians(ang), 4, 'Z')
