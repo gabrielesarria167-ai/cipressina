@@ -84,7 +84,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | Language switcher | `<button type="button" data-lang="it|en|es|fr" lang="…" aria-label="Italiano" aria-pressed>` ×4 inside a `role="group"` labelled `lang.label` | R | repeatable (header and menu panel); App writes `.is-active` and `aria-pressed`. A `<select data-lang-select>` also works |
 | Menu toggle | `button#menuToggle` (`aria-controls="navPanel"`, `aria-expanded`) | R | App writes `aria-label` («Apri/Chiudi il menu»), `.is-open`; give it an icon through CSS |
 | Menu panel | `#navPanel` (links as above, may repeat the language switcher) | R | closes on link click, outside click, Escape (focus returns to the toggle) |
-| FAB | `<a id="waFab" href="#contatti" data-i18n-attr="aria-label:fab.label">` (`../index.html#contatti` on `pgs/preventivo.html`) | R | WhatsApp number is `.ph`: it points at the contacts section. Hide it with `body.is-wizard #waFab` |
+| FAB | `<a id="waFab" href="https://wa.me/393391810099?text=…" target="_blank" data-i18n-attr="aria-label:fab.label">` on both pages | R | The client's WhatsApp number and pre-filled message, from the Click to Chat button on carrozzeriacipressina.it, which it also copies in look (style 8). Hide it with `body.is-wizard #waFab` |
 | Footer year | `#footYear` | O | App writes the current year (put the current year as the static fallback) |
 | Copy buttons | `<span id="x">text</span><button type="button" data-copy="#x" data-i18n="btn.copy">` | R for phone, email, address | copies that element's text, on failure selects it; the text must be visible and selectable |
 
@@ -98,9 +98,11 @@ Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. Th
 
 ### 3.1 Home
 
+The 3D hero and its swatches are optional (O). Since 2026-10-16 `index.html` shows a gallery photo (`.intro__photo`) instead and loads no importmap; App skips the hero when `#heroBoat` is absent. The design sketches still use it.
+
 | Element | Id / attribute | R/O |
 |---|---|---|
-| Hero boat host | `#heroBoat` with `data-boat-type="cabinato"` (any boat type) | R for the 3D hero |
+| Hero boat host | `#heroBoat` with `data-boat-type="cabinato"` (any boat type) | O (R for a 3D hero) |
 | …inside it, SVG poster | `<svg class="hero-poster">` whose bottom path uses `style="fill:var(--hero-bottom,#1d3b8f)"` | R (the fallback if 3D fails) |
 | …inside it, canvas | `<canvas id="heroCanvas">` | R |
 | Swatch radiogroup | `#heroSwatches` `role="radiogroup" aria-labelledby="heroSwatchLabel"`, **empty**: App renders the 11 strips | R |
@@ -131,7 +133,9 @@ Tiers and discount list:
 | Tier choose link | `<a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base">` | O: preselects the finish in the wizard |
 | Discount list | `ul#discountList` | App replaces the children with `li.discount-step > span.discount-step__zones + strong.discount-step__rate`, from `DISCOUNT_STEPS`. Static `<li>`s inside are the no-JS fallback |
 
-Other sections (Servizi, Come funziona, Interventi, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+Other sections (Servizi, Come funziona, Interventi, Galleria, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `galleria`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+
+Gallery (O): each `a[data-lightbox="<group>"]` (`barche`, `sede`) links to the full photo and wraps its thumbnail `img`, whose `alt` becomes the caption. With `dialog#lightbox` > `#lightboxImg`, `#lightboxCaption`, `#lightboxCount` (`lb.count`), `#lightboxPrev`, `#lightboxNext` and `#lightboxClose`, App opens the photos in the dialog, previous / next within the group; without it the links simply open the file.
 
 Contacts section: address, phone and email each as visible text + copy button (§2); `https://www.google.com/maps/search/?api=1&query=Via+Nazario+Sauro+15+Olmo+di+Martellago` link (`contact.map`); WhatsApp and hours as `.ph` (`contact.whatsappTbc.h`, `contact.hoursTbc.h`).
 

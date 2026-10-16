@@ -8,6 +8,7 @@ Plain HTML, CSS and JS with no build step. GitHub Pages serves the repo root.
   - `index.html`: the front page.
   - `pgs/preventivo.html`: the quote wizard. The tracking lookup is at `pgs/preventivo.html#stato`. The front page passes the chosen finish and length as `?pacchetto=<tier>&loa=<m>`.
 - **Styles:** `styles.css`.
+- **Photos:** `img/barche/` and `img/sede/` (the two gallery groups, full size with `thumb/` at 640 px), `img/officina/` (Chi siamo) and `img/logo-cipressina.jpg`. They are the client's own, from carrozzeriacipressina.it/gallery/ and /manuntenzione-barche/, used with the owner's permission (2026-10-16), converted to WebP with `cwebp`.
 - **Code:** `src/`.
   - `app.js` (router, wizard, lookup), `i18n.js`, `zones.js`, `regioni.js` and `boat3d.js` (the 3D viewer).
   - `site.js` holds the home copy and the 3D theme.

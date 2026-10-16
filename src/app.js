@@ -15,7 +15,8 @@
 
    Order of the file:
      1. helpers            5. hero (swatches + lazy 3D)
-     2. 3D module loader   6. home price sentence, tier prices, discount list
+     2. 3D module loader   6. home price sentence, tier prices, discount
+                              list, gallery lightbox
      3. router and views   7. wizard (rules table, steps, viewer, summary, submit)
      4. chrome (menu,      8. lookup
         language, copy)    9. language change and init
@@ -719,6 +720,49 @@
             item.appendChild(value);
             list.appendChild(item);
         });
+    }
+
+    // Home gallery. Each thumbnail links to the full photo, so without JS
+    // (or without <dialog>) the link still opens it; with JS it opens in
+    // #lightbox, with previous / next, arrow keys and a click outside to close.
+    // Previous / next stay within the group named by data-lightbox.
+    function initLightbox() {
+        var box = byId("lightbox");
+        var all = $$("[data-lightbox]");
+        if (!box || !all.length || typeof box.showModal !== "function") return;
+        var img = byId("lightboxImg"), caption = byId("lightboxCaption"), count = byId("lightboxCount");
+        var links = all, index = 0;
+        function show(i) {
+            index = (i + links.length) % links.length;
+            var thumb = $("img", links[index]);
+            var alt = thumb ? thumb.getAttribute("alt") || "" : "";
+            img.src = links[index].getAttribute("href");
+            img.alt = alt;
+            // The caption repeats the alt text for sighted users only.
+            caption.textContent = alt;
+            caption.setAttribute("aria-hidden", "true");
+            if (count) count.textContent = t("lb.count", { n: index + 1, total: links.length });
+        }
+        all.forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                var group = link.getAttribute("data-lightbox");
+                links = all.filter(function (other) { return other.getAttribute("data-lightbox") === group; });
+                show(links.indexOf(link));
+                box.showModal();
+            });
+        });
+        byId("lightboxPrev").addEventListener("click", function () { show(index - 1); });
+        byId("lightboxNext").addEventListener("click", function () { show(index + 1); });
+        byId("lightboxClose").addEventListener("click", function () { box.close(); });
+        box.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowLeft") show(index - 1);
+            else if (event.key === "ArrowRight") show(index + 1);
+        });
+        // A click on the backdrop lands on the dialog element itself.
+        box.addEventListener("click", function (event) { if (event.target === box) box.close(); });
+        box.addEventListener("close", function () { links[index].focus(); });
     }
 
     /* ==================================================================
@@ -2096,6 +2140,7 @@
         initQuoteLine();
         renderTierPrices();
         renderDiscountList();
+        initLightbox();
         initWizard();
         initLookup();
 

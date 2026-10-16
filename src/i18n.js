@@ -46,20 +46,26 @@
     R("skip", "Vai al contenuto", "Skip to content", "Saltar al contenido", "Aller au contenu");
     R("lang.label", "Lingua", "Language", "Idioma", "Langue");
     R("ribbon",
-        "Bozza di design · prezzi, foto e alcuni dati sono segnaposto",
-        "Design draft · prices, photos and some details are placeholders",
-        "Borrador de diseño · precios, fotos y algunos datos son provisionales",
-        "Maquette · prix, photos et certaines données sont provisoires");
+        "Bozza di design · prezzi e alcuni dati sono segnaposto",
+        "Design draft · prices and some details are placeholders",
+        "Borrador de diseño · precios y algunos datos son provisionales",
+        "Maquette · prix et certaines données sont provisoires");
     R("nav.label", "Navigazione principale", "Main navigation", "Navegación principal", "Navigation principale");
     R("nav.home", "Cipressina Barche, torna all'inizio", "Cipressina Barche, back to the top", "Cipressina Barche, volver al inicio", "Cipressina Barche, retour à l'accueil");
     R("nav.servizi", "Servizi", "Services", "Servicios", "Services");
     R("nav.come", "Come funziona", "How it works", "Cómo funciona", "Comment ça marche");
     R("nav.interventi", "Interventi", "Packages", "Intervenciones", "Interventions");
+    R("nav.galleria", "Galleria", "Gallery", "Galería", "Galerie");
     R("nav.chi", "Chi siamo", "About us", "Quiénes somos", "Qui sommes-nous");
     R("nav.contatti", "Contatti", "Contact", "Contacto", "Contact");
     R("nav.quote", "Preventivo", "Get a quote", "Presupuesto", "Devis");
     R("menu.open", "Apri il menu", "Open the menu", "Abrir el menú", "Ouvrir le menu");
     R("menu.close", "Chiudi il menu", "Close the menu", "Cerrar el menú", "Fermer le menu");
+    R("lb.label", "Foto ingrandita", "Enlarged photo", "Foto ampliada", "Photo agrandie");
+    R("lb.prev", "Precedente", "Previous", "Anterior", "Précédente");
+    R("lb.next", "Successiva", "Next", "Siguiente", "Suivante");
+    R("lb.close", "Chiudi", "Close", "Cerrar", "Fermer");
+    R("lb.count", "{n} di {total}", "{n} of {total}", "{n} de {total}", "{n} sur {total}");
     R("fab.label", "Scrivici su WhatsApp", "Message us on WhatsApp", "Escríbenos por WhatsApp", "Écrivez-nous sur WhatsApp");
 
     /* ---------------- Buttons ---------------- */
@@ -509,6 +515,7 @@
     R("contact.phone", "Telefono", "Phone", "Teléfono", "Téléphone");
     R("contact.email", "Email", "Email", "Correo electrónico", "E-mail");
     R("contact.hours", "Orari", "Opening hours", "Horario", "Horaires");
+    R("contact.mapTitle", "Mappa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Map: Officina Carrozzeria Cipressina, Olmo di Martellago", "Mapa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Carte : Officina Carrozzeria Cipressina, Olmo di Martellago");
     R("contact.whatsapp", "WhatsApp", "WhatsApp", "WhatsApp", "WhatsApp");
     R("contact.hoursTbc.h",
         "<span class=\"ph\">Orari: da confermare</span>",
