@@ -112,6 +112,8 @@ Zone ids and IT labels (EN / ES / FR in `zones.js`; the * terms are unverified, 
 | completo | Pacchetto Completo («Più scelto» = `.ph`) | Tutto il Base · Riverniciatura e riparazioni del gelcoat |
 | premium | Pacchetto Premium | Tutto il Completo · Riparazione di crepe o danni strutturali · Trattamento osmosi |
 
+> Superseded 2026-10-16: the client's page now lists the real contents (see research.md §4 update); `src/i18n.js` uses them.
+
 Each card shows «da {formatEUR(PRICES.topsides[tier]*1)} al metro» from the data, with `.ph`.
 
 ## Wizard (follow flow-spec §3.4–3.8, with these overrides)

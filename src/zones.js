@@ -141,23 +141,34 @@
         vela:      ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "cabin", "keel", "rudder"]
     };
 
-    // ---------- Finish tiers (the site's own package names) ----------------
+    // ---------- Maintenance packages -----------------------------------
+    // The site's own package names and contents (i18n.js tier.*). A package is
+    // a seasonal maintenance plan priced on the boat's length; the zones on
+    // the 3D model are paint and repair jobs priced on top of it. «nessuno»
+    // means no package, zone work only.
     var TIERS = ["base", "completo", "premium"];
+    var NO_PACKAGE = "nessuno";
+    var PACKAGE_CHOICES = TIERS.concat(NO_PACKAGE);
 
-    // EUR per metre of LOA, per tier; `min` is the floor per zone.
-    // ALL PLACEHOLDER. The figures follow flow-spec §4.2 with its tiers
-    // renamed (standard to base, premium to completo, custom to premium) and
-    // the extra groups from brief.md.
+    // EUR per metre of LOA, with a floor. ALL PLACEHOLDER.
+    var PACKAGES = {
+        base:     { rate: 30, min: 180 },
+        completo: { rate: 55, min: 350 },
+        premium:  { rate: 80, min: 500 }
+    };
+
+    // Zone work: EUR per metre of LOA, `min` is the floor per zone. One rate
+    // whatever the package. ALL PLACEHOLDER.
     var PRICES = {
-        antifouling:    { base: 30, completo: 40, premium: 55,  min: 150 },
-        stripe:         { base:  8, completo: 12, premium: 18,  min: 120 },
-        topsides:       { base: 60, completo: 85, premium: 120, min: 300 }, // per side
-        transom:        { base: 25, completo: 35, premium: 50,  min: 150 },
-        deck:           { base: 50, completo: 70, premium: 95,  min: 250 },
-        superstructure: { base: 45, completo: 65, premium: 90,  min: 250 },
-        appendage:      { base: 20, completo: 28, premium: 40,  min: 150 },
-        small:          { base: 10, completo: 14, premium: 20,  min: 100 },
-        tubes:          { base: 25, completo: 35, premium: 45,  min: 200 }  // per side
+        antifouling:    { rate: 40, min: 150 },
+        stripe:         { rate: 12, min: 120 },
+        topsides:       { rate: 85, min: 300 }, // per side
+        transom:        { rate: 35, min: 150 },
+        deck:           { rate: 70, min: 250 },
+        superstructure: { rate: 65, min: 250 },
+        appendage:      { rate: 28, min: 150 },
+        small:          { rate: 14, min: 100 },
+        tubes:          { rate: 35, min: 200 }  // per side
     };
 
     var PRICE_GROUP_OF = {
@@ -194,34 +205,47 @@
 
     // ---------- Maths ------------------------------------------------------
 
-    // The price of one zone at one tier and length, or null when any of the
-    // three is unknown. hasOwnProperty throughout: an id such as
-    // "constructor" must not resolve to an inherited Object method.
-    function price(id, tier, loa) {
-        if (!has.call(PRICE_GROUP_OF, id)) return null;
-        if (TIERS.indexOf(tier) === -1) return null;
-        if (!(loa > 0)) return null;
-        var row = PRICES[PRICE_GROUP_OF[id]];
-        return Math.max(row.min, Math.round(row[tier] * loa));
+    function perMetre(row, loa) {
+        return Math.max(row.min, Math.round(row.rate * loa));
     }
 
-    // Same algorithm as parts.js estimate(): unpriced zones add nothing and do
-    // not count towards the discount, which is rounded to whole euros.
+    // The price of one zone at one length, or null when either is unknown.
+    // hasOwnProperty throughout: an id such as "constructor" must not
+    // resolve to an inherited Object method.
+    function price(id, loa) {
+        if (!has.call(PRICE_GROUP_OF, id)) return null;
+        if (!(loa > 0)) return null;
+        return perMetre(PRICES[PRICE_GROUP_OF[id]], loa);
+    }
+
+    // The price of a package at one length; null for «nessuno», an unknown
+    // tier or an unknown length.
+    function packagePrice(tier, loa) {
+        if (!has.call(PACKAGES, tier)) return null;
+        if (!(loa > 0)) return null;
+        return perMetre(PACKAGES[tier], loa);
+    }
+
+    // Package + zones. The zone part follows parts.js estimate(): unpriced
+    // zones add nothing and do not count towards the discount, which is
+    // rounded to whole euros and only comes off the zones, never the package.
     function estimate(ids, tier, loa) {
         var subtotal = 0, priced = 0, unpriced = 0;
         (ids || []).forEach(function (id) {
-            var value = price(id, tier, loa);
+            var value = price(id, loa);
             if (value === null) unpriced++;
             else { subtotal += value; priced++; }
         });
         var rate = discountRate(priced);
         var discount = Math.round(subtotal * rate / 100);
+        var pkg = packagePrice(tier, loa) || 0;
         return {
+            package: pkg,
             subtotal: subtotal,
             priced: priced,
             rate: rate,
             discount: discount,
-            total: subtotal - discount,
+            total: pkg + subtotal - discount,
             unpriced: unpriced,
             placeholder: PLACEHOLDER
         };
@@ -365,6 +389,9 @@
         PRICES: PRICES,
         PRICE_GROUP_OF: PRICE_GROUP_OF,
         TIERS: TIERS,
+        NO_PACKAGE: NO_PACKAGE,
+        PACKAGE_CHOICES: PACKAGE_CHOICES,
+        PACKAGES: PACKAGES,
         DISCOUNT_STEPS: DISCOUNT_STEPS,
         SWATCHES: SWATCHES,
         BUILDERS: BUILDERS,
@@ -372,6 +399,7 @@
         modelsFor: modelsFor,
         findModel: findModel,
         price: price,
+        packagePrice: packagePrice,
         estimate: estimate,
         discountRate: discountRate,
         discountHint: discountHint,

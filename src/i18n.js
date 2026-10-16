@@ -46,20 +46,26 @@
     R("skip", "Vai al contenuto", "Skip to content", "Saltar al contenido", "Aller au contenu");
     R("lang.label", "Lingua", "Language", "Idioma", "Langue");
     R("ribbon",
-        "Bozza di design · prezzi, foto e alcuni dati sono segnaposto",
-        "Design draft · prices, photos and some details are placeholders",
-        "Borrador de diseño · precios, fotos y algunos datos son provisionales",
-        "Maquette · prix, photos et certaines données sont provisoires");
+        "Bozza di design · prezzi e alcuni dati sono segnaposto",
+        "Design draft · prices and some details are placeholders",
+        "Borrador de diseño · precios y algunos datos son provisionales",
+        "Maquette · prix et certaines données sont provisoires");
     R("nav.label", "Navigazione principale", "Main navigation", "Navegación principal", "Navigation principale");
     R("nav.home", "Cipressina Barche, torna all'inizio", "Cipressina Barche, back to the top", "Cipressina Barche, volver al inicio", "Cipressina Barche, retour à l'accueil");
     R("nav.servizi", "Servizi", "Services", "Servicios", "Services");
     R("nav.come", "Come funziona", "How it works", "Cómo funciona", "Comment ça marche");
     R("nav.interventi", "Interventi", "Packages", "Intervenciones", "Interventions");
+    R("nav.galleria", "Galleria", "Gallery", "Galería", "Galerie");
     R("nav.chi", "Chi siamo", "About us", "Quiénes somos", "Qui sommes-nous");
     R("nav.contatti", "Contatti", "Contact", "Contacto", "Contact");
     R("nav.quote", "Preventivo", "Get a quote", "Presupuesto", "Devis");
     R("menu.open", "Apri il menu", "Open the menu", "Abrir el menú", "Ouvrir le menu");
     R("menu.close", "Chiudi il menu", "Close the menu", "Cerrar el menú", "Fermer le menu");
+    R("lb.label", "Foto ingrandita", "Enlarged photo", "Foto ampliada", "Photo agrandie");
+    R("lb.prev", "Precedente", "Previous", "Anterior", "Précédente");
+    R("lb.next", "Successiva", "Next", "Siguiente", "Suivante");
+    R("lb.close", "Chiudi", "Close", "Cerrar", "Fermer");
+    R("lb.count", "{n} di {total}", "{n} of {total}", "{n} de {total}", "{n} sur {total}");
     R("fab.label", "Scrivici su WhatsApp", "Message us on WhatsApp", "Escríbenos por WhatsApp", "Écrivez-nous sur WhatsApp");
 
     /* ---------------- Buttons ---------------- */
@@ -82,7 +88,7 @@
     /* ---------------- Wizard shell ---------------- */
     R("wiz.progress", "Avanzamento della richiesta", "Quote progress", "Progreso de la solicitud", "Avancement de la demande");
     R("prog.1", "Barca", "Boat", "Barco", "Bateau");
-    R("prog.2", "Intervento", "Work", "Intervención", "Intervention");
+    R("prog.2", "Pacchetto", "Package", "Paquete", "Formule");
     R("prog.3", "Zone", "Zones", "Zonas", "Zones");
     R("prog.4", "Contatti", "Contact", "Contacto", "Coordonnées");
     R("prog.sr.done", "Passo {n} di {total}, completato", "Step {n} of {total}, completed", "Paso {n} de {total}, completado", "Étape {n} sur {total}, terminée");
@@ -97,18 +103,18 @@
         "Renseignez les informations pour identifier votre bateau.");
     R("step1.cardBoat", "Barca", "Boat", "Barco", "Bateau");
     R("step1.cardOwner", "Proprietario", "Owner", "Propietario", "Propriétaire");
-    R("step2.title", "Livello di intervento", "Level of work", "Nivel de intervención", "Niveau d'intervention");
+    R("step2.title", "Pacchetto di manutenzione", "Maintenance package", "Paquete de mantenimiento", "Formule d'entretien");
     R("step2.sub",
-        "Scegli il pacchetto che fa per te. La composizione è indicativa: la confermiamo nel preventivo.",
-        "Pick the package that suits you. What each one includes is indicative: we confirm it in the quote.",
-        "Elige el paquete que mejor te encaje. La composición es orientativa: la confirmamos en el presupuesto.",
-        "Choisissez la formule qui vous convient. Le contenu est indicatif : nous le confirmons dans le devis.");
+        "Offriamo diversi pacchetti di manutenzione per soddisfare ogni esigenza. Scegli quello che fa per te, oppure nessun pacchetto se ti servono solo lavori su alcune zone.",
+        "We offer several maintenance packages to suit every need. Pick the one that's right for you, or no package if you only need work on some zones.",
+        "Ofrecemos diversos paquetes de mantenimiento para satisfacer todas tus necesidades. Elige el que mejor te encaje, o ningún paquete si solo necesitas trabajos en algunas zonas.",
+        "Nous proposons différentes formules d'entretien pour répondre à tous vos besoins. Choisissez celle qui vous convient, ou aucune formule si vous avez seulement besoin de travaux sur certaines zones.");
     R("step3.title", "Quali zone?", "Which zones?", "¿Qué zonas?", "Quelles zones ?");
     R("step3.sub",
-        "Tocca le zone della barca su cui vuoi intervenire.",
-        "Tap the zones of the boat you want us to work on.",
-        "Toca las zonas del barco en las que quieres que intervengamos.",
-        "Touchez les zones du bateau sur lesquelles nous devons intervenir.");
+        "Tocca le zone da trattare, riverniciare o riparare: si aggiungono al pacchetto. Con un pacchetto puoi anche non sceglierne nessuna.",
+        "Tap the zones to treat, repaint or repair: they are added to the package. With a package you can also leave them all out.",
+        "Toca las zonas que hay que tratar, repintar o reparar: se suman al paquete. Con un paquete también puedes no elegir ninguna.",
+        "Touchez les zones à traiter, repeindre ou réparer : elles s'ajoutent à la formule. Avec une formule, vous pouvez aussi n'en choisir aucune.");
     R("step4.title", "Contatti", "Contact details", "Datos de contacto", "Vos coordonnées");
     R("step4.sub.h",
         "Ti invieremo un preventivo personalizzato entro <span class=\"ph\">24 ore</span>.",
@@ -301,25 +307,25 @@
     R("tier.base.name", "Pacchetto Base", "Base package", "Paquete Base", "Formule Base");
     R("tier.completo.name", "Pacchetto Completo", "Complete package", "Paquete Completo", "Formule Complète");
     R("tier.premium.name", "Pacchetto Premium", "Premium package", "Paquete Premium", "Formule Premium");
-    R("tier.base.i1", "Lavaggio completo e lucidatura", "Full wash and polish", "Lavado completo y pulido", "Lavage complet et polissage");
-    R("tier.base.i2", "Applicazione di antivegetativa", "Antifouling application", "Aplicación de antiincrustante", "Application d'antifouling");
-    R("tier.completo.i1", "Tutto il Pacchetto Base", "Everything in the Base package", "Todo el Paquete Base", "Tout le contenu de la formule Base");
-    R("tier.completo.i2", "Riverniciatura e riparazioni del gelcoat", "Repainting and gelcoat repairs", "Repintado y reparaciones del gelcoat", "Remise en peinture et réparations du gelcoat");
-    R("tier.premium.i1", "Tutto il Pacchetto Completo", "Everything in the Complete package", "Todo el Paquete Completo", "Tout le contenu de la formule Complète");
-    R("tier.premium.i2", "Riparazione di crepe o danni strutturali", "Repair of cracks or structural damage", "Reparación de grietas o daños estructurales", "Réparation des fissures ou des dégâts structurels");
-    R("tier.premium.i3", "Trattamento osmosi", "Osmosis treatment", "Tratamiento de ósmosis", "Traitement de l'osmose");
-    R("tier.from", "da {price} al metro", "from {price} per metre", "desde {price} el metro", "à partir de {price} le mètre");
+    /* Contents as listed under «Pacchetti di manutenzione» on
+       carrozzeriacipressina.it/manuntenzione-barche/ (ES / FR follow the
+       site's own translations). */
+    R("tier.base.i1", "Controllo generale del motore", "General engine check", "Revisión general del motor", "Contrôle général du moteur");
+    R("tier.base.i2", "Lavaggio della carrozzeria", "Exterior wash", "Lavado de la carrocería", "Lavage de la coque");
+    R("tier.completo.i1", "Manutenzione completa di motore e scafo", "Full engine and hull maintenance", "Mantenimiento completo del motor y el casco", "Entretien complet du moteur et de la coque");
+    R("tier.completo.i2", "Servizi di riparazione", "Repair services", "Servicios de reparación", "Services de réparation");
+    R("tier.premium.i1", "Tutti i servizi del Pacchetto Completo", "Every service in the Complete package", "Todos los servicios del Paquete Completo", "Tous les services de la formule Complète");
+    R("tier.premium.i2", "Monitoraggio stagionale", "Seasonal monitoring", "Seguimiento estacional", "Suivi saisonnier");
+    R("tier.premium.i3", "Assistenza prioritaria", "Priority assistance", "Asistencia prioritaria", "Assistance prioritaire");
+    R("tier.nessuno.name", "Nessun pacchetto", "No package", "Ningún paquete", "Aucune formule");
+    R("tier.nessuno.i1", "Solo i lavori sulle zone che scegli al passo 3", "Only the work on the zones you pick in step 3", "Solo los trabajos en las zonas que elijas en el paso 3", "Uniquement les travaux sur les zones choisies à l'étape 3");
+    R("tier.from", "da {price} al metro (minimo {min})", "from {price} per metre (minimum {min})", "desde {price} el metro (mínimo {min})", "à partir de {price} le mètre (minimum {min})");
     R("tier.choose", "Scegli questo pacchetto", "Choose this package", "Elegir este paquete", "Choisir cette formule");
     R("tier.badge.h",
         "<span class=\"ph\">Più scelto</span>",
         "<span class=\"ph\">Most popular</span>",
         "<span class=\"ph\">El más elegido</span>",
         "<span class=\"ph\">Le plus choisi</span>");
-    R("tier.note.h",
-        "<span class=\"ph\">composizione indicativa</span>",
-        "<span class=\"ph\">indicative content</span>",
-        "<span class=\"ph\">composición orientativa</span>",
-        "<span class=\"ph\">contenu indicatif</span>");
 
     /* ---------------- 3D viewer, zone summary, estimate ---------------- */
     R("viewer.loading", "Caricamento del modello 3D…", "Loading the 3D model…", "Cargando el modelo 3D…", "Chargement du modèle 3D…");
@@ -364,7 +370,7 @@
         "No zones selected yet. Tap the boat to pick one.",
         "Ninguna zona seleccionada. Toca el barco para elegir una.",
         "Aucune zone sélectionnée. Touchez le bateau pour en choisir une.");
-    R("sum.subtotal", "Subtotale", "Subtotal", "Subtotal", "Sous-total");
+    R("sum.subtotal", "Lavori sulle zone", "Zone work", "Trabajos en las zonas", "Travaux sur les zones");
     R("sum.discount", "Sconto per {count} zone ({rate}%)", "Discount for {count} zones ({rate}%)", "Descuento por {count} zonas ({rate}%)", "Remise pour {count} zones ({rate}%)");
     R("sum.total", "Totale stimato", "Estimated total", "Total estimado", "Total estimé");
     R("sum.note",
@@ -448,7 +454,11 @@
     R("ql.zoneMany", "zone", "zones", "zonas", "zones");
     R("ql.mid1", "di una barca lunga", "of a boat", "de un barco de", "d'un bateau de");
     R("ql.afterLoa", "", "long", "de eslora", "de long");
-    R("ql.mid2", "con il", "with the", "con el", "avec la");
+    R("ql.mid2", "con il", "with the", "con el", "avec la"); // design/sketches only
+    R("ql.opt.base", "con il Pacchetto Base", "with the Base package", "con el Paquete Base", "avec la formule Base");
+    R("ql.opt.completo", "con il Pacchetto Completo", "with the Complete package", "con el Paquete Completo", "avec la formule Complète");
+    R("ql.opt.premium", "con il Pacchetto Premium", "with the Premium package", "con el Paquete Premium", "avec la formule Premium");
+    R("ql.opt.nessuno", "senza pacchetto", "without a package", "sin paquete", "sans formule");
     R("ql.post", "costa da", "costs from", "cuesta desde", "coûte à partir de");
     R("ql.without", "senza lo sconto del {rate}% per più zone", "without the {rate}% multi-zone discount", "sin el descuento del {rate}% por varias zonas", "sans la remise de {rate}% pour plusieurs zones");
     R("ql.cta", "Seleziona le zone in 3D", "Pick the zones in 3D", "Selecciona las zonas en 3D", "Sélectionner les zones en 3D");
@@ -505,6 +515,7 @@
     R("contact.phone", "Telefono", "Phone", "Teléfono", "Téléphone");
     R("contact.email", "Email", "Email", "Correo electrónico", "E-mail");
     R("contact.hours", "Orari", "Opening hours", "Horario", "Horaires");
+    R("contact.mapTitle", "Mappa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Map: Officina Carrozzeria Cipressina, Olmo di Martellago", "Mapa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Carte : Officina Carrozzeria Cipressina, Olmo di Martellago");
     R("contact.whatsapp", "WhatsApp", "WhatsApp", "WhatsApp", "WhatsApp");
     R("contact.hoursTbc.h",
         "<span class=\"ph\">Orari: da confermare</span>",

@@ -84,7 +84,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | Language switcher | `<button type="button" data-lang="it|en|es|fr" lang="…" aria-label="Italiano" aria-pressed>` ×4 inside a `role="group"` labelled `lang.label` | R | repeatable (header and menu panel); App writes `.is-active` and `aria-pressed`. A `<select data-lang-select>` also works |
 | Menu toggle | `button#menuToggle` (`aria-controls="navPanel"`, `aria-expanded`) | R | App writes `aria-label` («Apri/Chiudi il menu»), `.is-open`; give it an icon through CSS |
 | Menu panel | `#navPanel` (links as above, may repeat the language switcher) | R | closes on link click, outside click, Escape (focus returns to the toggle) |
-| FAB | `<a id="waFab" href="#contatti" data-i18n-attr="aria-label:fab.label">` (`../index.html#contatti` on `pgs/preventivo.html`) | R | WhatsApp number is `.ph`: it points at the contacts section. Hide it with `body.is-wizard #waFab` |
+| FAB | `<a id="waFab" href="https://wa.me/393391810099?text=…" target="_blank" data-i18n-attr="aria-label:fab.label">` on both pages | R | The client's WhatsApp number and pre-filled message, from the Click to Chat button on carrozzeriacipressina.it, which it also copies in look (style 8). Hide it with `body.is-wizard #waFab` |
 | Footer year | `#footYear` | O | App writes the current year (put the current year as the static fallback) |
 | Copy buttons | `<span id="x">text</span><button type="button" data-copy="#x" data-i18n="btn.copy">` | R for phone, email, address | copies that element's text, on failure selects it; the text must be visible and selectable |
 
@@ -94,13 +94,15 @@ Up to three containers, switched with `hidden` by the router (a page contains on
 
 Router, with `#view-home` present: `#preventivo` → wizard (single-page sketch only), `#stato` → lookup, `""` → home, any other plain hash → home then scroll to that id. Without `#view-home` (`preventivo.html`): `#stato` → lookup, anything else → wizard (the step from `history.state`, else the last step shown). On `index.html` (no wizard) an old `#preventivo` / `#stato` link is redirected to `pgs/preventivo.html`. The step is in `history.state`, not in the URL; the wizard URL is the plain page URL (`location.pathname`).
 
-Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. The wizard page reads both once at load (tier must be in `Z.TIERS`, length within 2.5..30 m), applies them to step 1/2 and removes the query with `history.replaceState`.
+Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. The wizard page reads both once at load (tier must be in `Z.PACKAGE_CHOICES`, i.e. a package or `nessuno`; length within 2.5..30 m), applies them to step 1/2 and removes the query with `history.replaceState`.
 
 ### 3.1 Home
 
+The 3D hero and its swatches are optional (O). Since 2026-10-16 `index.html` shows a gallery photo (`.intro__photo`) instead and loads no importmap; App skips the hero when `#heroBoat` is absent. The design sketches still use it.
+
 | Element | Id / attribute | R/O |
 |---|---|---|
-| Hero boat host | `#heroBoat` with `data-boat-type="cabinato"` (any boat type) | R for the 3D hero |
+| Hero boat host | `#heroBoat` with `data-boat-type="cabinato"` (any boat type) | O (R for a 3D hero) |
 | …inside it, SVG poster | `<svg class="hero-poster">` whose bottom path uses `style="fill:var(--hero-bottom,#1d3b8f)"` | R (the fallback if 3D fails) |
 | …inside it, canvas | `<canvas id="heroCanvas">` | R |
 | Swatch radiogroup | `#heroSwatches` `role="radiogroup" aria-labelledby="heroSwatchLabel"`, **empty**: App renders the 11 strips | R |
@@ -117,21 +119,23 @@ Price sentence (the true default result as static HTML):
 | Form | `form#quoteLine` | submit sets the wizard finish + length, goes to `pgs/preventivo.html?pacchetto=<tier>&loa=<m>` (or `#preventivo` in the single-page sketch) |
 | Count | `select#qlCount` | options `value` 1..6 |
 | Length | `select#qlLoa` | options `value` in metres (5, 6, 8, 10, 12, 15), text «8 m» |
-| Tier | `select#qlTier` | options `base`, `completo`, `premium`, text via `data-i18n="tier.<id>.name"` |
+| Tier | `select#qlTier` | options `base`, `completo`, `premium`, `nessuno`, text via `data-i18n="ql.opt.<id>"` («con il Pacchetto Base» … «senza pacchetto»); the sketches still use `tier.<id>.name` after `ql.mid2` |
 | Word | `#qlWord` | App writes «zona/zone» |
 | Total | `#qlTotal` (an `<output>`/span) | App writes the formatted price. Wrap in `.ph` |
-| Before | `#qlBefore` | App writes `<s>1.360 €</s> senza lo sconto del 5% …`, hidden when no discount |
-| Sentence pieces | `data-i18n` keys `ql.pre`, `ql.mid1`, `ql.afterLoa`, `ql.mid2`, `ql.post`; visually-hidden labels `ql.countLabel`, `ql.loaLabel`, `ql.tierLabel`; button `ql.cta` | R, in this order: pre, count, word, mid1, loa, afterLoa, mid2, tier, post, total |
+| Before | `#qlBefore` | App writes `<s>1.800 €</s> senza lo sconto del 5% …` (package + zones before the discount), hidden when no discount |
+| Sentence pieces | `data-i18n` keys `ql.pre`, `ql.mid1`, `ql.afterLoa`, `ql.post`; visually-hidden labels `ql.countLabel`, `ql.loaLabel`, `ql.tierLabel`; button `ql.cta` | R, in this order: pre, count, word, mid1, loa, afterLoa, tier, post, total |
 
 Tiers and discount list:
 
 | Element | Hook | Notes |
 |---|---|---|
-| Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 60 € al metro» (the topsides price per metre). Wrap in `.ph` |
+| Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 55 € al metro (minimo 350 €)» from `PACKAGES` in zones.js. Wrap in `.ph` |
 | Tier choose link | `<a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base">` | O: preselects the finish in the wizard |
 | Discount list | `ul#discountList` | App replaces the children with `li.discount-step > span.discount-step__zones + strong.discount-step__rate`, from `DISCOUNT_STEPS`. Static `<li>`s inside are the no-JS fallback |
 
-Other sections (Servizi, Come funziona, Interventi, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+Other sections (Servizi, Come funziona, Interventi, Galleria, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `galleria`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+
+Gallery (O): each `a[data-lightbox="<group>"]` (`barche`, `sede`) links to the full photo and wraps its thumbnail `img`, whose `alt` becomes the caption. With `dialog#lightbox` > `#lightboxImg`, `#lightboxCaption`, `#lightboxCount` (`lb.count`), `#lightboxPrev`, `#lightboxNext` and `#lightboxClose`, App opens the photos in the dialog, previous / next within the group; without it the links simply open the file.
 
 Contacts section: address, phone and email each as visible text + copy button (§2); `https://www.google.com/maps/search/?api=1&query=Via+Nazario+Sauro+15+Olmo+di+Martellago` link (`contact.map`); WhatsApp and hours as `.ph` (`contact.whatsappTbc.h`, `contact.hoursTbc.h`).
 
@@ -203,7 +207,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `firstName`, `lastName` | text | |
 | `boatSummary` (`hidden`), `boatSummaryIcon`, `boatSummaryThumb`, `boatSummaryText` | O | App fills the type silhouette + «Beneteau Oceanis 40.1 · 12,87 m · 2019». `boatSummaryThumb` is `<img id="boatSummaryThumb" data-type-thumb="" alt="" hidden>` in the same parent as `boatSummaryIcon`: App sets its `data-type-thumb` and `src` per type, with the same fallback to the silhouette |
 
-**Step 2**: `#tier` radiogroup, `data-value` = `base`, `completo`, `premium`. Each card: name `data-i18n="tier.<id>.name"`, `<span data-tier-from="<id>">`, items `tier.<id>.i1…`, the «Più scelto» badge `tier.badge.h` on `completo`, and the «composizione indicativa» note `tier.note.h` once. Error `#tierError` (O).
+**Step 2**: `#tier` radiogroup, `data-value` = `base`, `completo`, `premium`, and O `nessuno` (no package, zone work only: name `tier.nessuno.name`, item `tier.nessuno.i1`, no price). Zones are required in step 3 only with `nessuno`. Each card: name `data-i18n="tier.<id>.name"`, `<span data-tier-from="<id>">`, items `tier.<id>.i1…`, the «Più scelto» badge `tier.badge.h` on `completo`. Error `#tierError` (O).
 
 **Step 3**
 
@@ -220,12 +224,12 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `zonesSummary` | `tabindex="-1"` container | R | focus lands here when the list empties |
 | `zonesCount`, `zonesEmpty`, `zonesList` (`<ul>`), `zonesClear` (button, `hidden`) | | R | rows: `li.zone-row[data-zone] > span.zone-row__name + span.zone-row__price + button.zone-row__remove[data-zone-remove]` |
 | `zonesNudge` | | R | `hidden` when empty; `.is-maxed` at the cap |
-| `estimate` (`hidden`) | | R | children: `estSubtotalRow` (hidden without discount) > `estSubtotal`; `estDiscountRow` > `estDiscountLabel` + `estDiscount`; `estTotal` (`aria-live="polite"`); `estNote` |
+| `estimate` (`hidden`) | | R | children: O `estPackageRow` (hidden without a package) > `estPackageLabel` + `estPackage`; `estSubtotalRow` (the zone work, shown when there is a discount or a package) > `estSubtotal`; `estDiscountRow` > `estDiscountLabel` + `estDiscount`; `estTotal` (`aria-live="polite"`); `estNote` |
 | placeholder tag | `<span class="ph" data-i18n-html="sum.placeholder.h">` | R (brief): next to the estimate |
 | `antifoulingBlock` | wrapper, `hidden` | O | Optional «Colore antivegetativa (indicativo)». App shows it only while zone `bottom` is selected |
 | `antifoulingSwatches` | `role="radiogroup" aria-labelledby="antifoulingLabel"`, **empty** | O | App renders the same 11 `.swatch` buttons as `#heroSwatches` (same `Z.SWATCHES`, `sw.<id>` names, `aria-label`), roving tabindex, `.is-active` + `aria-checked`. «Originale» is the wizard theme's `bottom` colour. Choosing one calls `setColors({ bottom: hex })` on the wizard viewer (nothing is painted when the viewer failed; the choice is still kept), stores `state.antifoulingColor` (the swatch id), shows its name in the `bottom` row of `zonesList` (`span.zone-row__sub`) and sends `antifoulingColor` in the payload. Deselecting `bottom` clears it |
 | `antifoulingLabel`, `antifoulingCaption` (`hidden`), `antifoulingChip` (App sets `--sw`), `antifoulingName` | | O | label, and the «colore scelto» caption (shown once a colour is chosen). Put the «colori indicativi» note (`af.note.h`, `.ph`) next to them |
-| `zonesPicker` | `<details>` with `<summary data-i18n="zones.picker">` | R | auto-opens on 3D failure or when the main button is pressed with no zone |
+| `zonesPicker` | `<details>` with `<summary data-i18n="zones.picker">` | R | auto-opens on 3D failure or when the main button is pressed with no zone (only possible with `nessuno`: with a package, zones are optional) |
 | `zonesChecklist` | empty `<div>` inside it | R | App renders `label.check > input[type=checkbox][value=<zone>] + span` |
 
 **Step 4**

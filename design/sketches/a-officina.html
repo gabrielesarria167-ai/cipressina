@@ -1321,9 +1321,9 @@ window.CIPRESSINA_CONFIG = {
                         <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
                     </select>
                     <span data-i18n="ql.post">costa da</span>
-                    <span class="ph"><output id="qlTotal">1.292 €</output></span>
+                    <span class="ph"><output id="qlTotal">1.732 €</output></span>
                 </p>
-                <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+                <p id="qlBefore"><s>1.800 €</s> senza lo sconto del 5% per più zone</p>
                 <button type="submit" class="btn btn--primary" data-i18n="ql.cta">Seleziona le zone in 3D</button>
             </form>
 
@@ -1348,7 +1348,6 @@ window.CIPRESSINA_CONFIG = {
                     <a class="btn btn--ghost" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
                 </article>
             </div>
-            <p class="int__note" data-i18n-html="tier.note.h"></p>
 
             <h3 class="int__sub" data-i18n="disc.title"></h3>
             <p class="int__sublede"><span data-i18n="a.int.disc.lede"></span> <span class="ph" data-i18n="a.ph.pct"></span></p>
@@ -1618,7 +1617,6 @@ window.CIPRESSINA_CONFIG = {
             </div>
             <p id="tierError" class="field__error" role="alert" hidden></p>
         </div>
-        <p class="step-note" data-i18n-html="tier.note.h"></p>
     </section>
 
     <!-- STEP 3: zones -->
@@ -1659,6 +1657,7 @@ window.CIPRESSINA_CONFIG = {
                 <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
                 <p id="zonesNudge" hidden></p>
                 <div id="estimate" hidden>
+                    <p id="estPackageRow" hidden><span id="estPackageLabel"></span> <span id="estPackage"></span></p>
                     <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
                     <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
                     <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>

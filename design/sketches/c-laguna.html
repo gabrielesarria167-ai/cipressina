@@ -897,9 +897,9 @@ window.CIPRESSINA_CONFIG = (function () {
             <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
           </select>
           <span data-i18n="ql.post">costa da</span>
-          <span class="ph"><output id="qlTotal">1.292 €</output></span>
+          <span class="ph"><output id="qlTotal">1.732 €</output></span>
         </p>
-        <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+        <p id="qlBefore"><s>1.800 €</s> senza lo sconto del 5% per più zone</p>
         <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
       </form>
 
@@ -936,7 +936,6 @@ window.CIPRESSINA_CONFIG = (function () {
           <a class="btn btn--outline" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose">Scegli questo pacchetto</a>
         </article>
       </div>
-      <p class="pkgs__note note" data-i18n-html="tier.note.h"></p>
     </div>
   </section>
 
@@ -1218,7 +1217,6 @@ window.CIPRESSINA_CONFIG = (function () {
         </div>
         <p id="tierError" class="field__error" role="alert" hidden></p>
       </div>
-      <p class="tier-note" data-i18n-html="tier.note.h"></p>
     </section>
 
     <!-- STEP 3 -->
@@ -1275,6 +1273,7 @@ window.CIPRESSINA_CONFIG = (function () {
           <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
           <p id="zonesNudge" hidden></p>
           <div id="estimate" hidden>
+            <p id="estPackageRow" hidden><span id="estPackageLabel"></span> <span id="estPackage"></span></p>
             <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
             <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
             <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
