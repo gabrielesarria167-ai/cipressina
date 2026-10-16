@@ -327,7 +327,7 @@
         if (!views.wizard || views.home || !location.search) return;
         var params = new URLSearchParams(location.search);
         var tier = params.get("pacchetto"), loa = params.get("loa");
-        if (tier && Z.TIERS.indexOf(tier) === -1) tier = null;
+        if (tier && Z.PACKAGE_CHOICES.indexOf(tier) === -1) tier = null;
         if (loa !== null) {
             var n = parseLoa(loa);
             if (isNaN(n) || n < LOA_MIN || n > LOA_MAX) loa = null;
@@ -634,9 +634,9 @@
        6. Home: price sentence, tier prices, discount list
        ================================================================== */
 
-    // «Intervenire su [2] zone di una barca lunga [8 m] con il [Pacchetto
-    // Completo] costa da X». The base is the topsides price (per side), the
-    // discount the same curve the wizard uses, via Z.estimate.
+    // «Intervenire su [2] zone di una barca lunga [8 m] [con il Pacchetto
+    // Completo] costa da X»: the package plus that many topsides (per side),
+    // with the discount curve the wizard uses, via Z.estimate.
     function renderQuoteLine() {
         var countEl = byId("qlCount"), loaEl = byId("qlLoa"), tierEl = byId("qlTier");
         var totalEl = byId("qlTotal");
@@ -654,7 +654,7 @@
             before.textContent = "";
             if (est.rate > 0) {
                 var struck = document.createElement("s");
-                struck.textContent = Z.formatEUR(est.subtotal);
+                struck.textContent = Z.formatEUR(est.total + est.discount);
                 before.appendChild(struck);
                 before.appendChild(document.createTextNode(" " + t("ql.without", { rate: est.rate })));
             }
@@ -683,13 +683,14 @@
         renderQuoteLine();
     }
 
-    // «da 60 € al metro» on every tier card (home and wizard step 2), from
-    // the same table the estimate uses.
+    // «da 55 € al metro (minimo 350 €)» on every package card (home and
+    // wizard step 2), from the same table the estimate uses.
     function renderTierPrices() {
         $$("[data-tier-from]").forEach(function (el) {
             var tier = el.getAttribute("data-tier-from");
             if (Z.TIERS.indexOf(tier) === -1) return;
-            el.textContent = t("tier.from", { price: Z.formatEUR(Z.PRICES.topsides[tier]) });
+            var row = Z.PACKAGES[tier];
+            el.textContent = t("tier.from", { price: Z.formatEUR(row.rate), min: Z.formatEUR(row.min) });
         });
     }
 
@@ -835,7 +836,10 @@
         addRule({ id: "tier", step: 2, radio: true, get: function () { return state.tier; },
             ok: function (v) { return !!v; }, msg: "hint.step2" });
 
+        // With a package the zones are optional extras; without one they are
+        // the whole request.
         addRule({ id: "zones", step: 3, virtual: true, get: function () { return state.zones; },
+            when: function () { return state.tier === Z.NO_PACKAGE; },
             ok: function (v) { return v.length > 0; }, msg: "hint.step3" });
 
         addRule({ id: "region", step: 4, ok: function (v) { return v !== ""; }, msg: "err.region" });
@@ -1046,7 +1050,7 @@
     function applyHomePick() {
         if (!pick) return;
         var loaEl = byId("loa");
-        if (pick.tier && Z.TIERS.indexOf(pick.tier) !== -1 && groups.tier) groups.tier.select(pick.tier);
+        if (pick.tier && Z.PACKAGE_CHOICES.indexOf(pick.tier) !== -1 && groups.tier) groups.tier.select(pick.tier);
         var loa = parseLoa(pick.loa || "");
         if (loaEl && !isNaN(loa) && clean(loaEl.value) === "") {
             loaEl.value = formatNumber(loa);
@@ -1296,7 +1300,7 @@
             }
             var cost = document.createElement("span");
             cost.className = "zone-row__price";
-            var value = Z.price(id, tier, loa);
+            var value = Z.price(id, loa);
             cost.textContent = value === null ? t("est.none") : Z.formatEUR(value);
             var remove = makeButton("zone-row__remove", "✕", t("btn.remove", { label: Z.label(id, lang) }));
             remove.setAttribute("data-zone-remove", id);
@@ -1324,8 +1328,11 @@
         }
 
         var box = byId("estimate");
-        if (box) box.hidden = ids.length === 0;
-        setRow("estSubtotalRow", est.rate > 0);
+        if (box) box.hidden = ids.length === 0 && !est.package;
+        setRow("estPackageRow", est.package > 0);
+        setText("estPackageLabel", tier ? t("tier." + tier + ".name") : "");
+        setText("estPackage", Z.formatEUR(est.package));
+        setRow("estSubtotalRow", ids.length > 0 && (est.rate > 0 || est.package > 0));
         setText("estSubtotal", Z.formatEUR(est.subtotal));
         setRow("estDiscountRow", est.rate > 0);
         setText("estDiscountLabel", t("sum.discount", { count: est.priced, rate: est.rate }));

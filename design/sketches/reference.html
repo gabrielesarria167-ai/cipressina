@@ -162,9 +162,9 @@ window.CIPRESSINA_I18N_EXTRA = {
                     <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
                 </select>
                 <span data-i18n="ql.post">costa da</span>
-                <span class="ph"><output id="qlTotal">1.292 €</output></span>
+                <span class="ph"><output id="qlTotal">1.732 €</output></span>
             </p>
-            <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+            <p id="qlBefore"><s>1.800 €</s> senza lo sconto del 5% per più zone</p>
             <button type="submit" data-i18n="ql.cta">Seleziona le zone in 3D</button>
         </form>
 
@@ -192,7 +192,6 @@ window.CIPRESSINA_I18N_EXTRA = {
             <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
             <a href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
         </article>
-        <p data-i18n-html="tier.note.h"></p>
     </section>
 
     <section id="chi-siamo">
@@ -409,7 +408,6 @@ window.CIPRESSINA_I18N_EXTRA = {
             </div>
             <p id="tierError" class="field__error" role="alert" hidden></p>
         </div>
-        <p data-i18n-html="tier.note.h"></p>
     </section>
 
     <!-- STEP 3: zones -->
@@ -452,6 +450,7 @@ window.CIPRESSINA_I18N_EXTRA = {
             <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
             <p id="zonesNudge" hidden></p>
             <div id="estimate" hidden>
+                <p id="estPackageRow" hidden><span id="estPackageLabel"></span> <span id="estPackage"></span></p>
                 <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
                 <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
                 <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>

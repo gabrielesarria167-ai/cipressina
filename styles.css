@@ -192,8 +192,9 @@ strong { font-weight: 700; }
 .intro__text .lead { font-weight: 700; font-size: 1.125rem; }
 .intro__cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 32px; max-width: none; }
 .intro__text h2 { margin-top: 8px; }
-.tick-list { list-style: disc; padding-left: 1.25rem; font-weight: 700; }
-.tick-list li { padding: 2px 0; }
+.tick-list { list-style: disc; padding-left: 1.25rem; }
+.tick-list li { padding: 4px 0; }
+.tick-list strong { display: block; }
 .intro__boat { min-width: 0; }
 #heroBoat { width: 100%; height: clamp(260px, 62vw, 380px); background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
 #heroBoat canvas, #heroBoat .hero-poster { z-index: 1; }
@@ -222,7 +223,11 @@ strong { font-weight: 700; }
 @media (min-width: 720px) { .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; } }
 .bul { list-style: disc; padding-left: 1.25rem; }
 .bul li { padding: 3px 0; }
+.srv-sub { margin: -6px 0 12px; font-weight: 700; color: var(--muted); }
+.bul--desc li { padding: 6px 0; }
+.bul--desc strong { display: block; }
 .srv-note { margin-top: 16px; color: var(--muted); font-size: .9688rem; }
+.srv-end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 40px; max-width: none; font-size: 1.125rem; }
 
 .steps { counter-reset: s; display: grid; gap: 20px; max-width: 720px; }
 .steps li { counter-increment: s; position: relative; padding-left: 52px; }
@@ -251,7 +256,8 @@ strong { font-weight: 700; }
 .discount-step:last-child { border-bottom: 0; }
 .discount-step:nth-child(odd) { background: var(--panel); }
 .discount-step__rate { font-weight: 700; }
-.pkgs-title { margin: 48px 0 20px; text-transform: none; }
+.pkgs-title { margin: 48px 0 8px; text-transform: none; }
+.pkgs-lede { margin-bottom: 20px; }
 .pkgs { display: grid; gap: 16px; }
 .pkg { position: relative; display: grid; align-content: start; min-width: 0; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 4px; }
 .pkg--c { border-color: var(--primary); }
@@ -262,7 +268,6 @@ strong { font-weight: 700; }
 .pkg ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 20px; }
 .pkg li { padding: 2px 0; }
 .pkg .btn { justify-self: start; margin-top: auto; }
-.pkgs__note { margin-top: 16px; }
 @media (min-width: 900px) { .pkgs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
 
 .about { display: grid; gap: 32px; }
@@ -392,7 +397,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: #80bdff
 #tier [data-tier-from] { justify-self: start; margin: 4px 0 8px; font-weight: 700; }
 #tier .t-item { display: block; font-weight: 400; padding: 1px 0; }
 #tier .t-badge { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
-.tier-note { margin-top: 16px; }
 
 /* Step 3: the viewer on a light panel, summary as a plain table */
 .step3 { display: grid; gap: 24px; margin-top: 8px; }
@@ -441,7 +445,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: #80bdff
 #estimate { margin-top: 16px; padding-top: 12px; border-top: 2px solid var(--text); }
 #estimate p { margin: 0 0 4px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; max-width: none; }
 #estTotal { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-#estSubtotal, #estDiscount { font-variant-numeric: tabular-nums; }
+#estPackage, #estSubtotal, #estDiscount { font-variant-numeric: tabular-nums; }
 #estNote { display: block !important; font-size: .875rem; color: var(--muted); }
 .est-ph { margin: 12px 0 0; }
 

@@ -1027,9 +1027,9 @@ window.CIPRESSINA_CONFIG = {
                                     <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
                                 </select>
                                 <span data-i18n="ql.post">costa da</span>
-                                <span class="ph"><output id="qlTotal">1.292 €</output></span>
+                                <span class="ph"><output id="qlTotal">1.732 €</output></span>
                             </p>
-                            <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+                            <p id="qlBefore"><s>1.800 €</s> senza lo sconto del 5% per più zone</p>
                             <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
                         </div>
                     </form>
@@ -1069,7 +1069,6 @@ window.CIPRESSINA_CONFIG = {
                         <a class="btn btn--ghost" href="#preventivo" data-tier-choose="premium" data-i18n="tier.choose"></a>
                     </article>
                 </div>
-                <p class="tier-note" data-i18n-html="tier.note.h"></p>
             </div>
         </section>
 
@@ -1345,7 +1344,6 @@ window.CIPRESSINA_CONFIG = {
             </div>
             <p id="tierError" class="field__error" role="alert" hidden></p>
         </div>
-        <p class="tier-note" data-i18n-html="tier.note.h"></p>
     </section>
 
     <!-- STEP 3 -->
@@ -1388,6 +1386,7 @@ window.CIPRESSINA_CONFIG = {
                     <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
                     <p id="zonesNudge" hidden></p>
                     <div id="estimate" hidden>
+                        <div id="estPackageRow" class="bill__row" hidden><span id="estPackageLabel"></span><span id="estPackage"></span></div>
                         <div id="estSubtotalRow" class="bill__row"><span data-i18n="sum.subtotal"></span><span id="estSubtotal"></span></div>
                         <div id="estDiscountRow" class="bill__row"><span id="estDiscountLabel"></span><span id="estDiscount"></span></div>
                         <div class="bill__row bill__row--total"><span data-i18n="sum.total"></span><strong id="estTotal" aria-live="polite"></strong></div>

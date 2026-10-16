@@ -93,6 +93,8 @@ Use the site's own package names. Sources: https://www.carrozzeriacipressina.it/
 
 The tier contents are the lead's inference from the service list, so mark them «composizione indicativa».
 
+**Update 2026-10-16:** the page now lists the contents (Base: controllo generale del motore e lavaggio carrozzeria; Completo: manutenzione completa di motore e scafo con servizi di riparazione; Premium: tutto il Completo più monitoraggio stagionale e assistenza prioritaria). The site uses those; the table above is superseded.
+
 ## 5. Colour swatches (hero preview)
 No maker publishes hex values; **all hex values are approximations**. Show the colour names and label the swatches «colori indicativi».
 

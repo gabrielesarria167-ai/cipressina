@@ -69,7 +69,7 @@
   <nav class="wiz-progress" data-i18n-attr="aria-label:wiz.progress">
     <ol id="wizProgress">
       <li data-step="1"><span data-i18n="prog.1">Barca</span><span class="sr-only" data-progress-sr></span></li>
-      <li data-step="2"><span data-i18n="prog.2">Intervento</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="2"><span data-i18n="prog.2">Pacchetto</span><span class="sr-only" data-progress-sr></span></li>
       <li data-step="3"><span data-i18n="prog.3">Zone</span><span class="sr-only" data-progress-sr></span></li>
       <li data-step="4"><span data-i18n="prog.4">Contatti</span><span class="sr-only" data-progress-sr></span></li>
     </ol>
@@ -250,10 +250,13 @@
             <span class="t-item" data-i18n="tier.premium.i2"></span>
             <span class="t-item" data-i18n="tier.premium.i3"></span>
           </button>
+          <button type="button" role="radio" aria-checked="false" data-value="nessuno">
+            <strong data-i18n="tier.nessuno.name"></strong>
+            <span class="t-item" data-i18n="tier.nessuno.i1"></span>
+          </button>
         </div>
         <p id="tierError" class="field__error" role="alert" hidden></p>
       </div>
-      <p class="tier-note" data-i18n-html="tier.note.h"></p>
     </section>
 
     <!-- STEP 3 -->
@@ -310,6 +313,7 @@
           <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
           <p id="zonesNudge" hidden></p>
           <div id="estimate" hidden>
+            <p id="estPackageRow" hidden><span id="estPackageLabel"></span> <span id="estPackage"></span></p>
             <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
             <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
             <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>

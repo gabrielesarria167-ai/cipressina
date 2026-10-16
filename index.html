@@ -76,9 +76,9 @@
       </p>
       <h2 data-i18n="cip.hero.why">Perché scegliere noi?</h2>
       <ul class="tick-list">
-        <li data-i18n="cip.hero.why1"></li>
-        <li data-i18n="cip.hero.why2"></li>
-        <li data-i18n="cip.hero.why3"></li>
+        <li><strong data-i18n="cip.hero.why1"></strong> <span data-i18n="cip.hero.why1d"></span></li>
+        <li><strong data-i18n="cip.hero.why2"></strong> <span data-i18n="cip.hero.why2d"></span></li>
+        <li><strong data-i18n="cip.hero.why3"></strong> <span data-i18n="cip.hero.why3d"></span></li>
       </ul>
     </div>
 
@@ -111,27 +111,37 @@
       <div class="cols" style="margin-top:24px">
         <div>
           <h3 data-i18n="cip.srv.hull">Manutenzione scafo e coperta</h3>
-          <ul class="bul">
-            <li data-i18n="cip.srv.h1"></li>
-            <li data-i18n="cip.srv.h2"></li>
-            <li data-i18n="cip.srv.h3"></li>
-            <li data-i18n="cip.srv.h4"></li>
-            <li data-i18n="cip.srv.h5"></li>
+          <p class="srv-sub" data-i18n="cip.srv.hullSub">Protezione ed estetica per la tua barca</p>
+          <p data-i18n="cip.srv.hullLede"></p>
+          <p data-i18n="cip.srv.hullList"></p>
+          <ul class="bul bul--desc">
+            <li><strong data-i18n="cip.srv.h1"></strong> <span data-i18n="cip.srv.h1d"></span></li>
+            <li><strong data-i18n="cip.srv.h2"></strong> <span data-i18n="cip.srv.h2d"></span></li>
+            <li><strong data-i18n="cip.srv.h3"></strong> <span data-i18n="cip.srv.h3d"></span></li>
+            <li><strong data-i18n="cip.srv.h4"></strong> <span data-i18n="cip.srv.h4d"></span></li>
+            <li><strong data-i18n="cip.srv.h5"></strong> <span data-i18n="cip.srv.h5d"></span></li>
           </ul>
         </div>
         <div>
           <h3 data-i18n="cip.srv.engine">Manutenzione del motore</h3>
-          <ul class="bul">
-            <li data-i18n="cip.srv.e1"></li>
-            <li data-i18n="cip.srv.e2"></li>
-            <li data-i18n="cip.srv.e3"></li>
-            <li data-i18n="cip.srv.e4"></li>
-            <li data-i18n="cip.srv.e5"></li>
-            <li data-i18n="cip.srv.e6"></li>
+          <p class="srv-sub" data-i18n="cip.srv.engineSub">Massime prestazioni e sicurezza in mare</p>
+          <p data-i18n="cip.srv.engineLede"></p>
+          <p data-i18n="cip.srv.engineList"></p>
+          <ul class="bul bul--desc">
+            <li><strong data-i18n="cip.srv.e1"></strong> <span data-i18n="cip.srv.e1d"></span></li>
+            <li><strong data-i18n="cip.srv.e2"></strong> <span data-i18n="cip.srv.e2d"></span></li>
+            <li><strong data-i18n="cip.srv.e3"></strong> <span data-i18n="cip.srv.e3d"></span></li>
+            <li><strong data-i18n="cip.srv.e4"></strong> <span data-i18n="cip.srv.e4d"></span></li>
+            <li><strong data-i18n="cip.srv.e5"></strong> <span data-i18n="cip.srv.e5d"></span></li>
+            <li><strong data-i18n="cip.srv.e6"></strong> <span data-i18n="cip.srv.e6d"></span></li>
           </ul>
           <p class="srv-note" data-i18n="cip.srv.engineNote"></p>
         </div>
       </div>
+      <p class="srv-end">
+        <strong data-i18n="cip.srv.end"></strong>
+        <a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
+      </p>
     </div>
   </section>
 
@@ -181,17 +191,17 @@
             <option value="15">15 m</option>
           </select>
           <span data-i18n="ql.afterLoa"></span>
-          <span data-i18n="ql.mid2">con il</span>
           <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
           <select id="qlTier">
-            <option value="base" data-i18n="tier.base.name">Pacchetto Base</option>
-            <option value="completo" data-i18n="tier.completo.name" selected>Pacchetto Completo</option>
-            <option value="premium" data-i18n="tier.premium.name">Pacchetto Premium</option>
+            <option value="base" data-i18n="ql.opt.base">con il Pacchetto Base</option>
+            <option value="completo" data-i18n="ql.opt.completo" selected>con il Pacchetto Completo</option>
+            <option value="premium" data-i18n="ql.opt.premium">con il Pacchetto Premium</option>
+            <option value="nessuno" data-i18n="ql.opt.nessuno">senza pacchetto</option>
           </select>
           <span data-i18n="ql.post">costa da</span>
-          <span class="ph"><output id="qlTotal">1.292 €</output></span>
+          <span class="ph"><output id="qlTotal">1.732 €</output></span>
         </p>
-        <p id="qlBefore"><s>1.360 €</s> senza lo sconto del 5% per più zone</p>
+        <p id="qlBefore"><s>1.800 €</s> senza lo sconto del 5% per più zone</p>
         <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
       </form>
 
@@ -206,29 +216,29 @@
         </ul>
       </div>
 
-      <h3 class="pkgs-title" data-i18n="cip.int.pkg">Tre pacchetti, dal più semplice al più completo.</h3>
+      <h3 class="pkgs-title" data-i18n="cip.int.pkg">Pacchetti di manutenzione</h3>
+      <p class="pkgs-lede" data-i18n="cip.int.pkgLede"></p>
       <div class="pkgs">
         <article class="pkg">
           <h3 data-i18n="tier.base.name">Pacchetto Base</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="base">da 60 € al metro</span></p>
+          <p class="pkg__price"><span class="ph" data-tier-from="base">da 30 € al metro (minimo 180 €)</span></p>
           <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
           <a class="btn btn--outline" href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base" data-i18n="tier.choose">Scegli questo pacchetto</a>
         </article>
         <article class="pkg pkg--c">
           <p class="pkg__badge" data-i18n-html="tier.badge.h"></p>
           <h3 data-i18n="tier.completo.name">Pacchetto Completo</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="completo">da 85 € al metro</span></p>
+          <p class="pkg__price"><span class="ph" data-tier-from="completo">da 55 € al metro (minimo 350 €)</span></p>
           <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
           <a class="btn" href="pgs/preventivo.html?pacchetto=completo" data-tier-choose="completo" data-i18n="tier.choose">Scegli questo pacchetto</a>
         </article>
         <article class="pkg">
           <h3 data-i18n="tier.premium.name">Pacchetto Premium</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="premium">da 120 € al metro</span></p>
+          <p class="pkg__price"><span class="ph" data-tier-from="premium">da 80 € al metro (minimo 500 €)</span></p>
           <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
           <a class="btn btn--outline" href="pgs/preventivo.html?pacchetto=premium" data-tier-choose="premium" data-i18n="tier.choose">Scegli questo pacchetto</a>
         </article>
       </div>
-      <p class="pkgs__note note" data-i18n-html="tier.note.h"></p>
     </div>
   </section>
 
