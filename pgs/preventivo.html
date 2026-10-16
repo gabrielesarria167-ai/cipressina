@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preventivo barca | Cipressina Barche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+</head>
+<body>
+<a class="skip-link" href="#contenuto" data-skip data-i18n="skip">Vai al contenuto</a>
+<div id="draftRibbon" role="note" data-i18n="ribbon">Bozza di design · prezzi, foto e alcuni dati sono segnaposto</div>
+
+<header id="siteHeader">
+  <div class="hdr">
+    <a class="logo" href="../index.html" data-i18n-attr="aria-label:nav.home" aria-label="Cipressina Barche">
+      <!-- logo ricostruito, usare file originale -->
+      <svg viewBox="0 0 236 56" role="img" aria-hidden="true" focusable="false">
+        <path class="logo__blue" d="M30 4A24 24 0 0 0 30 52A30 30 0 0 1 30 4Z"/>
+        <path class="logo__green" d="M30 4A24 24 0 0 0 30 52A30 30 0 0 1 30 4Z" transform="translate(14 0)"/>
+        <text class="logo__word" x="68" y="21" font-size="10.5" textLength="162" lengthAdjust="spacingAndGlyphs">OFFICINA CARROZZERIA</text>
+        <text class="logo__word" x="67" y="48" font-size="29" textLength="164" lengthAdjust="spacingAndGlyphs">CIPRESSINA</text>
+      </svg>
+    </a>
+    <span class="hdr__spacer"></span>
+    <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+      <a href="../index.html#servizi" data-i18n="nav.servizi">Servizi</a>
+      <a href="../index.html#come-funziona" data-i18n="nav.come">Come funziona</a>
+      <a href="../index.html#interventi" data-i18n="nav.interventi">Interventi</a>
+      <a href="../index.html#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+      <a href="../index.html#contatti" data-i18n="nav.contatti">Contatti</a>
+    </nav>
+    <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false"><span class="flag flag-it" aria-hidden="true"></span><span>Italiano</span></button>
+        <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false"><span class="flag flag-en" aria-hidden="true"></span><span>English</span></button>
+        <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false"><span class="flag flag-es" aria-hidden="true"></span><span>Español</span></button>
+        <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false"><span class="flag flag-fr" aria-hidden="true"></span><span>Français</span></button>
+      </div></div>
+    <a class="btn" href="#" data-i18n="nav.quote">Preventivo</a>
+    <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel" aria-label="Apri il menu"></button>
+  </div>
+  <div id="navPanel">
+    <a href="../index.html#servizi" data-i18n="nav.servizi">Servizi</a>
+    <a href="../index.html#come-funziona" data-i18n="nav.come">Come funziona</a>
+    <a href="../index.html#interventi" data-i18n="nav.interventi">Interventi</a>
+    <a href="../index.html#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+    <a href="../index.html#contatti" data-i18n="nav.contatti">Contatti</a>
+    <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
+    <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false"><span class="flag flag-it" aria-hidden="true"></span><span>Italiano</span></button>
+        <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false"><span class="flag flag-en" aria-hidden="true"></span><span>English</span></button>
+        <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false"><span class="flag flag-es" aria-hidden="true"></span><span>Español</span></button>
+        <button type="button" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false"><span class="flag flag-fr" aria-hidden="true"></span><span>Français</span></button>
+      </div></div>
+    <a class="btn" href="#" data-i18n="nav.quote">Preventivo</a>
+  </div>
+</header>
+
+<main id="contenuto" tabindex="-1">
+
+<!-- ========================= VIEW: WIZARD ========================= -->
+<section id="view-wizard" hidden>
+  <div class="band">
+    <p class="band__title" data-i18n="cip.band.quote">Preventivo barca</p>
+    <p class="crumbs"><a href="../index.html"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="cip.band.quote">Preventivo barca</span></p>
+  </div>
+
+  <nav class="wiz-progress" data-i18n-attr="aria-label:wiz.progress">
+    <ol id="wizProgress">
+      <li data-step="1"><span data-i18n="prog.1">Barca</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="2"><span data-i18n="prog.2">Intervento</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="3"><span data-i18n="prog.3">Zone</span><span class="sr-only" data-progress-sr></span></li>
+      <li data-step="4"><span data-i18n="prog.4">Contatti</span><span class="sr-only" data-progress-sr></span></li>
+    </ol>
+  </nav>
+
+  <div class="page">
+
+    <!-- STEP 1 -->
+    <form class="step" data-step="1" novalidate hidden>
+      <h1 data-i18n="step1.title">Dati della barca</h1>
+      <p data-i18n="step1.sub"></p>
+
+      <fieldset>
+        <legend data-i18n="step1.cardBoat">Barca</legend>
+        <div class="fields">
+          <div class="field wide">
+            <span id="boatTypeLabel" class="flabel" data-i18n="fld.boatType"></span>
+            <div id="boatType" role="radiogroup" aria-labelledby="boatTypeLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="gommone" aria-labelledby="typeName-gommone" aria-describedby="typeSub-gommone">
+                <span class="type-media"><img data-type-thumb="gommone" src="../models/thumbs/gommone.webp" alt=""><span data-type-icon="gommone"></span></span>
+                <span id="typeName-gommone" class="type-name" data-i18n="type.gommone"></span>
+                <span id="typeSub-gommone" class="type-sub" data-i18n="type.sub.gommone"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="open" aria-labelledby="typeName-open" aria-describedby="typeSub-open">
+                <span class="type-media"><img data-type-thumb="open" src="../models/thumbs/open.webp" alt=""><span data-type-icon="open"></span></span>
+                <span id="typeName-open" class="type-name" data-i18n="type.open"></span>
+                <span id="typeSub-open" class="type-sub" data-i18n="type.sub.open"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="cabinato" aria-labelledby="typeName-cabinato" aria-describedby="typeSub-cabinato">
+                <span class="type-media"><img data-type-thumb="cabinato" src="../models/thumbs/cabinato.webp" alt=""><span data-type-icon="cabinato"></span></span>
+                <span id="typeName-cabinato" class="type-name" data-i18n="type.cabinato"></span>
+                <span id="typeSub-cabinato" class="type-sub" data-i18n="type.sub.cabinato"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="flybridge" aria-labelledby="typeName-flybridge" aria-describedby="typeSub-flybridge">
+                <span class="type-media"><img data-type-thumb="flybridge" src="../models/thumbs/flybridge.webp" alt=""><span data-type-icon="flybridge"></span></span>
+                <span id="typeName-flybridge" class="type-name" data-i18n="type.flybridge"></span>
+                <span id="typeSub-flybridge" class="type-sub" data-i18n="type.sub.flybridge"></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-value="vela" aria-labelledby="typeName-vela" aria-describedby="typeSub-vela">
+                <span class="type-media"><img data-type-thumb="vela" src="../models/thumbs/vela.webp" alt=""><span data-type-icon="vela"></span></span>
+                <span id="typeName-vela" class="type-name" data-i18n="type.vela"></span>
+                <span id="typeSub-vela" class="type-sub" data-i18n="type.sub.vela"></span>
+              </button>
+            </div>
+            <p id="boatTypeHint" class="field__hint" data-i18n="type.note"></p>
+            <p id="boatTypeError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="builder" data-i18n="fld.builder"></label>
+            <input id="builder" type="text" list="builderList" autocomplete="off">
+            <datalist id="builderList"></datalist>
+            <p id="builderHint" class="field__hint" data-i18n="hint.builder"></p>
+            <p id="builderError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="model" data-i18n="fld.model"></label>
+            <input id="model" type="text" list="modelList" autocomplete="off">
+            <datalist id="modelList"></datalist>
+            <p id="modelHint" class="field__hint" data-i18n="hint.model"></p>
+            <a id="modelSource" href="#" target="_blank" rel="noopener" hidden></a>
+            <p id="modelAutofill" class="field__hint" role="status" aria-live="polite"></p>
+            <p id="modelError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="year" data-i18n="fld.year"></label>
+            <input id="year" type="text" inputmode="numeric" autocomplete="off">
+            <p id="yearError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="loa" data-i18n="fld.loa"></label>
+            <div class="affixed"><input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix">m</span></div>
+            <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
+            <p id="loaError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field wide">
+            <span id="registeredLabel" class="flabel" data-i18n="fld.registered"></span>
+            <div id="registered" role="radiogroup" aria-labelledby="registeredLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="registrata" data-i18n="opt.registrata"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="natante" data-i18n="opt.natante"></button>
+            </div>
+            <p id="registeredNote" role="status" hidden data-i18n-html="note.natante10.h"></p>
+            <p id="registeredError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field" hidden>
+            <label for="registration" data-i18n="fld.registration"></label>
+            <input id="registration" type="text" autocapitalize="characters" autocomplete="off">
+            <p id="registrationHint" class="field__hint" data-i18n-html="hint.registration.h"></p>
+            <p id="registrationError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field wide">
+            <span id="berthKindLabel" class="flabel" data-i18n="fld.berthKind"></span>
+            <div id="berthKind" role="radiogroup" aria-labelledby="berthKindLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="acqua" data-i18n="opt.berth.acqua"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="terra" data-i18n="opt.berth.terra"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="carrello" data-i18n="opt.berth.carrello"></button>
+            </div>
+            <p id="berthKindError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="location"><span data-i18n="fld.location"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="location" type="text">
+            <p id="locationHint" class="field__hint" data-i18n="hint.location"></p>
+          </div>
+
+          <div class="field">
+            <label for="engineHours"><span data-i18n="fld.engineHours"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="engineHours" type="text" inputmode="numeric" autocomplete="off">
+            <p id="engineHoursHint" class="field__hint" data-i18n="hint.engineHours"></p>
+            <p id="engineHoursError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="boatName"><span data-i18n="fld.boatName"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="boatName" type="text">
+          </div>
+
+          <div class="field">
+            <label for="colorCode"><span data-i18n="fld.colorCode"></span> <span data-i18n="fld.optional"></span></label>
+            <input id="colorCode" type="text">
+            <p id="colorCodeHint" class="field__hint" data-i18n-html="hint.colorCode.h"></p>
+          </div>
+
+          <div id="boatSummary" hidden>
+            <span class="type-media"><img id="boatSummaryThumb" data-type-thumb="" alt="" hidden><span id="boatSummaryIcon"></span></span>
+            <span id="boatSummaryText"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend data-i18n="step1.cardOwner">Proprietario</legend>
+        <div class="fields">
+          <div class="field">
+            <label for="firstName" data-i18n="fld.firstName"></label>
+            <input id="firstName" type="text" autocomplete="given-name">
+            <p id="firstNameError" class="field__error" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="lastName" data-i18n="fld.lastName"></label>
+            <input id="lastName" type="text" autocomplete="family-name">
+            <p id="lastNameError" class="field__error" role="alert" hidden></p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <!-- STEP 2 -->
+    <section class="step" data-step="2" hidden>
+      <h1 data-i18n="step2.title">Livello di intervento</h1>
+      <p data-i18n="step2.sub"></p>
+      <div class="field">
+        <div id="tier" role="radiogroup" data-i18n-attr="aria-label:step2.title">
+          <button type="button" role="radio" aria-checked="false" data-value="base">
+            <strong data-i18n="tier.base.name"></strong>
+            <span class="ph" data-tier-from="base"></span>
+            <span class="t-item" data-i18n="tier.base.i1"></span>
+            <span class="t-item" data-i18n="tier.base.i2"></span>
+          </button>
+          <button type="button" role="radio" aria-checked="false" data-value="completo">
+            <strong data-i18n="tier.completo.name"></strong>
+            <span class="t-badge" data-i18n-html="tier.badge.h"></span>
+            <span class="ph" data-tier-from="completo"></span>
+            <span class="t-item" data-i18n="tier.completo.i1"></span>
+            <span class="t-item" data-i18n="tier.completo.i2"></span>
+          </button>
+          <button type="button" role="radio" aria-checked="false" data-value="premium">
+            <strong data-i18n="tier.premium.name"></strong>
+            <span class="ph" data-tier-from="premium"></span>
+            <span class="t-item" data-i18n="tier.premium.i1"></span>
+            <span class="t-item" data-i18n="tier.premium.i2"></span>
+            <span class="t-item" data-i18n="tier.premium.i3"></span>
+          </button>
+        </div>
+        <p id="tierError" class="field__error" role="alert" hidden></p>
+      </div>
+      <p class="tier-note" data-i18n-html="tier.note.h"></p>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" data-step="3" hidden>
+      <h1 data-i18n="step3.title">Quali zone?</h1>
+      <p data-i18n="step3.sub"></p>
+
+      <div class="step3">
+        <div class="step3__main">
+          <div id="boatView3d">
+            <div id="boatCanvasWrap">
+              <canvas id="boatCanvas" data-i18n-attr="aria-label:viewer.label"></canvas>
+              <span id="zoneHover" aria-hidden="true"></span>
+              <div id="boatOverlay">
+                <p id="boatLoading" data-i18n="viewer.loading"></p>
+                <p id="boatError" role="alert" hidden></p>
+              </div>
+            </div>
+            <div class="viewer-tools">
+              <div id="boatViewButtons" role="group" data-i18n-attr="aria-label:viewer.views">
+                <button type="button" data-view="prua" aria-pressed="false" data-i18n="view.prua"></button>
+                <button type="button" data-view="poppa" aria-pressed="false" data-i18n="view.poppa"></button>
+                <button type="button" data-view="sinistra" aria-pressed="false" data-i18n="view.sinistra"></button>
+                <button type="button" data-view="destra" aria-pressed="false" data-i18n="view.destra"></button>
+                <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
+                <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
+              </div>
+              <button type="button" id="waterToggle"></button>
+            </div>
+            <p class="viewer-hint" data-i18n="viewer.hint"></p>
+          </div>
+
+          <div id="antifoulingBlock" hidden>
+            <p id="antifoulingLabel" class="flabel"><span data-i18n="af.label"></span> <span data-i18n="fld.optional"></span></p>
+            <div id="antifoulingSwatches" role="radiogroup" aria-labelledby="antifoulingLabel"></div>
+            <p id="antifoulingCaption" class="fan-caption" hidden><span id="antifoulingChip" class="swatch-chip"></span> <span class="sr-only" data-i18n="hero.swatchChosen"></span> <strong id="antifoulingName"></strong></p>
+            <p class="note" data-i18n-html="af.note.h"></p>
+          </div>
+
+          <details id="zonesPicker">
+            <summary data-i18n="zones.picker">Scegli le zone da un elenco</summary>
+            <fieldset>
+              <legend data-i18n="zones.pickerLegend"></legend>
+              <div id="zonesChecklist"></div>
+            </fieldset>
+          </details>
+        </div>
+
+        <aside id="zonesSummary" tabindex="-1">
+          <h2 data-i18n="sum.title">Zone selezionate</h2>
+          <p id="zonesCount"></p>
+          <p id="zonesEmpty" data-i18n="sum.empty"></p>
+          <ul id="zonesList"></ul>
+          <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
+          <p id="zonesNudge" hidden></p>
+          <div id="estimate" hidden>
+            <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
+            <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
+            <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
+            <p id="estNote"></p>
+          </div>
+          <p class="est-ph" data-i18n-html="sum.placeholder.h"></p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <form class="step" data-step="4" novalidate hidden>
+      <h1 data-i18n="step4.title">Contatti</h1>
+      <p data-i18n-html="step4.sub.h"></p>
+
+      <div class="fields">
+        <div class="field">
+          <label for="region" data-i18n="fld.region"></label>
+          <select id="region" autocomplete="off"></select>
+          <p id="regionError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="province" data-i18n="fld.province"></label>
+          <select id="province"></select>
+          <p id="provinceError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="provinceText" data-i18n="fld.province"></label>
+          <input id="provinceText" type="text" autocomplete="off">
+          <p id="provinceTextError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="country" data-i18n="fld.country"></label>
+          <input id="country" type="text" autocomplete="country-name">
+          <p id="countryError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="phone" data-i18n="fld.phone"></label>
+          <div class="affixed"><span class="affix">+39</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel-national"></div>
+          <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
+          <p id="phoneError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field" hidden>
+          <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
+          <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
+          <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field wide">
+          <label for="email" data-i18n="fld.email"></label>
+          <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false">
+          <p id="emailHint" class="field__hint" data-i18n="hint.email"></p>
+          <p id="emailError" class="field__error" role="alert" hidden></p>
+        </div>
+        <div class="field wide">
+          <label for="notes"><span data-i18n="fld.notes"></span> <span data-i18n="fld.optional"></span></label>
+          <textarea id="notes" rows="4" data-i18n-attr="placeholder:ph.notes"></textarea>
+        </div>
+      </div>
+      <p class="note" style="margin-top:28px" data-i18n-html="privacy.h"></p>
+    </form>
+
+    <!-- SUCCESS -->
+    <section id="success" hidden>
+      <h1 data-i18n="success.title">Richiesta inviata!</h1>
+      <p class="lede" data-i18n="success.lede"></p>
+      <p class="label" style="margin-top:32px"><span data-i18n="success.code"></span> <span class="ph" data-i18n="success.demo"></span></p>
+      <div class="code">
+        <strong id="successCode"></strong>
+        <button type="button" id="successCopy" data-copy="#successCode" data-i18n="btn.copy">Copia</button>
+      </div>
+      <p class="note" data-i18n-html="success.demoNote.h"></p>
+      <div class="actions">
+        <a class="link-arrow" href="#stato" data-i18n="success.lookup">Verifica la tua richiesta</a>
+        <button type="button" id="resetBtn" data-i18n="btn.reset">Nuova richiesta</button>
+      </div>
+    </section>
+
+    <div id="wizardFoot">
+      <p id="stepHint" role="status" hidden></p>
+      <button type="button" id="stepBack" hidden data-i18n="btn.back">Indietro</button>
+      <button type="button" id="stepNext" aria-describedby="stepHint" aria-disabled="true"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= VIEW: LOOKUP ========================= -->
+<section id="view-lookup" hidden>
+  <div class="band">
+    <h1 class="band__title" tabindex="-1" data-i18n="lookup.title">Verifica la tua richiesta</h1>
+    <p class="crumbs"><a href="../index.html"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="lookup.title">Verifica la tua richiesta</span></p>
+  </div>
+  <div class="page">
+    <p data-i18n="lookup.sub"></p>
+    <form id="lookupForm" novalidate>
+      <label for="lookupId" data-i18n="lookup.label"></label>
+      <input id="lookupId" type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="lookupError">
+      <button type="submit" id="lookupSubmit" data-i18n="lookup.submit">Verifica</button>
+      <p id="lookupError" role="alert" hidden></p>
+    </form>
+    <div id="lookupResult" hidden>
+      <dl>
+        <dt data-i18n="lookup.res.code"></dt><dd id="resultId"></dd>
+        <dt data-i18n="lookup.res.boat"></dt><dd id="resultBoat"></dd>
+        <dt data-i18n="lookup.res.name"></dt><dd id="resultName"></dd>
+        <dt data-i18n="lookup.res.status"></dt><dd><span class="ph" id="resultStatus"></span></dd>
+      </dl>
+      <p class="note" data-i18n-html="lookup.demoNote.h"></p>
+    </div>
+    <p class="back"><a class="link-arrow" href="../index.html" data-i18n="nav.home">Cipressina Barche</a></p>
+  </div>
+</section>
+
+</main><!-- /#contenuto -->
+
+<a id="waFab" class="fab" href="../index.html#contatti" data-i18n-attr="aria-label:fab.label" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.5A9.5 9.5 0 0 0 3.9 16.9L2.6 21.5l4.7-1.2A9.5 9.5 0 1 0 12 2.5Zm0 1.8a7.7 7.7 0 1 1-4 14.3l-.3-.2-2.7.7.7-2.6-.2-.3A7.7 7.7 0 0 1 12 4.3Zm-3 3.7c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.800 2.900 4.400 3.900 2.200.9 2.600.7 3.100.7.500 0 1.500-.6 1.700-1.200.2-.6.2-1.100.2-1.200-.1-.1-.3-.2-.6-.4l-1.800-.9c-.2-.1-.4-.1-.6.1l-.8 1c-.1.200-.3.200-.6.100-.3-.1-1.100-.4-2.100-1.300-.8-.7-1.300-1.500-1.400-1.800-.1-.3 0-.4.1-.5l.4-.5c.1-.1.200-.3.300-.4.100-.2 0-.3 0-.4l-.8-2c-.2-.5-.4-.4-.6-.4Z"/></svg>
+  <span data-i18n="cip.fab">Sono a tua disposizione</span>
+</a>
+
+
+<footer id="siteFooter">
+  <div class="in">
+    <p class="name">Officina Carrozzeria Cipressina S.R.L.</p>
+    <p><span data-i18n="foot.vat">P.IVA</span> IT00762770279 · Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</p>
+    <p class="credits"><span data-i18n="foot.models">Modelli 3D</span>: «Zodiac boat» di RedC130; «Freedom 325», «285 Conquest», «2002 Grand Banks», «Irwin 38» di BoatUS Foundation. Da <a href="https://sketchfab.com" rel="noopener">Sketchfab</a>, licenza <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>, <span data-i18n="foot.modelsMod">modificati (zone, colori, loghi rimossi)</span>.</p>
+    <p>© <span id="footYear">2026</span> · <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a></p>
+  </div>
+</footer>
+
+<script src="../src/site.js" defer></script>
+<script src="../src/zones.js" defer></script>
+<script src="../src/regioni.js" defer></script>
+<script src="../src/i18n.js" defer></script>
+<script src="../src/app.js" defer></script>
+</body>
+</html>

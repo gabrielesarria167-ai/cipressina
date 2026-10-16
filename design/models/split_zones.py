@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from zonelib import *
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SCRATCH = '/private/tmp/claude-501/-Users-gabrielesarria-cipressina/258c9c6b-ca5d-4950-a71c-1d322710137e/scratchpad/models'
+OUT = os.path.join(ROOT, 'out')   # intermediates, gitignored
 
 MATS = {
     'gelcoat': ((0.93, 0.93, 0.94), 0.35, 0.0),
@@ -306,7 +306,7 @@ def main():
     print('ZONES', {o.name: len(o.data.polygons) for o in final})
     os.makedirs(os.path.join(ROOT, 'blend'), exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(ROOT, 'blend', t + '.blend'))
-    zjson = os.path.join(SCRATCH, t + '_info.json')
+    zjson = os.path.join(OUT, t + '_info.json')
     json.dump({'info': info, 'zones': {o.name: len(o.data.polygons) for o in final}}, open(zjson, 'w'))
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@
 The sketches are written for Claude artifacts, which add the document
 skeleton (<!doctype>, <html>, <head>, <body>) at publish time. Served as-is,
 browsers would render them in quirks mode, so this wraps each one in the same
-skeleton. The output sits next to the source, so relative paths (shared/,
+skeleton. The output sits next to the source, so relative paths (../../src/,
 boat3d.js, models/) keep working.
 
     python3 design/tools/build-pages.py      # run after editing a sketch

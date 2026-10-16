@@ -63,7 +63,7 @@
 <body>
 <header>
   <h1>Carrozzeria Cipressina: visualizzatore 3D barche (prova)</h1>
-  <p class="sub">Tocca una zona per selezionarla. Trascina per girare la barca. URL: <code>?type=vela&amp;view=sotto&amp;sel=keel,rudder&amp;water=0&amp;spin=1&amp;pitch=-10&amp;url=models/prova.glb</code> (<code>url</code> sostituisce il file del modello: un indirizzo sbagliato prova il percorso d'errore)</p>
+  <p class="sub">Tocca una zona per selezionarla. Scorri di lato o usa i pulsanti per cambiare vista (solo le 6 viste degli assi). URL: <code>?type=vela&amp;view=sotto&amp;sel=keel,rudder&amp;water=0&amp;spin=1&amp;pitch=-10&amp;url=models/prova.glb</code> (<code>url</code> sostituisce il file del modello: un indirizzo sbagliato prova il percorso d'errore)</p>
 </header>
 
 <div class="layout">
@@ -125,7 +125,7 @@
   const emptyEl = document.getElementById('empty');
   const countEl = document.getElementById('count');
 
-  const mod = await import('./boat3d.js');
+  const mod = await import('../../src/boat3d.js');
   const { BOAT_TYPES, BOAT_MODELS, mountBoat3D } = mod;
 
   // Host-owned selection: the viewer never keeps its own.

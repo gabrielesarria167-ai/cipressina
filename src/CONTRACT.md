@@ -1,6 +1,6 @@
-# DOM contract: what a skin must produce for `shared/app.js`
+# DOM contract: what a page must produce for `src/app.js`
 
-Three skins (A Officina, B Cantiere, C Laguna) differ in markup layout, CSS and home copy only. All behaviour lives in `shared/*.js`. This file is the whole interface between the two sides. `design/sketches/reference.html` is a complete, unstyled page that follows it and is tested; copy from it.
+The site is two pages that share one script set: `index.html` (front page, only `#view-home`) and `pgs/preventivo.html` (`#view-wizard` and `#view-lookup`, the lookup at `preventivo.html#stato`). Markup, CSS (`styles.css`) and page copy/theme (`src/site.js`) are the pages' own; all behaviour lives in `src/*.js`. The archived single-page draft `design/sketches/c-laguna.html` (and the other sketches) have all three views in one page and still work. The views each page contains are the only ones the router uses. This file is the whole interface between the two sides. `design/sketches/reference.html` is a complete, unstyled page that follows it and is tested; copy from it.
 
 Words: **R** = required (the logic breaks or degrades without it), **O** = optional (used when present, silently skipped otherwise). "App writes" means JS sets it and the skin only styles it.
 
@@ -9,24 +9,21 @@ Words: **R** = required (the logic breaks or degrades without it), **O** = optio
 ```html
 <!-- inside <head>, before the content: the import map from brief.md (R) -->
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
-<!-- optional, plain data, before the scripts: this page's own copy and 3D theme -->
-<script>
-window.CIPRESSINA_I18N_EXTRA = { it: {"home.hero.title": "…"}, en: {…}, es: {…}, fr: {…} };
-window.CIPRESSINA_CONFIG = { theme: { water, select, hover, topsides, bottom, deck }, heroTheme: { … }, heroSpinPitch: -10 };
-</script>
-<!-- at the end of <body>, in this order (R) -->
-<script src="shared/zones.js" defer></script>
-<script src="shared/regioni.js" defer></script>
-<script src="shared/i18n.js" defer></script>
-<script src="shared/app.js" defer></script>
+<!-- at the end of <body>, in this order (R); paths shown for index.html, pgs/ uses ../src/ -->
+<script src="src/site.js" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
+<script src="src/zones.js" defer></script>
+<script src="src/regioni.js" defer></script>
+<script src="src/i18n.js" defer></script>
+<script src="src/app.js" defer></script>
 ```
 
-- `boat3d.js` is imported by `app.js` (dynamic `import()`, absolute URL derived from `app.js`'s own `src`, so it resolves to `design/sketches/boat3d.js`; an external classic script's `import()` is relative to the script, not the document). Override: `window.CIPRESSINA_BOAT3D_URL`.
+- `boat3d.js` is imported by `app.js` (dynamic `import()`, absolute URL derived from `app.js`'s own `src`, so it resolves to `src/boat3d.js`; the models are `../models/<type>.glb` relative to that; an external classic script's `import()` is relative to the script, not the document). Override: `window.CIPRESSINA_BOAT3D_URL`.
 - The page must be served over http(s): ES modules do not load from `file://`.
 - `CIPRESSINA_CONFIG.theme` / `heroTheme` are passed to `mountBoat3D({theme})` for the wizard viewer and the hero. `heroTheme.bottom` also sets the colour of the «Originale» swatch. (O)
 - `CIPRESSINA_CONFIG.heroSpinPitch` (number, degrees, optional) is passed to the hero's `mountBoat3D({spinPitch})`: the camera pitch of the turntable. Positive looks down from above (default 14); negative puts the camera below the waterline looking slightly up, which shows the bottom (opera viva) together with the topsides, like a boat on a cradle seen from the ground. The hero has no water, so use about `-10` to preview antifouling colours. Clamped to -30..60. With `prefers-reduced-motion` the static picture uses the same pitch when it is set. (O)
+- `src/site.js` sets `window.CIPRESSINA_I18N_EXTRA = { it: {…}, en: {…}, es: {…}, fr: {…} }` and `window.CIPRESSINA_CONFIG = { theme: { water, select, hover, topsides, bottom, deck }, heroTheme: { … }, heroSpinPitch: -10 }`; both pages load it. The language choice is stored in `localStorage` (`cipressina.lang`, same origin), so it carries across the two pages.
 - Home copy: either `CIPRESSINA_I18N_EXTRA` before the scripts or `CIPRESSINA_I18N.extend({it:{…},…})` any time after `i18n.js`. Both apply immediately.
-- The page is complete without JS (home view visible, wizard and lookup `hidden`). The reference default for the price sentence is the true result of the default selection.
+- The page is complete without JS (on the single-page sketch: home view visible, wizard and lookup `hidden`). The reference default for the price sentence is the true result of the default selection.
 
 ## 1. Global rules
 
@@ -71,7 +68,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 - `data-i18n-attr="aria-label:key;placeholder:key2"` sets attributes.
 - `data-i18n-params='{"n":4}'` optional parameters for the three above.
 - **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#waterToggle`, `#menuToggle`, `#zonesCount`, `#zonesNudge`, `#estimate *`, `#qlWord`, `#qlBefore`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
-- Shared keys: see `shared/i18n.js` (nav, buttons, wizard, fields, errors, tiers, viewer, summary, price sentence, success, lookup, statuses, contact labels, FAQ questions + `faq.a.h`, boat types `type.<id>`, swatches `sw.<id>`, ribbon, footer `foot.vat`). Page copy goes under the page's own key prefix.
+- Shared keys: see `src/i18n.js` (nav, buttons, wizard, fields, errors, tiers, viewer, summary, price sentence, success, lookup, statuses, contact labels, FAQ questions + `faq.a.h`, boat types `type.<id>`, swatches `sw.<id>`, ribbon, footer `foot.vat`). Page copy goes under the page's own key prefix.
 
 ## 2. Chrome (every view)
 
@@ -81,21 +78,23 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | Content target | `#contenuto` with `tabindex="-1"` | R | wraps the three views |
 | Draft ribbon | `#draftRibbon` `data-i18n="ribbon"` | R | on every view: put it outside the views, in the shell |
 | Header | `#siteHeader` | O | sticky. `top: env(safe-area-inset-top, 0px)` |
-| Logo link | `href="#"` (home), `data-i18n-attr="aria-label:nav.home"` | R | |
-| Nav links | `<a href="#servizi">` … `#come-funziona`, `#interventi`, `#chi-siamo`, `#contatti` | R | plain hashes `[A-Za-z0-9-]` only |
-| CTA | `<a href="#preventivo" data-i18n="nav.quote">` | R | `#preventivo` is the wizard |
+| Logo link | `href="index.html"` on the home page, `href="../index.html"` on `pgs/preventivo.html`; `data-i18n-attr="aria-label:nav.home"` | R | |
+| Nav links | `<a href="#servizi">` … `#come-funziona`, `#interventi`, `#chi-siamo`, `#contatti` on the home page; `../index.html#servizi` … on `pgs/preventivo.html` | R | ids are plain `[A-Za-z0-9-]` |
+| CTA | `<a data-i18n="nav.quote">` | R | On `index.html`: `pgs/preventivo.html` (tiers add `?pacchetto=<tier>`). On `pgs/preventivo.html`: `href="#"`, which returns to the last wizard step (e.g. from `#stato`). In the single-page sketch: `#preventivo` |
 | Language switcher | `<button type="button" data-lang="it|en|es|fr" lang="…" aria-label="Italiano" aria-pressed>` ×4 inside a `role="group"` labelled `lang.label` | R | repeatable (header and menu panel); App writes `.is-active` and `aria-pressed`. A `<select data-lang-select>` also works |
 | Menu toggle | `button#menuToggle` (`aria-controls="navPanel"`, `aria-expanded`) | R | App writes `aria-label` («Apri/Chiudi il menu»), `.is-open`; give it an icon through CSS |
 | Menu panel | `#navPanel` (links as above, may repeat the language switcher) | R | closes on link click, outside click, Escape (focus returns to the toggle) |
-| FAB | `<a id="waFab" href="#contatti" data-i18n-attr="aria-label:fab.label">` | R | WhatsApp number is `.ph`: it points at `#contatti`. Hide it with `body.is-wizard #waFab` |
+| FAB | `<a id="waFab" href="#contatti" data-i18n-attr="aria-label:fab.label">` (`../index.html#contatti` on `pgs/preventivo.html`) | R | WhatsApp number is `.ph`: it points at the contacts section. Hide it with `body.is-wizard #waFab` |
 | Footer year | `#footYear` | O | App writes the current year (put the current year as the static fallback) |
 | Copy buttons | `<span id="x">text</span><button type="button" data-copy="#x" data-i18n="btn.copy">` | R for phone, email, address | copies that element's text, on failure selects it; the text must be visible and selectable |
 
 ## 3. Views
 
-Three containers, switched with `hidden` by the router: `#view-home` (visible by default), `#view-wizard` (`hidden`), `#view-lookup` (`hidden`). Each contains an `<h1>`, which receives focus (`tabindex="-1"`) when the view opens (not on first load). In the wizard the focus goes to the `<h1>` of the current step (or the success panel).
+Up to three containers, switched with `hidden` by the router (a page contains only its own: home on `index.html`, wizard and lookup on `preventivo.html`): `#view-home` (visible by default), `#view-wizard` (`hidden`), `#view-lookup` (`hidden`). Each contains an `<h1>`, which receives focus (`tabindex="-1"`) when the view opens (not on first load). In the wizard the focus goes to the `<h1>` of the current step (or the success panel).
 
-Router: `#preventivo` → wizard, `#stato` → lookup, `""` → home, any other plain hash → home then scroll to that id. The step is in `history.state`, not in the URL.
+Router, with `#view-home` present: `#preventivo` → wizard (single-page sketch only), `#stato` → lookup, `""` → home, any other plain hash → home then scroll to that id. Without `#view-home` (`preventivo.html`): `#stato` → lookup, anything else → wizard (the step from `history.state`, else the last step shown). On `index.html` (no wizard) an old `#preventivo` / `#stato` link is redirected to `pgs/preventivo.html`. The step is in `history.state`, not in the URL; the wizard URL is the plain page URL (`location.pathname`).
+
+Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. The wizard page reads both once at load (tier must be in `Z.TIERS`, length within 2.5..30 m), applies them to step 1/2 and removes the query with `history.replaceState`.
 
 ### 3.1 Home
 
@@ -115,7 +114,7 @@ Price sentence (the true default result as static HTML):
 
 | Element | Id | Notes |
 |---|---|---|
-| Form | `form#quoteLine` | submit sets the wizard finish + length, goes to `#preventivo` |
+| Form | `form#quoteLine` | submit sets the wizard finish + length, goes to `pgs/preventivo.html?pacchetto=<tier>&loa=<m>` (or `#preventivo` in the single-page sketch) |
 | Count | `select#qlCount` | options `value` 1..6 |
 | Length | `select#qlLoa` | options `value` in metres (5, 6, 8, 10, 12, 15), text «8 m» |
 | Tier | `select#qlTier` | options `base`, `completo`, `premium`, text via `data-i18n="tier.<id>.name"` |
@@ -129,7 +128,7 @@ Tiers and discount list:
 | Element | Hook | Notes |
 |---|---|---|
 | Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 60 € al metro» (the topsides price per metre). Wrap in `.ph` |
-| Tier choose link | `<a href="#preventivo" data-tier-choose="base">` | O: preselects the finish in the wizard |
+| Tier choose link | `<a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base">` | O: preselects the finish in the wizard |
 | Discount list | `ul#discountList` | App replaces the children with `li.discount-step > span.discount-step__zones + strong.discount-step__rate`, from `DISCOUNT_STEPS`. Static `<li>`s inside are the no-JS fallback |
 
 Other sections (Servizi, Come funziona, Interventi, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
@@ -182,7 +181,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
   <span id="typeSub-gommone" data-i18n="type.sub.gommone"></span>
 </button>
 ```
-- `[data-type-icon]` (App injects the SVG silhouette, `currentColor`) is the fallback. `img[data-type-thumb]` and its `[data-type-icon]` **must share a parent**: App shows the picture and hides the icon (`hidden` attribute on both) only once the image has loaded; if the file is missing or fails, the icon stays. Do not use `loading="lazy"` on these images (a hidden lazy image never loads, so it would never replace the icon). Thumbnail folder: `models/thumbs/<type>.webp`, relative to the page (override: `CIPRESSINA_CONFIG.thumbDir`, trailing slash).
+- `[data-type-icon]` (App injects the SVG silhouette, `currentColor`) is the fallback. `img[data-type-thumb]` and its `[data-type-icon]` **must share a parent**: App shows the picture and hides the icon (`hidden` attribute on both) only once the image has loaded; if the file is missing or fails, the icon stays. Do not use `loading="lazy"` on these images (a hidden lazy image never loads, so it would never replace the icon). Thumbnail folder: the markup's `src` is relative to the page (`models/thumbs/<type>.webp` at the root, `../models/thumbs/` from `pgs/`); the thumbnails App builds itself (the boat summary) resolve next to `app.js`, i.e. `src/../models/thumbs/` (override: `CIPRESSINA_CONFIG.thumbDir`, trailing slash).
 - Sub-label keys `type.sub.<id>` (shared); the note under the cards is `type.note` (use `#boatTypeHint`, so App adds it to `aria-describedby`).
 
 **Step 1 controls**
@@ -272,4 +271,4 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 - Changing the boat type clears the zones, announces it (a polite live region the app creates), destroys the 3D viewer and mounts a fresh one on the next visit to step 3.
 - 3D failure (import twice, WebGL, build) opens `#zonesPicker` and shows the error in `#boatError`; the quote can always be finished from the checklist.
 - Reduced motion: scripted scrolling is instant; the hero does not spin.
-- Window events: `popstate` and `hashchange` drive the router; the wizard uses `history.pushState({view:"wizard", step})` with URL `#preventivo`.
+- Window events: `popstate` and `hashchange` drive the router; the wizard uses `history.pushState({view:"wizard", step})` with URL `location.pathname` (`#preventivo` in the single-page sketch).

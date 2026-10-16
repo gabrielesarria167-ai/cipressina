@@ -348,10 +348,10 @@
     R("viewer.water.hide", "Nascondi acqua", "Hide water", "Ocultar agua", "Masquer l'eau");
     R("viewer.water.show", "Mostra acqua", "Show water", "Mostrar agua", "Afficher l'eau");
     R("viewer.hint",
-        "Tocca una zona della barca per selezionarla o toglierla. Usa i pulsanti per cambiare vista.",
-        "Tap a zone of the boat to select or deselect it. Use the buttons to change the view.",
-        "Toca una zona del barco para seleccionarla o quitarla. Usa los botones para cambiar de vista.",
-        "Touchez une zone du bateau pour la sélectionner ou la retirer. Utilisez les boutons pour changer de vue.");
+        "Tocca una zona della barca per selezionarla o toglierla. Usa i pulsanti, o scorri di lato, per cambiare vista.",
+        "Tap a zone of the boat to select or deselect it. Use the buttons, or swipe sideways, to change the view.",
+        "Toca una zona del barco para seleccionarla o quitarla. Usa los botones, o desliza de lado, para cambiar de vista.",
+        "Touchez une zone du bateau pour la sélectionner ou la retirer. Utilisez les boutons, ou balayez de côté, pour changer de vue.");
 
     R("sum.title", "Zone selezionate", "Selected zones", "Zonas seleccionadas", "Zones sélectionnées");
     R("sum.count",

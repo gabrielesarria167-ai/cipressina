@@ -3,7 +3,7 @@
    Cipressina
 
    The sibling of autocolor's carVisual.js. Every boat is a real model: one
-   meshopt-compressed glTF per boat type (models/<type>.json, an embedded copy of <type>.glb), loaded with
+   meshopt-compressed GLB per boat type (models/<type>.glb), loaded with
    GLTFLoader. Five boats: gommone (RIB), open, cabinato, flybridge and vela.
 
    It keeps carVisual's design principles:
@@ -84,9 +84,7 @@ function modelEntry(type, parts, dims, labelOverrides = {}, extra = {}) {
   for (const id of parts) defaultLabelsIt[id] = labelOverrides[id] || LABELS_IT[id];
   return {
     // Resolved against this module, so it works wherever the site is served.
-    // .json, not .glb: the same glTF with its binary embedded (made by
-    // design/models/glb2json.mjs), because artifacts don't serve .glb.
-    url: new URL(`./models/${type}.json`, import.meta.url).href,
+    url: new URL(`../models/${type}.glb`, import.meta.url).href,
     parts,
     defaultLabelsIt,
     dims,
@@ -129,14 +127,15 @@ const GELCOAT_ZONE_PAINT = {
 const PAINT_KEYS = ['topsides', 'bottom', 'deck', 'boot'];
 
 const UP_AXIS = new THREE.Vector3(0, 1, 0);
-const FRONT_AXIS = new THREE.Vector3(1, 0, 0);   // the bow
+const SIDE_AXIS = new THREE.Vector3(0, 0, 1);    // starboard
 
 const FOV_DEG = 40;
 const CAMERA_PADDING = 1.14;
 const HOVER_OPACITY = 0.38;
 const SELECTED_OPACITY = 0.58;
 const HOVER_THROTTLE_MS = 50;
-const DRAG_PX = 6;            // a pointer that moves further than this is an orbit, not a tap
+const DRAG_PX = 6;            // a pointer that moves further than this is a swipe, not a tap
+const SWIPE_PX = 40;          // a horizontal swipe this long steps to the next side view
 const MS_PER_QUARTER_TURN = 620;
 const MIN_FLIGHT_MS = 420;
 const MAX_FLIGHT_MS = 1150;
@@ -213,18 +212,34 @@ function formatBytes(n) {
    VIEWER
 ========================================================================= */
 
-// View directions from the boat's centre, in boat axes (x bow, z starboard).
-// Horizontal views ride a few degrees above the water so the deck reads.
-const ELEV = THREE.MathUtils.degToRad(8);
+// The only views: the six axes, from the boat's centre towards the camera,
+// in boat axes (x bow, y up, z starboard). No oblique angle and no free
+// orbit: the camera always looks straight along one axis.
 const VIEW_DIRS = {
-  prua: new THREE.Vector3(Math.cos(ELEV), Math.sin(ELEV), 0),
-  poppa: new THREE.Vector3(-Math.cos(ELEV), Math.sin(ELEV), 0),
-  sinistra: new THREE.Vector3(0, Math.sin(ELEV), -Math.cos(ELEV)),
-  destra: new THREE.Vector3(0, Math.sin(ELEV), Math.cos(ELEV)),
+  prua: new THREE.Vector3(1, 0, 0),
+  poppa: new THREE.Vector3(-1, 0, 0),
+  sinistra: new THREE.Vector3(0, 0, -1),
+  destra: new THREE.Vector3(0, 0, 1),
   alto: new THREE.Vector3(0, 1, 0),
-  sotto: new THREE.Vector3(0.42, -0.58, -0.7).normalize(),
-  home: new THREE.Vector3(0.78, 0.3, -0.62).normalize(),
+  sotto: new THREE.Vector3(0, -1, 0),
 };
+// Each view's screen-up. From above and below the beam is up, so the hull
+// lies along the wide canvas, bow to the right in both.
+const VIEW_UPS = {
+  prua: new THREE.Vector3(0, 1, 0),
+  poppa: new THREE.Vector3(0, 1, 0),
+  sinistra: new THREE.Vector3(0, 1, 0),
+  destra: new THREE.Vector3(0, 1, 0),
+  alto: new THREE.Vector3(0, 0, -1),
+  sotto: new THREE.Vector3(0, 0, 1),
+};
+// Where a viewer opens: the starboard profile, bow to the right.
+const DEFAULT_VIEW = 'destra';
+// A horizontal swipe steps round the boat in this order (a swipe to the left
+// turns the boat to the left, as the old drag-orbit did).
+const RING = ['prua', 'destra', 'poppa', 'sinistra'];
+// The hero turntable is not a view: it starts on a 3/4 bow-port angle.
+const SPIN_START_DIR = new THREE.Vector3(0.78, 0, -0.62).normalize();
 
 // Soft radial disc with per-vertex alpha: the water melts into the page
 // instead of ending at a hard edge. `ellipse` squashes it for the shadow.
@@ -387,6 +402,12 @@ export function mountBoat3D(options) {
   let modelRoot = null;
   const center = new THREE.Vector3();
   let fitPts = new Float32Array(0);
+  // With `frameMaxY` (the sailing boat's mast) the near plane follows the
+  // framed box, so the part left out of the framing is cut away instead of
+  // filling the screen: from above the mast would end inches from the lens.
+  let clipBox = null;
+  let baseNear = 0.05;
+  const cornerTmp = new THREE.Vector3();
   let waterGroup = null, shadow = null;
   let waterRadius = 0;
 
@@ -394,7 +415,7 @@ export function mountBoat3D(options) {
   const spinTiltRad = THREE.MathUtils.degToRad(spinTilt);
   const spinPitchGiven = spinTilt !== SPIN_TILT_DEG;
   let waterWanted = !!showWater;
-  let currentView = 'home';
+  let currentView = null;
   let pendingView = null;        // a setView() that arrived before the model did
   function applyWater() {
     if (!waterGroup) return;
@@ -416,16 +437,18 @@ export function mountBoat3D(options) {
   // angle the corners of an empty box stick far out beyond a slim hull, and
   // the boat would end up half the size it could be.
 
-  // Up vector for a camera looking along `forward`: world-up for horizontal
-  // views, the bow axis once the view is steep enough that world-up stops
-  // meaning anything (straight down it is parallel to the view direction).
+  // Up vector for a camera looking along `forward`, for the framing and the
+  // turntable: world-up for horizontal views, the beam axis (as VIEW_UPS)
+  // once the view is steep enough that world-up stops meaning anything.
+  // Views and flights between them set their up explicitly (placeCamera).
   function upHintFor(forward) {
     const projUp = UP_AXIS.clone().addScaledVector(forward, -forward.dot(UP_AXIS));
-    const projFront = FRONT_AXIS.clone().addScaledVector(forward, -forward.dot(FRONT_AXIS));
-    if (projUp.lengthSq() < 1e-10) return projFront.normalize();
-    if (projFront.lengthSq() < 1e-10) return projUp.normalize();
+    const projSide = SIDE_AXIS.clone().addScaledVector(forward, -forward.dot(SIDE_AXIS));
+    if (forward.y < 0) projSide.negate();
+    if (projUp.lengthSq() < 1e-10) return projSide.normalize();
+    if (projSide.lengthSq() < 1e-10) return projUp.normalize();
     const blend = smoothstep(Math.abs(forward.dot(UP_AXIS)), 0.6, 0.97);
-    return projUp.normalize().lerp(projFront.normalize(), blend).normalize();
+    return projUp.normalize().lerp(projSide.normalize(), blend).normalize();
   }
 
   // Distance at which the whole boat fits with padding when seen along `dir`
@@ -454,11 +477,14 @@ export function mountBoat3D(options) {
 
   let presets = {};
   let spinRadius = 0;
+  let spinHome = null;   // the turntable's resting camera position
   function computePresets() {
     presets = {};
     for (const name of Object.keys(VIEW_DIRS)) {
       presets[name] = center.clone().addScaledVector(VIEW_DIRS[name], fitDistance(VIEW_DIRS[name]));
     }
+    const homeDir = new THREE.Vector3(Math.cos(spinTiltRad) * SPIN_START_DIR.x, Math.sin(spinTiltRad), Math.cos(spinTiltRad) * SPIN_START_DIR.z);
+    spinHome = center.clone().addScaledVector(homeDir, fitDistance(homeDir));
     // The turntable keeps one distance all the way round: the widest one it
     // passes through, so the boat never breathes in and out as it turns.
     const tilt = spinTiltRad;
@@ -471,11 +497,26 @@ export function mountBoat3D(options) {
   }
 
   const forwardTmp = new THREE.Vector3();
-  function placeCamera(position) {
+  // `up` (optional) is the screen-up to use; without it upHintFor decides.
+  function placeCamera(position, up) {
     forwardTmp.copy(center).sub(position).normalize();
-    camera.up.copy(upHintFor(forwardTmp));
+    camera.up.copy(up || upHintFor(forwardTmp));
     camera.position.copy(position);
     camera.lookAt(center);
+    // Only looking down does the mast come near the lens; in the side views
+    // the near plane must stay put or it would cut the water in front.
+    if (clipBox && forwardTmp.y < -0.5) {
+      let minDepth = Infinity;
+      for (let k = 0; k < 8; k++) {
+        cornerTmp.set(k & 1 ? clipBox.max.x : clipBox.min.x, k & 2 ? clipBox.max.y : clipBox.min.y, k & 4 ? clipBox.max.z : clipBox.min.z);
+        minDepth = Math.min(minDepth, cornerTmp.sub(position).dot(forwardTmp));
+      }
+      camera.near = Math.max(baseNear, minDepth * 0.97);
+      camera.updateProjectionMatrix();
+    } else if (camera.near !== baseNear) {
+      camera.near = baseNear;
+      camera.updateProjectionMatrix();
+    }
     requestRender();
   }
 
@@ -538,8 +579,10 @@ export function mountBoat3D(options) {
     const toRadius = toDir.length() || 1;
     toDir.divideScalar(toRadius);
 
-    // Opposite views have no single arc between them: route them over the top.
-    const waypoints = fromDir.dot(toDir) < -0.9 ? [fromDir, UP_AXIS.clone(), toDir] : [fromDir, toDir];
+    // Opposite views have no single arc between them: route them over the
+    // top, or (top to bottom) round the port side.
+    const via = Math.abs(fromDir.dot(UP_AXIS)) < 0.9 ? UP_AXIS.clone() : VIEW_DIRS.sinistra.clone();
+    const waypoints = fromDir.dot(toDir) < -0.9 ? [fromDir, via, toDir] : [fromDir, toDir];
     const angles = [];
     let totalAngle = 0;
     for (let i = 0; i < waypoints.length - 1; i++) {
@@ -548,11 +591,36 @@ export function mountBoat3D(options) {
       totalAngle += angle;
     }
 
+    const toUp = VIEW_UPS[view];
     if (immediate || totalAngle < 1e-4 || prefersReducedMotion()) {
-      placeCamera(target);
+      placeCamera(target, toUp);
       flying = false;
       return;
     }
+
+    // Screen-up during the flight: the starting up is carried along the arc
+    // (the rotation of each leg applied to it), and whatever roll is still
+    // missing to land on the view's own up is spread over the whole flight.
+    // A per-frame guess from fixed axes flipped the boat in one frame on
+    // arcs over the top.
+    const fromUp = camera.up.clone().addScaledVector(fromDir, -camera.up.dot(fromDir));
+    if (fromUp.lengthSq() < 1e-10) fromUp.copy(upHintFor(fromDir.clone().negate()));
+    fromUp.normalize();
+    const legAxes = [];
+    for (let i = 0; i < waypoints.length - 1; i++) {
+      const axis = new THREE.Vector3().crossVectors(waypoints[i], waypoints[i + 1]);
+      legAxes.push(axis.lengthSq() > 1e-12 ? axis.normalize() : null);
+    }
+    const carryUp = (leg, f, out) => {
+      out.copy(fromUp);
+      for (let i = 0; i <= leg; i++) {
+        if (legAxes[i]) out.applyAxisAngle(legAxes[i], angles[i] * (i < leg ? 1 : f));
+      }
+      return out;
+    };
+    const endUp = carryUp(angles.length - 1, 1, new THREE.Vector3());
+    const roll = Math.atan2(toDir.dot(new THREE.Vector3().crossVectors(endUp, toUp)), endUp.dot(toUp));
+    const flightUp = new THREE.Vector3();
 
     const duration = clamp(MS_PER_QUARTER_TURN * (totalAngle / (Math.PI / 2)), MIN_FLIGHT_MS, MAX_FLIGHT_MS);
     const startTime = performance.now();
@@ -565,14 +633,16 @@ export function mountBoat3D(options) {
       let travelled = eased * totalAngle;
       let leg = 0;
       while (leg < angles.length - 1 && travelled > angles[leg]) { travelled -= angles[leg]; leg++; }
-      slerpDirection(waypoints[leg], waypoints[leg + 1], angles[leg] > 1e-6 ? travelled / angles[leg] : 1, flightDir);
+      const f = angles[leg] > 1e-6 ? travelled / angles[leg] : 1;
+      slerpDirection(waypoints[leg], waypoints[leg + 1], f, flightDir);
       flightPos.copy(center).addScaledVector(flightDir, lerp(fromRadius, toRadius, eased));
-      placeCamera(flightPos);
+      carryUp(leg, f, flightUp).applyAxisAngle(flightDir, roll * eased);
+      placeCamera(flightPos, flightUp);
       if (t < 1) requestAnimationFrame(step);
       else {
         // Land on the preset as it is NOW: a resize during the flight
         // recomputed the presets.
-        placeCamera(presets[view] || target);
+        placeCamera(presets[view] || target, toUp);
         flying = false;
       }
     }
@@ -597,11 +667,11 @@ export function mountBoat3D(options) {
   const spinPos = new THREE.Vector3();
 
   // The reduced-motion picture. Kept as a function because onResize has to
-  // re-place it at the recomputed distance instead of falling back to `home`.
+  // re-place it at the recomputed distance instead of falling back to spinHome.
   let spinStatic = false;
   function placeStaticSpin() {
-    const a = Math.atan2(VIEW_DIRS.home.z, VIEW_DIRS.home.x);
-    if (!spinStatic) { placeCamera(presets.home); return; }
+    const a = Math.atan2(SPIN_START_DIR.z, SPIN_START_DIR.x);
+    if (!spinStatic) { placeCamera(spinHome); return; }
     spinDir.set(Math.cos(spinTiltRad) * Math.cos(a), Math.sin(spinTiltRad), Math.cos(spinTiltRad) * Math.sin(a));
     placeCamera(spinPos.copy(center).addScaledVector(spinDir, spinRadius));
   }
@@ -609,7 +679,7 @@ export function mountBoat3D(options) {
   function startSpin() {
     if (destroyed || spinning || !spinRadius) return;
     // The lap starts on the 3/4 bow-port view the static boat would show.
-    const startAngle = Math.atan2(VIEW_DIRS.home.z, VIEW_DIRS.home.x);
+    const startAngle = Math.atan2(SPIN_START_DIR.z, SPIN_START_DIR.x);
     const tilt = spinTiltRad;
     if (prefersReducedMotion()) {
       // Static picture: with an explicit spinPitch the host wants that angle
@@ -840,7 +910,9 @@ export function mountBoat3D(options) {
     const size = box.getSize(new THREE.Vector3());
     const boundRadius = size.length() / 2;
     waterRadius = Math.max(size.x, size.z) * 2.6;
-    camera.near = Math.max(boundRadius * 0.01, 0.05);
+    baseNear = Math.max(boundRadius * 0.01, 0.05);
+    camera.near = baseNear;
+    clipBox = model.frameMaxY !== undefined ? frameBox.clone() : null;
     camera.far = Math.max(waterRadius * 2.2, boundRadius * 30);
     camera.updateProjectionMatrix();
 
@@ -985,10 +1057,13 @@ export function mountBoat3D(options) {
 
     applyWater();
     computePresets();
-    const first = pendingView && presets[pendingView] ? pendingView : 'home';
+    // A turntable rests on its own 3/4 angle; every other viewer opens on an
+    // axis view.
+    const first = pendingView && presets[pendingView] ? pendingView : spin ? null : DEFAULT_VIEW;
     pendingView = null;
     currentView = first;
-    placeCamera(presets[first]);
+    if (first) placeCamera(presets[first], VIEW_UPS[first]);
+    else placeCamera(spinHome);
     syncViewButtons();
     applyWater();
     // The turntable can only start once the model has been measured, which
@@ -1000,9 +1075,11 @@ export function mountBoat3D(options) {
   }
 
   /* -----------------------------------------------------------------------
-     Pointer interaction: hover (throttled), tap-to-toggle and a light orbit.
-     A pointer that travels further than DRAG_PX is an orbit and its click is
-     swallowed, so turning the boat never toggles a zone.
+     Pointer interaction: hover (throttled), tap-to-toggle and a swipe.
+     There is no free orbit: a horizontal swipe of SWIPE_PX steps to the next
+     side view (RING), from above or below it lands on a side. A pointer that
+     travels further than DRAG_PX is a swipe and its click is swallowed, so
+     turning the boat never toggles a zone.
   ----------------------------------------------------------------------- */
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
@@ -1018,31 +1095,24 @@ export function mountBoat3D(options) {
     return hits.length ? hits[0].object.userData.zone || null : null;
   }
 
-  let down = null;               // { id, x, y, dragging, lastX, lastY }
+  let down = null;               // { id, x, y, dragging }
   let suppressClick = false;
   let lastHoverTime = 0;
-  const orbitOffset = new THREE.Vector3();
 
-  function orbitBy(dx, dy) {
+  function swipe(dx) {
     if (!modelReady) return;
-    // Cancel any flight: the user has taken the wheel.
-    flightId++; flying = false;
     stopSpin();
-    if (currentView !== null) { currentView = null; syncViewButtons(); applyWater(); }
-    orbitOffset.copy(camera.position).sub(center);
-    const r = orbitOffset.length();
-    let az = Math.atan2(orbitOffset.z, orbitOffset.x);
-    let el = Math.asin(clamp(orbitOffset.y / r, -1, 1));
-    az -= dx * 0.0065;
-    el = clamp(el + dy * 0.005, THREE.MathUtils.degToRad(-80), THREE.MathUtils.degToRad(86));
-    orbitOffset.set(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)).multiplyScalar(r);
-    placeCamera(flightPos.copy(center).add(orbitOffset));
+    const i = RING.indexOf(currentView);
+    let next;
+    if (i === -1) next = dx < 0 ? 'destra' : 'sinistra';
+    else next = RING[(i + (dx < 0 ? 1 : RING.length - 1)) % RING.length];
+    flyToView(next);
   }
 
   function onPointerDown(event) {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     suppressClick = false;
-    down = { id: event.pointerId, x: event.clientX, y: event.clientY, dragging: false, lastX: event.clientX, lastY: event.clientY };
+    down = { id: event.pointerId, x: event.clientX, y: event.clientY, dragging: false };
     try { canvasEl.setPointerCapture(event.pointerId); } catch (e) { /* synthetic events cannot be captured */ }
   }
 
@@ -1052,11 +1122,7 @@ export function mountBoat3D(options) {
         down.dragging = true;
         setHovered(null);
       }
-      if (down.dragging) {
-        orbitBy(event.clientX - down.lastX, event.clientY - down.lastY);
-        down.lastX = event.clientX; down.lastY = event.clientY;
-        return;
-      }
+      if (down.dragging) return;
     }
     // Hover is a mouse thing: on a touchscreen it would only flash under the
     // finger right before a tap.
@@ -1072,6 +1138,8 @@ export function mountBoat3D(options) {
   function onPointerUp(event) {
     if (down && event.pointerId === down.id) {
       suppressClick = down.dragging;
+      const dx = event.clientX - down.x, dy = event.clientY - down.y;
+      if (down.dragging && Math.abs(dx) >= SWIPE_PX && Math.abs(dx) > Math.abs(dy)) swipe(dx);
       down = null;
       try { canvasEl.releasePointerCapture(event.pointerId); } catch (e) { /* not captured */ }
     }
@@ -1092,7 +1160,7 @@ export function mountBoat3D(options) {
   }
 
   if (interactive) {
-    // Horizontal drags orbit; vertical pans stay with the page on touch.
+    // Horizontal swipes step the view; vertical pans stay with the page on touch.
     canvasEl.style.touchAction = 'pan-y';
     canvasEl.addEventListener('pointerdown', onPointerDown);
     canvasEl.addEventListener('pointermove', onPointerMove);
@@ -1112,9 +1180,10 @@ export function mountBoat3D(options) {
     if (spinning) return;
     if (spinStatic && !spinCancelled) { placeStaticSpin(); return; }
     // Framing depends on the aspect ratio: re-place the current view at the
-    // recomputed distance (a manual orbit keeps its own angle and distance).
+    // recomputed distance.
     const here = currentView && presets[currentView];
-    if (here && !flying) placeCamera(here);
+    if (here && !flying) placeCamera(here, VIEW_UPS[currentView]);
+    else if (!currentView && spin && !spinCancelled && !flying) placeCamera(spinHome);
   }
   const resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(onResize) : null;
   if (resizeObserver) resizeObserver.observe(canvasWrapEl);
@@ -1141,7 +1210,7 @@ export function mountBoat3D(options) {
     // Call after the selection changed from outside a canvas click
     // (checklist, remove button, "clear all").
     refreshSelection() { paintAll(); requestRender(); },
-    resetView() { flyToView('home'); },
+    resetView() { flyToView(DEFAULT_VIEW); },
     // For the hero turntable: the host stops the loop while the viewer is
     // off screen or the tab is hidden, and restarts it afterwards. Both are
     // no-ops once destroyed, and resumeSpin only restarts a spin that was

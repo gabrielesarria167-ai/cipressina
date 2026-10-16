@@ -1,10 +1,10 @@
-// Converts design/sketches/models/<type>.glb into <type>.json: the same glTF with
+// Converts models/<type>.glb into <type>.json: the same glTF with
 // its binary chunk embedded as a base64 data URI. Claude artifacts don't serve
 // .glb, but they serve .json, and GLTFLoader reads either.
 // usage: node glb2json.mjs [type...]
 import fs from 'node:fs';
 import path from 'node:path';
-const DIR = new URL('../sketches/models/', import.meta.url).pathname;
+const DIR = new URL('../../models/', import.meta.url).pathname;
 const types = process.argv.slice(2).length ? process.argv.slice(2) : ['gommone', 'open', 'cabinato', 'flybridge', 'vela'];
 for (const t of types) {
   const buf = fs.readFileSync(path.join(DIR, t + '.glb'));

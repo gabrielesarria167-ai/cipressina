@@ -5,7 +5,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from zonelib import *
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SCRATCH = '/private/tmp/claude-501/-Users-gabrielesarria-cipressina/258c9c6b-ca5d-4950-a71c-1d322710137e/scratchpad/models'
+OUT = os.path.join(ROOT, 'out')   # intermediates, gitignored
+THUMBS = os.path.join(ROOT, '..', '..', 'models', 'thumbs')
 t = sys.argv[sys.argv.index('--') + 1]
 cfg = load_config(t)
 BUDGET = cfg.get('budget_tris', 240000)
@@ -51,8 +52,8 @@ for o in objs:
         if k in ('srcid',): o.data.attributes.remove(o.data.attributes[k])
 
 # export raw GLB (Y-up conversion is done by the exporter: Blender +Z up -> glTF +Y up, Blender -Y -> glTF +Z)
-os.makedirs(os.path.join(SCRATCH, 'out'), exist_ok=True)
-raw = os.path.join(SCRATCH, 'out', t + '_raw.glb')
+os.makedirs(OUT, exist_ok=True)
+raw = os.path.join(OUT, t + '_raw.glb')
 bpy.ops.object.select_all(action='DESELECT')
 bpy.ops.export_scene.gltf(filepath=raw, export_format='GLB', export_yup=True, export_cameras=False, export_lights=False)
 print('EXPORTED', raw, os.path.getsize(raw))
@@ -96,8 +97,8 @@ xs, ys = loc[0], loc[1]
 cam.data.ortho_scale = max(xs.max() - xs.min(), (ys.max() - ys.min()) * 1.5) * 1.12
 off = rot @ np.array([(xs.max() + xs.min()) / 2, (ys.max() + ys.min()) / 2, 0])
 cam.location = Vector(c) + dv * 200 + Vector(off)
-os.makedirs(os.path.join(ROOT, 'thumbs'), exist_ok=True)
-png = os.path.join(SCRATCH, 'out', t + '_thumb.png')
+os.makedirs(THUMBS, exist_ok=True)
+png = os.path.join(OUT, t + '_thumb.png')
 sc.render.filepath = png
 bpy.ops.render.render(write_still=True)
 # try WebP
@@ -105,8 +106,8 @@ try:
     im = bpy.data.images.load(png)
     sc.render.image_settings.file_format = 'WEBP'
     sc.render.image_settings.quality = 85
-    im.save_render(os.path.join(ROOT, 'thumbs', t + '.webp'), scene=sc)
+    im.save_render(os.path.join(THUMBS, t + '.webp'), scene=sc)
     print('THUMB webp')
 except Exception as e:
-    import shutil; shutil.copy(png, os.path.join(ROOT, 'thumbs', t + '.png')); print('THUMB png', e)
-json.dump({'tris': tot2}, open(os.path.join(SCRATCH, 'out', t + '_post.json'), 'w'))
+    import shutil; shutil.copy(png, os.path.join(THUMBS, t + '.png')); print('THUMB png', e)
+json.dump({'tris': tot2}, open(os.path.join(OUT, t + '_post.json'), 'w'))

@@ -10,7 +10,7 @@ const ZONE_IDS = new Set(['bottom', 'boot', 'topside_port', 'topside_starboard',
   'flybridge', 'tube_port', 'tube_starboard', 'outboard', 'sterndrive', 'inboard', 'propeller', 'rudder', 'keel']);
 const res = {};
 for (const type of Object.keys(meta)) {
-  const file = path.join(here, '..', 'sketches', 'models', type + '.glb');
+  const file = path.join(here, '..', '..', 'models', type + '.glb');
   if (!fs.existsSync(file)) continue;
   const { json, bytes } = readGlb(file);
   const order = meta[type].order;

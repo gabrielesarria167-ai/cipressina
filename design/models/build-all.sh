@@ -1,5 +1,5 @@
 #!/bin/zsh
-# build-all.sh [type...] : GLB -> zones (Blender) -> decimate/export/thumbnail (Blender) -> gltf-transform compress -> sketches/models/<type>.glb
+# build-all.sh [type...] : GLB -> zones (Blender) -> decimate/export/thumbnail (Blender) -> gltf-transform compress -> models/<type>.glb (repo root)
 set -e
 cd "$(dirname "$0")"
 B=/Applications/Blender.app/Contents/MacOS/Blender
@@ -12,5 +12,4 @@ for T in $TYPES; do
 done
 node make-zones-found.mjs
 
-# Embedded .json copies for the artifact (it does not serve .glb).
-node "$(dirname "$0")/glb2json.mjs" "$@"
+# For a Claude artifact preview (it does not serve .glb), also run: node glb2json.mjs

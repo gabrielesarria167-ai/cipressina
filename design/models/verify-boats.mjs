@@ -7,7 +7,7 @@ import { readGlb, bboxOf } from './glb-util.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const found = JSON.parse(fs.readFileSync(path.join(here, 'zones-found.json'), 'utf8'));
-const outDir = path.join(here, '..', 'sketches', 'models');
+const outDir = path.join(here, '..', '..', 'models');
 const f3 = v => v.map(x => x.toFixed(2)).join(', ');
 let bad = 0;
 

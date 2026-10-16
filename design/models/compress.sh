@@ -2,8 +2,9 @@
 # compress.sh <type> : autocolor recipe (prune -> reorder -> webp (if textures) -> meshopt) from the Blender-exported raw GLB
 set -e
 T=$1
-S=/private/tmp/claude-501/-Users-gabrielesarria-cipressina/258c9c6b-ca5d-4950-a71c-1d322710137e/scratchpad/models/out
-OUT=/Users/gabrielesarria/cipressina/design/sketches/models
+HERE=${0:A:h}
+S=$HERE/out
+OUT=$HERE/../../models
 mkdir -p $OUT
 G() { npx --yes @gltf-transform/cli@4.5 "$@"; }
 G prune $S/${T}_raw.glb $S/${T}_s1.glb --keep-attributes false --keep-leaves true

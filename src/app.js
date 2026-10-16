@@ -1,11 +1,17 @@
 /* =========================================================================
-   app.js: everything the three skins share, wired by the DOM contract
+   app.js: the one script behind both pages of the site
 
    Autocolor split this across home.js, repair.js and lookup.js; here one file
-   serves one HTML page with three views (home, wizard, lookup), so the router,
-   the menu, the language switcher and the 3D loader exist once. A skin only
-   brings markup, CSS and its home copy (see shared/CONTRACT.md for the exact
-   ids, data attributes and classes this file reads and writes).
+   serves two HTML pages, so the router, the menu, the language switcher and
+   the 3D loader exist once:
+     index.html          the front page: only #view-home is in the DOM.
+     pgs/preventivo.html the quote wizard (#view-wizard) and the tracking
+                         lookup (#view-lookup, reached at preventivo.html#stato).
+   The router shows whichever views exist (the archived single-page sketch,
+   design/sketches/c-laguna.html, has all three). The home page hands the
+   chosen finish and length to the wizard in the URL:
+   pgs/preventivo.html?pacchetto=<tier>&loa=<m>. See CONTRACT.md for the exact
+   ids, data attributes and classes this file reads and writes.
 
    Order of the file:
      1. helpers            5. hero (swatches + lazy 3D)
@@ -36,13 +42,13 @@
 
     // Where boat3d.js lives, as an absolute URL. A dynamic import() resolves
     // against the base URL of the script that runs it: for an external classic
-    // script such as this one that is app.js's own URL (shared/), for an
+    // script such as this one that is app.js's own URL (src/), for an
     // inline script it is the document. Deriving the URL from our own src
-    // makes both cases land on design/sketches/boat3d.js; the page can still
+    // makes both cases land on src/boat3d.js; the page can still
     // override it with window.CIPRESSINA_BOAT3D_URL.
     var SELF = document.currentScript;
     var BOAT_URL = window.CIPRESSINA_BOAT3D_URL ||
-        (SELF && SELF.src ? new URL("../boat3d.js", SELF.src).href : "./boat3d.js");
+        (SELF && SELF.src ? new URL("./boat3d.js", SELF.src).href : "./boat3d.js");
 
     /* ==================================================================
        1. Helpers
@@ -197,19 +203,30 @@
     /* ==================================================================
        3. Router and views
        ==================================================================
-       Plain hashes only. #preventivo and #stato are views; any other hash is
-       an anchor on the home page; an empty hash is home. The wizard step, the
-       finish and the length chosen on the home page live in JS state, never in
-       the URL. Steps use pushState so Back works.                           */
+       Two pages. index.html has only the home view: any hash is an anchor.
+       pgs/preventivo.html has the wizard and the lookup: #stato is the lookup,
+       anything else is the wizard, and the wizard URL stays the plain page URL
+       (no hash). The step lives in history.state and steps use pushState so
+       Back works. The archived single-page sketch has all three views and
+       keeps the old hashes (#preventivo, #stato, anchors on home). The finish
+       and length chosen on the home page arrive as ?pacchetto= and ?loa=,
+       read once by readQueryPick() and then removed from the URL.         */
 
     var views = {
         home: byId("view-home"),
         wizard: byId("view-wizard"),
         lookup: byId("view-lookup")
     };
+    // URL written for a wizard history entry: a hash in the single-page
+    // sketch, the plain page URL on preventivo.html.
+    var WIZARD_URL = views.home ? "#preventivo" : location.pathname;
     var shown = { view: null, step: null };   // what is on screen right now
     var routed = false;
     var BASE_TITLE = document.title;
+    // The last wizard step shown: a link back to the wizard that carries no
+    // history entry (the header «Preventivo» from #stato, or on the wizard
+    // itself) returns there instead of to step 1.
+    var lastStep = 1;
 
     function setView(name) {
         Object.keys(views).forEach(function (key) {
@@ -223,7 +240,7 @@
     }
 
     function updateTitle() {
-        var prefix = shown.view === "wizard" ? t("nav.quote") : shown.view === "lookup" ? t("lookup.title") : "";
+        var prefix = shown.view === "wizard" ? (views.home ? t("nav.quote") : "") : shown.view === "lookup" ? t("lookup.title") : "";
         document.title = prefix ? prefix + " · " + BASE_TITLE : BASE_TITLE;
     }
 
@@ -232,8 +249,14 @@
         if (!/^[A-Za-z0-9-]*$/.test(hash)) hash = "";
         var state = history.state || {};
         var first = !routed;
-        if (hash === "preventivo" && views.wizard) enterWizard(state.view === "wizard" ? state.step : 1, first);
-        else if (hash === "stato" && views.lookup) enterLookup(first);
+        // Old links to the single-page draft (index.html#preventivo, #stato)
+        // now belong to the wizard page.
+        if (!views.wizard && (hash === "preventivo" || hash === "stato")) {
+            location.replace("pgs/preventivo.html" + (hash === "stato" ? "#stato" : ""));
+            return;
+        }
+        if (hash === "stato" && views.lookup) enterLookup(first);
+        else if (views.wizard && (hash === "preventivo" || !views.home)) enterWizard(state.view === "wizard" ? state.step : lastStep, first);
         else enterHome(hash, first);
         routed = true;
     }
@@ -287,7 +310,7 @@
         applyHomePick();
         var tag = history.state || {};
         if (tag.view !== "wizard" || tag.step !== target) {
-            history.replaceState({ view: "wizard", step: target }, "", "#preventivo");
+            history.replaceState({ view: "wizard", step: target }, "", WIZARD_URL);
         }
         if (target === "success") renderSuccess({ focus: !first });
         else renderStep(target, { focus: !first });
@@ -295,8 +318,24 @@
     }
 
     // What the customer picked on the home page (finish, length), waiting for
-    // the wizard to open. Applied once.
+    // the wizard to open. Applied once. On preventivo.html it comes from the
+    // query string (?pacchetto=&loa=); in the single-page sketch from the
+    // home page's own clicks.
     var pick = null;
+
+    function readQueryPick() {
+        if (!views.wizard || views.home || !location.search) return;
+        var params = new URLSearchParams(location.search);
+        var tier = params.get("pacchetto"), loa = params.get("loa");
+        if (tier && Z.TIERS.indexOf(tier) === -1) tier = null;
+        if (loa !== null) {
+            var n = parseLoa(loa);
+            if (isNaN(n) || n < LOA_MIN || n > LOA_MAX) loa = null;
+        }
+        if (tier || loa) pick = { tier: tier, loa: loa };
+        // Applied once: a reload must not re-apply it.
+        history.replaceState(history.state, "", location.pathname + location.hash);
+    }
 
     /* ==================================================================
        4. Chrome: menu, language switcher, copy buttons, year
@@ -634,7 +673,12 @@
             event.preventDefault();
             var loaEl = byId("qlLoa"), tierEl = byId("qlTier");
             pick = { tier: tierEl && tierEl.value, loa: loaEl && loaEl.value };
-            location.hash = "preventivo";
+            if (views.wizard) { location.hash = "preventivo"; return; }
+            var query = new URLSearchParams();
+            if (pick.tier) query.set("pacchetto", pick.tier);
+            if (pick.loa) query.set("loa", pick.loa);
+            var qs = query.toString();
+            location.href = "pgs/preventivo.html" + (qs ? "?" + qs : "");
         });
         renderQuoteLine();
     }
@@ -961,6 +1005,7 @@
         current = step;
         shown.view = "wizard";
         shown.step = step;
+        lastStep = step;
         stepEls.forEach(function (el) {
             var on = Number(el.getAttribute("data-step")) === step;
             el.classList.toggle("is-active", on);
@@ -981,11 +1026,11 @@
     }
 
     // `mode`: "push" adds a history entry (forward, back button of ours),
-    // "replace" rewrites the current one. The URL stays #preventivo.
+    // "replace" rewrites the current one. The URL stays WIZARD_URL.
     function goTo(step, mode) {
         var entry = { view: "wizard", step: step };
-        if (mode === "push") history.pushState(entry, "", "#preventivo");
-        else if (mode === "replace") history.replaceState(entry, "", "#preventivo");
+        if (mode === "push") history.pushState(entry, "", WIZARD_URL);
+        else if (mode === "replace") history.replaceState(entry, "", WIZARD_URL);
         renderStep(step, { focus: true });
         updateTitle();
     }
@@ -1113,11 +1158,13 @@
         if (!active) paint(rule, true);
     }
 
-    // Type pictures: <img data-type-thumb="<type>" src="models/thumbs/<type>.webp">
+    // Type pictures: <img data-type-thumb="<type>" src="../models/thumbs/<type>.webp">
     // next to a [data-type-icon] in the same parent. The picture replaces the
     // SVG silhouette once it has loaded; if it is missing or fails, the
     // silhouette stays (the thumbnails may not exist yet).
-    var THUMB_DIR = CONFIG.thumbDir || "models/thumbs/";
+    // The JS-built ones (summary) resolve next to app.js: src/../models/thumbs/.
+    var THUMB_DIR = CONFIG.thumbDir ||
+        (SELF && SELF.src ? new URL("../models/thumbs/", SELF.src).href : "models/thumbs/");
 
     function syncThumb(img) {
         var icon = $("[data-type-icon]", img.parentNode);
@@ -1677,7 +1724,7 @@
             };
             submitting = false;
             submitted = true;
-            history.pushState({ view: "wizard", step: "success" }, "", "#preventivo");
+            history.pushState({ view: "wizard", step: "success" }, "", WIZARD_URL);
             renderSuccess({ focus: true });
         }, 600);
     }
@@ -2048,9 +2095,10 @@
         document.addEventListener("cipressina:lang", onLanguage);
         window.addEventListener("popstate", route);
         window.addEventListener("hashchange", route);
+        readQueryPick();
         onLanguage();
-        // Opening the page on #preventivo or #stato shows that view without
-        // stealing focus; the first paint is the home view otherwise.
+        // Opening preventivo.html shows the wizard (or the lookup on #stato)
+        // without stealing focus; index.html is the home view.
         route();
     }
 
