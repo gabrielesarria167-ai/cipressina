@@ -12,7 +12,6 @@ Words: **R** = required (the logic breaks or degrades without it), **O** = optio
 <!-- at the end of <body>, in this order (R); paths shown for index.html, pgs/ uses ../src/ -->
 <script src="src/site.js?v=2026-10-16b" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
 <script src="src/zones.js?v=2026-10-16b" defer></script>
-<script src="src/regioni.js?v=2026-10-16b" defer></script>
 <script src="src/i18n.js?v=2026-10-16b" defer></script>
 <script src="src/app.js?v=2026-10-16b" defer></script>
 ```
@@ -22,7 +21,7 @@ Words: **R** = required (the logic breaks or degrades without it), **O** = optio
 - The page must be served over http(s): ES modules do not load from `file://`.
 - `CIPRESSINA_CONFIG.theme` / `heroTheme` are passed to `mountBoat3D({theme})` for the wizard viewer and the hero. `heroTheme.bottom` also sets the colour of the «Originale» swatch. (O)
 - `CIPRESSINA_CONFIG.heroSpinPitch` (number, degrees, optional) is passed to the hero's `mountBoat3D({spinPitch})`: the camera pitch of the turntable. Positive looks down from above (default 14); negative puts the camera below the waterline looking slightly up, which shows the bottom (opera viva) together with the topsides, like a boat on a cradle seen from the ground. The hero has no water, so use about `-10` to preview antifouling colours. Clamped to -30..60. With `prefers-reduced-motion` the static picture uses the same pitch when it is set. (O)
-- `src/site.js` sets `window.CIPRESSINA_I18N_EXTRA = { it: {…}, en: {…}, es: {…}, fr: {…} }` and `window.CIPRESSINA_CONFIG = { theme: { water, select, hover, topsides, bottom, deck }, heroTheme: { … }, heroSpinPitch: -10 }`; both pages load it. The language choice is stored in `localStorage` (`cipressina.lang`, same origin), so it carries across the two pages.
+- `src/site.js` sets `window.CIPRESSINA_I18N_EXTRA = { it: {…}, en: {…}, es: {…}, fr: {…} }` and `window.CIPRESSINA_CONFIG = { theme: { water, select, hover, topsides, bottom, deck }, heroTheme: { … }, heroSpinPitch: -10, shopMaxLoa: 8 }` (`shopMaxLoa` optional, see `serviceSite`); both pages load it. The language choice is stored in `localStorage` (`cipressina.lang`, same origin), so it carries across the two pages.
 - Home copy: either `CIPRESSINA_I18N_EXTRA` before the scripts or `CIPRESSINA_I18N.extend({it:{…},…})` any time after `i18n.js`. Both apply immediately.
 - The page is complete without JS (on the single-page sketch: home view visible, wizard and lookup `hidden`). The reference default for the price sentence is the true result of the default selection.
 
@@ -57,7 +56,6 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | `.is-3d` / `.is-fallback` | `#heroBoat` | 3D mounted / import or WebGL failed (SVG poster stays) |
 | `[hidden]` | anything | JS shows and hides with the attribute |
 | `[aria-checked]`, `[aria-pressed]` | radios / view buttons | a11y state, also stylable |
-| `[data-water="on|off"]` | `#waterToggle` | water visible or not |
 | `[data-status="…"]` | `#resultStatus` | lookup status id |
 
 ### Placeholders
@@ -68,7 +66,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 - `data-i18n-html="key.h"` sets `innerHTML` (only the shared `.h` keys, which contain `<span class="ph">`).
 - `data-i18n-attr="aria-label:key;placeholder:key2"` sets attributes.
 - `data-i18n-params='{"n":4}'` optional parameters for the three above.
-- **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#waterToggle`, `#menuToggle`, `#zonesCount`, `#zonesNudge`, `#estimate *`, `#qlWord`, `#qlBefore`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
+- **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#menuToggle`, `#zonesCount`, `#zonesNudge`, `#estimate *`, `#qlWord`, `#qlBefore`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
 - Shared keys: see `src/i18n.js` (nav, buttons, wizard, fields, errors, tiers, viewer, summary, price sentence, success, lookup, statuses, contact labels, FAQ questions + `faq.a.h`, boat types `type.<id>`, swatches `sw.<id>`, ribbon, footer `foot.vat`). Page copy goes under the page's own key prefix.
 
 ## 2. Chrome (every view)
@@ -202,6 +200,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `loa` | text, `inputmode=decimal` | the «m» suffix is the skin's static text |
 | `registered` | radiogroup | `data-value` = `registrata`, `natante` |
 | `berthKind` | radiogroup, **required** | «Dove si trova la barca?». `data-value` = `acqua`, `terra`, `carrello` (labels `opt.berth.*`); error `#berthKindError` (`err.berthKind`); goes in the payload as `berthKind`. Sits before `location` |
+| `serviceSite` | `<p role="status" hidden>`, inside the `berthKind` field | O. App fills it once the length is valid: up to `SHOP_MAX_LOA` (8 m, placeholder; `CIPRESSINA_CONFIG.shopMaxLoa` overrides) `note.site.shop.h` (body shop, Olmo di Martellago), above it `note.site.yard.h` (local shipyard). Sent in the payload as `serviceSite`: `carrozzeria` or `cantiere` |
 | `registeredNote` | `<p role="status" hidden data-i18n-html="note.natante10.h">` | O. App toggles `hidden` (natante and LOA > 10 m) |
 | `registration` | text | its `.field` is hidden unless `registrata` |
 | `engineHours`, `location`, `boatName`, `colorCode` | text | optional (`engineHours` also has an error element); `colorCode` hint uses `hint.colorCode.h`. `location` is labelled «Porto o località» (`fld.location`) |
@@ -220,7 +219,6 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `boatOverlay` | child of the wrap | R | boat3d adds class `hidden` when ready, removes it on failure |
 | `boatLoading`, `boatError` | children of the overlay | R | `boatError` is `hidden` + `role="alert"`; App/boat3d write its text |
 | `boatViewButtons` | `role="group"` | R | contains `button[data-view="prua|poppa|sinistra|destra|alto|sotto"]` (text `view.<name>`); boat3d writes `.is-active` and `aria-pressed` |
-| `waterToggle` | button | R | App writes its label («Nascondi/Mostra acqua») |
 | `zoneHover` | any element, `aria-hidden` | O | App writes the hovered zone's name |
 | `zonesSummary` | `tabindex="-1"` container | R | focus lands here when the list empties |
 | `zonesCount`, `zonesEmpty`, `zonesList` (`<ul>`), `zonesClear` (button, `hidden`) | | R | rows: `li.zone-row[data-zone] > span.zone-row__name + span.zone-row__price + button.zone-row__remove[data-zone-remove]` |
@@ -237,12 +235,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 
 | Id | Kind | Notes |
 |---|---|---|
-| `region` | `<select>`, **empty** | App renders the placeholder, the 20 regions and «Estero / Fuori Italia» (`value="__estero"`) |
-| `province` | `<select>`, empty | filled for Veneto, FVG, Emilia-Romagna, Lombardia, Trentino-AA; disabled until a region is chosen |
-| `provinceText` | text, its `.field` `hidden` | shown for the 15 free-text regions |
-| `country` | text, its `.field` `hidden` | shown for «Estero» |
-| `phone` | `type=tel` | the fixed «+39» prefix is the skin's static text; its `.field` is hidden for «Estero» |
-| `phoneIntl` | `type=tel`, its `.field` `hidden` | shown for «Estero» |
+| `phone` | `type=tel`, no prefix affix | an Italian number (3… / 0…, sent as `+39…`) or any number typed with its own `+` (sent as typed). There is no region, province or country: the shop works only in the Venice area |
 | `email` | `type=email` | |
 | `notes` | `<textarea>` | `data-i18n-attr="placeholder:ph.notes"` |
 | privacy line | `data-i18n-html="privacy.h"` | `.ph` |
