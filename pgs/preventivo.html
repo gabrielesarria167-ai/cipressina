@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preventivo barca | Cipressina Barche</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../styles.css?v=2026-10-16f">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
@@ -99,10 +99,10 @@
                 <span id="typeName-cabinato" class="type-name" data-i18n="type.cabinato"></span>
                 <span id="typeSub-cabinato" class="type-sub" data-i18n="type.sub.cabinato"></span>
               </button>
-              <button type="button" role="radio" aria-checked="false" data-value="flybridge" aria-labelledby="typeName-flybridge" aria-describedby="typeSub-flybridge">
-                <span class="type-media"><img data-type-thumb="flybridge" src="../models/thumbs/flybridge.webp" alt=""><span data-type-icon="flybridge"></span></span>
-                <span id="typeName-flybridge" class="type-name" data-i18n="type.flybridge"></span>
-                <span id="typeSub-flybridge" class="type-sub" data-i18n="type.sub.flybridge"></span>
+              <button type="button" role="radio" aria-checked="false" data-value="yacht" aria-labelledby="typeName-yacht" aria-describedby="typeSub-yacht">
+                <span class="type-media"><img data-type-thumb="yacht" src="../models/thumbs/yacht.webp" alt=""><span data-type-icon="yacht"></span></span>
+                <span id="typeName-yacht" class="type-name" data-i18n="type.yacht"></span>
+                <span id="typeSub-yacht" class="type-sub" data-i18n="type.sub.yacht"></span>
               </button>
               <button type="button" role="radio" aria-checked="false" data-value="vela" aria-labelledby="typeName-vela" aria-describedby="typeSub-vela">
                 <span class="type-media"><img data-type-thumb="vela" src="../models/thumbs/vela.webp" alt=""><span data-type-icon="vela"></span></span>
@@ -170,6 +170,7 @@
               <button type="button" role="radio" aria-checked="false" data-value="carrello" data-i18n="opt.berth.carrello"></button>
             </div>
             <p id="berthKindError" class="field__error" role="alert" hidden></p>
+            <p id="serviceSite" role="status" hidden></p>
           </div>
 
           <div class="field">
@@ -280,7 +281,6 @@
                 <button type="button" data-view="alto" aria-pressed="false" data-i18n="view.alto"></button>
                 <button type="button" data-view="sotto" aria-pressed="false" data-i18n="view.sotto"></button>
               </div>
-              <button type="button" id="waterToggle"></button>
             </div>
             <p class="viewer-hint" data-i18n="viewer.hint"></p>
           </div>
@@ -327,35 +327,10 @@
 
       <div class="fields">
         <div class="field">
-          <label for="region" data-i18n="fld.region"></label>
-          <select id="region" autocomplete="off"></select>
-          <p id="regionError" class="field__error" role="alert" hidden></p>
-        </div>
-        <div class="field">
-          <label for="province" data-i18n="fld.province"></label>
-          <select id="province"></select>
-          <p id="provinceError" class="field__error" role="alert" hidden></p>
-        </div>
-        <div class="field" hidden>
-          <label for="provinceText" data-i18n="fld.province"></label>
-          <input id="provinceText" type="text" autocomplete="off">
-          <p id="provinceTextError" class="field__error" role="alert" hidden></p>
-        </div>
-        <div class="field" hidden>
-          <label for="country" data-i18n="fld.country"></label>
-          <input id="country" type="text" autocomplete="country-name">
-          <p id="countryError" class="field__error" role="alert" hidden></p>
-        </div>
-        <div class="field">
           <label for="phone" data-i18n="fld.phone"></label>
-          <div class="affixed"><span class="affix">+39</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel-national"></div>
+          <input id="phone" type="tel" inputmode="tel" autocomplete="tel">
           <p id="phoneHint" class="field__hint" data-i18n="hint.phone"></p>
           <p id="phoneError" class="field__error" role="alert" hidden></p>
-        </div>
-        <div class="field" hidden>
-          <label for="phoneIntl" data-i18n="fld.phoneIntl"></label>
-          <input id="phoneIntl" type="tel" inputmode="tel" autocomplete="tel">
-          <p id="phoneIntlError" class="field__error" role="alert" hidden></p>
         </div>
         <div class="field wide">
           <label for="email" data-i18n="fld.email"></label>
@@ -435,15 +410,14 @@
   <div class="in">
     <p class="name">Officina Carrozzeria Cipressina S.R.L.</p>
     <p><span data-i18n="foot.vat">P.IVA</span> IT00762770279 · Via N. Sauro, 15 · 30030 Olmo di Martellago (VE)</p>
-    <p class="credits"><span data-i18n="foot.models">Modelli 3D</span>: «Zodiac boat» di RedC130; «Freedom 325», «285 Conquest», «2002 Grand Banks», «Irwin 38» di BoatUS Foundation. Da <a href="https://sketchfab.com" rel="noopener">Sketchfab</a>, licenza <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>, <span data-i18n="foot.modelsMod">modificati (zone, colori, loghi rimossi)</span>.</p>
+    <p class="credits"><span data-i18n="foot.models">Modelli 3D</span>: «Zodiac boat» di RedC130; «Freedom 325», «285 Conquest», «Irwin 38» di BoatUS Foundation; «Yatch» di dannzjs. Da <a href="https://sketchfab.com" rel="noopener">Sketchfab</a>, licenza <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>, <span data-i18n="foot.modelsMod">modificati (zone, colori, loghi rimossi)</span>.</p>
     <p>© <span id="footYear">2026</span> · <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a></p>
   </div>
 </footer>
 
-<script src="../src/site.js" defer></script>
-<script src="../src/zones.js" defer></script>
-<script src="../src/regioni.js" defer></script>
-<script src="../src/i18n.js" defer></script>
-<script src="../src/app.js" defer></script>
+<script src="../src/site.js?v=2026-10-16f" defer></script>
+<script src="../src/zones.js?v=2026-10-16f" defer></script>
+<script src="../src/i18n.js?v=2026-10-16f" defer></script>
+<script src="../src/app.js?v=2026-10-16f" defer></script>
 </body>
 </html>

@@ -385,7 +385,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: #80bdff
 .field.is-invalid input, .field.is-invalid select, .field.is-invalid textarea, [aria-invalid="true"] { border-color: var(--err); }
 .field.is-invalid input:focus, .field.is-invalid select:focus { box-shadow: 0 0 0 .2rem rgba(192, 24, 43, .2); }
 #modelSource { display: inline-block; margin-top: 4px; font-size: .875rem; }
-#registeredNote { margin: 8px 0 0; font-size: .9375rem; }
+#registeredNote, #serviceSite { margin: 8px 0 0; font-size: .9375rem; }
 
 #boatType { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; }
 #boatType button, #registered button, #berthKind button {
@@ -432,12 +432,11 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: #80bdff
 #zoneHover:empty { display: none; }
 .viewer-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 10px; }
 #boatViewButtons { display: flex; flex-wrap: wrap; gap: 6px; }
-#boatViewButtons button, #waterToggle {
+#boatViewButtons button {
   min-height: 36px; padding: 0 12px; background: #fff; color: var(--primary-dark); border: 1px solid var(--primary); border-radius: 4px; font-size: .875rem; font-weight: 600;
 }
-#boatViewButtons button:hover, #waterToggle:hover { background: var(--primary-soft); }
+#boatViewButtons button:hover { background: var(--primary-soft); }
 #boatViewButtons button.is-active { background: var(--primary); color: #fff; }
-#waterToggle { color: var(--text); border-color: var(--input-border); }
 .viewer-hint { margin: 10px 0 0; font-size: .9375rem; color: var(--muted); }
 #antifoulingBlock { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 #antifoulingLabel { margin: 0 0 6px; font-weight: 700; line-height: 1.3; }

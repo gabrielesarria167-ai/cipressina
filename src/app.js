@@ -21,7 +21,7 @@
      4. chrome (menu,      8. lookup
         language, copy)    9. language change and init
 
-   Loads after zones.js, regioni.js and i18n.js. Every string shown to the
+   Loads after zones.js and i18n.js. Every string shown to the
    customer goes through t(); prices go through Z.formatEUR (always it-IT).
    ========================================================================= */
 (function () {
@@ -29,7 +29,6 @@
 
     var Z = window.CIPRESSINA_ZONES;
     var I18N = window.CIPRESSINA_I18N;
-    var REGIONI = window.IT_REGIONI || {};
     // Optional per-skin settings: { theme: {...}, heroTheme: {...} }, passed
     // through to boat3d.js as its `theme` option (water, select, hover, hull
     // colours). Without it the module's own defaults apply.
@@ -47,9 +46,18 @@
     // inline script it is the document. Deriving the URL from our own src
     // makes both cases land on src/boat3d.js; the page can still
     // override it with window.CIPRESSINA_BOAT3D_URL.
+    // The page's ?v= on app.js is passed on to boat3d.js (which passes it on
+    // to the .glb files): the module is imported only when the 3D step opens,
+    // after the page load, so even a hard reload would leave an old cached
+    // copy next to a new app.js. Bumping ?v= in the page refetches them all.
     var SELF = document.currentScript;
-    var BOAT_URL = window.CIPRESSINA_BOAT3D_URL ||
-        (SELF && SELF.src ? new URL("./boat3d.js", SELF.src).href : "./boat3d.js");
+    var BOAT_URL = window.CIPRESSINA_BOAT3D_URL || (function () {
+        if (!SELF || !SELF.src) return "./boat3d.js";
+        var u = new URL("./boat3d.js", SELF.src);
+        var v = new URL(SELF.src).searchParams.get("v");
+        if (v) u.searchParams.set("v", v);
+        return u.href;
+    })();
 
     /* ==================================================================
        1. Helpers
@@ -189,7 +197,13 @@
     // stays failed until reload, and that is what the checklist is for.
     function loadBoat3D() {
         if (!boatModule) {
-            var attempt = import(BOAT_URL + (boatRetries ? "?reintento=" + boatRetries : ""));
+            var url = BOAT_URL;
+            if (boatRetries) {
+                var u = new URL(BOAT_URL, document.baseURI);
+                u.searchParams.set("reintento", String(boatRetries));
+                url = u.href;
+            }
+            var attempt = import(url);
             boatModule = attempt;
             // Holding on to a rejected promise would make every later caller
             // fail without fetching anything, so the failure drops it. Done
@@ -775,7 +789,10 @@
     // A sanity range for the form, not the shop's capacity (unknown, .ph).
     var LOA_MIN = 2.5, LOA_MAX = 30;
     var HOURS_MAX = 99999;
-    var ESTERO = "__estero";
+    // The shop works only around Venice. Boats up to this length come to the
+    // body shop in Olmo di Martellago; longer ones are done at a shipyard in
+    // the area. Placeholder until the owner confirms (CONFIG.shopMaxLoa).
+    var SHOP_MAX_LOA = typeof CONFIG.shopMaxLoa === "number" ? CONFIG.shopMaxLoa : 8;
     var PHONE_IT = /^(3\d{8,9}|0\d{5,10})$/;
     var PHONE_INTL = /^\+\d{8,15}$/;
     var REGISTRATION = /^[A-Z0-9][A-Z0-9 ]{2,14}$/;
@@ -836,14 +853,6 @@
         RULE[def.id] = def;
     }
 
-    function regionMode() {
-        var el = byId("region");
-        var value = el ? el.value : "";
-        if (!value) return "none";
-        if (value === ESTERO) return "estero";
-        return Array.isArray(REGIONI[value]) ? "select" : "text";
-    }
-
     function defineRules() {
         addRule({ id: "boatType", step: 1, radio: true, get: function () { return state.boatType; },
             ok: function (v) { return !!v; }, msg: "err.boatType" });
@@ -886,19 +895,10 @@
             when: function () { return state.tier === Z.NO_PACKAGE; },
             ok: function (v) { return v.length > 0; }, msg: "hint.step3" });
 
-        addRule({ id: "region", step: 4, ok: function (v) { return v !== ""; }, msg: "err.region" });
-        addRule({ id: "province", step: 4, when: function () { return regionMode() === "select"; },
-            ok: function (v) { return v !== ""; }, msg: "err.province" });
-        addRule({ id: "provinceText", step: 4, max: 60, when: function () { return regionMode() === "text"; },
-            ok: function (v) { return clean(v).length >= 2; }, msg: "err.provinceText" });
-        addRule({ id: "country", step: 4, max: 60, when: function () { return regionMode() === "estero"; },
-            ok: function (v) { return clean(v).length >= 2; }, msg: "err.country" });
-        addRule({ id: "phone", step: 4, when: function () { return regionMode() !== "estero"; },
-            format: function (v) { return digitsOnly(v, 11); },
-            ok: function (v) { return PHONE_IT.test(v); }, msg: "err.phone" });
-        addRule({ id: "phoneIntl", step: 4, when: function () { return regionMode() === "estero"; },
-            format: function (v) { return (v.charAt(0) === "+" ? "+" : "") + digitsOnly(v, 15); },
-            ok: function (v) { return PHONE_INTL.test(v); }, msg: "err.phoneIntl" });
+        // An Italian number without prefix, or any number with its own «+».
+        addRule({ id: "phone", step: 4,
+            format: function (v) { return v.charAt(0) === "+" ? "+" + digitsOnly(v, 15) : digitsOnly(v, 11); },
+            ok: function (v) { return PHONE_IT.test(v) || PHONE_INTL.test(v); }, msg: "err.phone" });
         addRule({ id: "email", step: 4,
             format: function (v) { return v.replace(EMAIL_DISALLOWED, ""); },
             ok: function (v) { return EMAIL_PATTERN.test(v); },
@@ -1100,6 +1100,7 @@
             loaEl.value = formatNumber(loa);
             state.autoLoa = "";
             renderRegisteredNote();
+            renderServiceSite();
             renderBoatSummary();
         }
         pick = null;
@@ -1166,6 +1167,7 @@
         renderModelSource();
         renderAutofillNote();
         renderRegisteredNote();
+        renderServiceSite();
         renderBoatSummary();
     }
 
@@ -1196,6 +1198,21 @@
         if (!note) return;
         var loaEl = byId("loa");
         note.hidden = !(state.registered === "natante" && loaEl && parseLoa(loaEl.value) > 10);
+    }
+
+    // Where the job is done follows from the length; null until it's valid.
+    function serviceSite() {
+        var loa = parseLoa((byId("loa") || {}).value || "");
+        if (!(loa >= LOA_MIN && loa <= LOA_MAX)) return null;
+        return loa <= SHOP_MAX_LOA ? "carrozzeria" : "cantiere";
+    }
+
+    function renderServiceSite() {
+        var note = byId("serviceSite");
+        if (!note) return;
+        var site = serviceSite();
+        note.hidden = !site;
+        if (site) note.innerHTML = t(site === "carrozzeria" ? "note.site.shop.h" : "note.site.yard.h", { max: formatNumber(SHOP_MAX_LOA) });
     }
 
     function updateRegistrationField() {
@@ -1289,7 +1306,6 @@
     var viewerType = null;      // boat type the viewer is mounted (or mounting) for
     var viewerMountId = 0;
     var importRetried = false;
-    var waterOn = true;
     var viewerErrorKey = null;  // error shown in the overlay, redrawn on language change
 
     function isZoneSelected(id) { return state.zones.indexOf(id) !== -1; }
@@ -1592,7 +1608,7 @@
                     interactive: true,
                     spin: false,
                     loadErrorText: t("viewer.errorMount"),
-                    showWater: waterOn,
+                    showWater: true,
                     theme: CONFIG.theme
                 });
             } catch (err) {
@@ -1638,83 +1654,11 @@
         });
     }
 
-    function renderWater() {
-        var button = byId("waterToggle");
-        if (!button) return;
-        button.textContent = t(waterOn ? "viewer.water.hide" : "viewer.water.show");
-        button.setAttribute("data-water", waterOn ? "on" : "off");
-    }
-
-    /* ---------- Step 4: region and province ---------- */
-
-    function sortedRegions() {
-        return Object.keys(REGIONI).sort(function (a, b) { return a.localeCompare(b, "it"); });
-    }
-
-    function buildRegionOptions() {
-        var select = byId("region");
-        if (!select) return;
-        var keep = select.value;
-        select.textContent = "";
-        function add(value, text) {
-            var option = document.createElement("option");
-            option.value = value;
-            option.textContent = text;
-            select.appendChild(option);
-        }
-        add("", t("opt.choose"));
-        sortedRegions().forEach(function (name) { add(name, name); });
-        add(ESTERO, t("opt.estero"));
-        select.value = keep;
-        fillProvinceOptions();
-    }
-
-    function fillProvinceOptions() {
-        var select = byId("province");
-        var region = byId("region");
-        if (!select || !region) return;
-        var keep = select.value;
-        select.textContent = "";
-        var mode = regionMode();
-        var placeholder = document.createElement("option");
-        placeholder.value = "";
-        placeholder.textContent = t(mode === "none" ? "opt.chooseRegion" : "opt.choose");
-        select.appendChild(placeholder);
-        if (mode === "select") {
-            REGIONI[region.value].slice().sort(function (a, b) { return a.localeCompare(b, "it"); }).forEach(function (name) {
-                var option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                select.appendChild(option);
-            });
-        }
-        select.value = keep;
-        if (select.value !== keep) select.value = "";
-    }
-
-    // One region select drives which of province / free-text province /
-    // country, and which of Italian / international phone, is on screen.
-    function applyRegionMode() {
-        var mode = regionMode();
-        var province = byId("province"), provinceText = byId("provinceText"), country = byId("country");
-        var phone = byId("phone"), phoneIntl = byId("phoneIntl");
-        fillProvinceOptions();
-        if (province) { fieldOf(province).hidden = !(mode === "select" || mode === "none"); province.disabled = mode === "none"; }
-        if (provinceText) fieldOf(provinceText).hidden = mode !== "text";
-        if (country) fieldOf(country).hidden = mode !== "estero";
-        if (phone) fieldOf(phone).hidden = mode === "estero";
-        if (phoneIntl) fieldOf(phoneIntl).hidden = mode !== "estero";
-        ["province", "provinceText", "country", "phone", "phoneIntl"].forEach(function (id) {
-            if (RULE[id]) check(RULE[id], false);
-        });
-    }
-
     /* ---------- Submit, success, reset ---------- */
 
     function buildPayload() {
-        var mode = regionMode();
         var value = function (id) { var el = byId(id); return el ? clean(el.value) : ""; };
-        var region = value("region");
+        var phone = value("phone");
         return {
             lang: I18N.getLang(),
             boatType: state.boatType,
@@ -1730,14 +1674,12 @@
             registration: state.registered === "registrata" ? value("registration") : "",
             engineHours: value("engineHours") === "" ? null : Number(value("engineHours")),
             location: value("location"),
+            serviceSite: serviceSite(),
             boatName: value("boatName"),
             colorCode: value("colorCode"),
             firstName: value("firstName"),
             lastName: value("lastName"),
-            region: region === ESTERO ? "" : region,
-            province: mode === "select" ? value("province") : mode === "text" ? value("provinceText") : "",
-            country: mode === "estero" ? value("country") : "",
-            phone: mode === "estero" ? value("phoneIntl") : "+39" + value("phone"),
+            phone: phone.charAt(0) === "+" ? phone : "+39" + phone,
             email: value("email"),
             notes: (byId("notes") || { value: "" }).value.trim()
         };
@@ -1808,12 +1750,11 @@
         $$("form.step", wizardEl).forEach(function (form) { form.reset(); });
         Object.keys(groups).forEach(function (id) { groups[id].reset(); });
         RULES.forEach(function (rule) { if (!rule.virtual) paint(rule, true); });
-        buildRegionOptions();
-        applyRegionMode();
         updateRegistrationField();
         renderModelSource();
         renderAutofillNote();
         renderRegisteredNote();
+        renderServiceSite();
         renderBoatSummary();
         fillModelList();
         renderChecklist();
@@ -1890,16 +1831,10 @@
                 }
                 if (rule.id === "loa") {
                     renderRegisteredNote();
+                    renderServiceSite();
                     if (state.autofillNote && el.value !== state.autoLoa) { state.autofillNote = false; renderAutofillNote(); }
                 }
                 if (rule.id === "loa" || rule.id === "year") renderBoatSummary();
-                if (rule.id === "region") {
-                    ["province", "provinceText", "country"].forEach(function (id) {
-                        var dependent = byId(id);
-                        if (dependent) dependent.value = "";
-                    });
-                    applyRegionMode();
-                }
                 if (rule.err) check(rule, true);
                 refreshMain();
             };
@@ -1929,10 +1864,8 @@
             modelEl.addEventListener("change", function () { onModelCommit(); renderBoatSummary(); });
         }
 
-        // Step 4
-        buildRegionOptions();
-        applyRegionMode();
         updateRegistrationField();
+        renderServiceSite();
 
         // Step 3
         initAntifouling();
@@ -1967,15 +1900,6 @@
                 if (event.target && event.target.type === "checkbox") setZone(event.target.value, event.target.checked);
             });
         }
-        var water = byId("waterToggle");
-        if (water) {
-            water.addEventListener("click", function () {
-                waterOn = !waterOn;
-                if (viewer) viewer.setWaterVisible(waterOn);
-                renderWater();
-            });
-        }
-        renderWater();
 
         // Navigation and submit
         if (nextBtn) nextBtn.addEventListener("click", onMain);
@@ -2107,7 +2031,7 @@
         $$("[data-copy].is-copied").forEach(function (button) { button.textContent = t("btn.copied"); });
 
         if (wizardEl) {
-            buildRegionOptions();
+            renderServiceSite();
             updateProgress();
             if (hintKey) setHint(hintKey);
             RULES.forEach(function (rule) {
@@ -2119,7 +2043,6 @@
             renderBoatSummary();
             renderChecklist();
             renderSummary();
-            renderWater();
             refreshMain();
         }
         renderLookupError();

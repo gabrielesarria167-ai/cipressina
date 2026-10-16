@@ -8,7 +8,7 @@ import mathutils
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PICKS = ['gommone/zodiac-redc130', 'open/grady-freedom-325', 'cabinato/whaler-285-conquest',
-         'flybridge/grand-banks-2002', 'vela/irwin-38']
+         'yacht/yatch-dannzjs', 'vela/irwin-38']
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 paths = args or [os.path.join(HERE, 'src', p, 'model.glb') for p in PICKS]
 

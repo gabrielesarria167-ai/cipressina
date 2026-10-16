@@ -1,0 +1,25 @@
+{
+ "group": "yacht",
+ "source": "yatch-dannzjs",
+ "bow": "+X",
+ "loa": 18.0,
+ "delete_materials": [
+  "Mat_0",
+  "Mat_9",
+  "Mat_13"
+ ],
+ "keep_box": {
+  "x": [-1720, 2620],
+  "y": [-720, 470],
+  "z": [-60, null]
+ },
+ "drop_boxes": [
+  {"x": [-1720, -1380], "y": [-130, -40], "z": [480, 780], "mats": ["Mat_1", "Default_0"]},
+  {"x": [-1430, -1290], "y": [-420, 130], "z": [340, 510], "mats": ["Mat_1"]}
+ ],
+ "wl": 0.58,
+ "boot": 0.07,
+ "floor": -0.3,
+ "fly_z": 3.84,
+ "foredeck_z": 3.16
+}

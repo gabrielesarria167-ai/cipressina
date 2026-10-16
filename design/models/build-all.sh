@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$0")"
 B=/Applications/Blender.app/Contents/MacOS/Blender
-TYPES=("$@"); [ ${#TYPES[@]} -eq 0 ] && TYPES=(gommone open cabinato flybridge vela)
+TYPES=("$@"); [ ${#TYPES[@]} -eq 0 ] && TYPES=(gommone open cabinato yacht vela)
 for T in $TYPES; do
   echo "=== $T"
   $B -b -P split_zones.py -- $T 2>&1 | grep -E "ZONES|Error|Traceback" || true

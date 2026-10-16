@@ -35,7 +35,7 @@
         gommone:   { it: "Gommone / RIB",        en: "RIB / inflatable",    es: "Neumática / RIB",      fr: "Semi-rigide / RIB" },
         open:      { it: "Open / day cruiser",   en: "Open / day cruiser",  es: "Open / lancha de paseo", fr: "Open / day cruiser" },
         cabinato:  { it: "Cabinato",             en: "Cabin cruiser",       es: "Cabinada",             fr: "Cabin cruiser" },
-        flybridge: { it: "Flybridge",            en: "Flybridge",           es: "Flybridge",            fr: "Flybridge" },
+        yacht:     { it: "Yacht",                en: "Yacht",               es: "Yate",                 fr: "Yacht" },
         vela:      { it: "Barca a vela",         en: "Sailboat",            es: "Velero",               fr: "Voilier" }
     };
 
@@ -137,7 +137,7 @@
         gommone:   ["bottom", "topside_port", "topside_starboard", "tube_port", "tube_starboard", "console", "deck", "transom", "outboard"],
         open:      ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "console", "outboard"],
         cabinato:  ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "cabin", "hardtop", "outboard"],
-        flybridge: ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "cabin", "flybridge", "propeller", "rudder"],
+        yacht:     ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "cabin", "flybridge"],
         vela:      ["bottom", "boot", "topside_port", "topside_starboard", "transom", "deck", "cabin", "keel", "rudder"]
     };
 
@@ -308,9 +308,9 @@
 
     // ---------- Builders and models (research.md §2) -----------------------
     // Step 1 offers these in a datalist; anything else is free text. `approx`
-    // marks values the source gives with "~"; `typeUnverified` the Azimut S6,
-    // whose type the research could not confirm. beam is null where the source
-    // has none. loa and beam are metres.
+    // marks values the source gives with "~". beam is null where the source
+    // has none. loa and beam are metres. (The Azimut S6 was flagged as
+    // unverified when the type was «flybridge»; as a «yacht» it fits.)
     var BUILDERS = [
         { builder: "Beneteau", model: "Oceanis 40.1", type: "vela", loa: 12.87, beam: 4.18, source: "https://www.beneteau.com/en-us/oceanis/oceanis-401" },
         { builder: "Beneteau", model: "Oceanis 34.1", type: "vela", loa: 10.77, beam: 3.57, source: "https://www.beneteau.com/oceanis/oceanis-341" },
@@ -322,13 +322,13 @@
         { builder: "Sessa Marine", model: "C3X", type: "cabinato", loa: 11.33, beam: 3.45, source: "https://yacht.sessamarine.com/en/yacht/c3x-ob/" },
         { builder: "Sessa Marine", model: "C42", type: "cabinato", loa: 13.10, beam: 3.90, source: "https://yacht.sessamarine.com/en/yacht/c42-yacht-line/" },
         { builder: "Sessa Marine", model: "C47", type: "cabinato", loa: 14.27, beam: 4.40, source: "https://yacht.sessamarine.com/en/yacht/c47/" },
-        { builder: "Sessa Marine", model: "FLY54", type: "flybridge", loa: 16.36, beam: null, source: "https://yacht.sessamarine.com/en/yacht/fly54-flybridge-line/" },
+        { builder: "Sessa Marine", model: "FLY54", type: "yacht", loa: 16.36, beam: null, source: "https://yacht.sessamarine.com/en/yacht/fly54-flybridge-line/" },
         { builder: "Ranieri International", model: "Voyager 23 S", type: "open", loa: 6.75, beam: 2.40, source: "https://www.ranieri-international.com/en/voyager-23-s.php" },
         { builder: "Ranieri International", model: "255 SL", type: "open", loa: 7.80, beam: 2.55, source: "https://www.ranieri-international.com/en/255-sl.php" },
         { builder: "Ranieri International", model: "275 SL", type: "open", loa: 8.20, beam: 2.55, source: "https://ranieri-international.com/en/275-sl/" },
         { builder: "Ranieri International", model: "Cayman 27 Sport Touring", type: "gommone", loa: 8.30, beam: 3.20, source: "https://itboat.com/models/10002-ranieri-international-cayman-27-sport-touring" },
         { builder: "Joker Boat", model: "Clubman 26", type: "gommone", loa: 7.93, beam: 3.00, source: "https://jokerboat.com/rhib/clubman-26/" },
-        { builder: "Azimut", model: "S6", type: "flybridge", typeUnverified: true, loa: 18.0, beam: 4.75, approx: true, source: "https://www.yachtbuyer.com/en-us/yachts/compare/azimut-s6-vs-beneteau-monte-carlo-6s-b09a6d1" },
+        { builder: "Azimut", model: "S6", type: "yacht", loa: 18.0, beam: 4.75, approx: true, source: "https://www.yachtbuyer.com/en-us/yachts/compare/azimut-s6-vs-beneteau-monte-carlo-6s-b09a6d1" },
         { builder: "Cranchi", model: "E26 O/B", type: "open", loa: 7.85, beam: 2.49, source: "https://www.cranchi.com/wp-content/uploads/2026/06/catalogo_E26-OB_LD.pdf" },
         { builder: "Cranchi", model: "E30 Endurance", type: "cabinato", loa: 9.85, beam: 2.95, source: "https://cranchi.com/en/yachts/e30-endurance" },
         { builder: "Quicksilver", model: "Activ 675 Open", type: "open", loa: 7.16, beam: 2.55, source: "https://www.quicksilver-boats.com/media/productsheet/activ%20675%20open%20product%20sheet%20uk-en.pdf" },
@@ -375,7 +375,7 @@
         gommone: svg('<rect x="4" y="16" width="84" height="10" rx="5"/><path d="M10 28h72l-4 5H14z"/><path d="M42 16l2-7h8l2 7z"/><rect x="88" y="14" width="5" height="16" rx="1.5"/>'),
         open: svg('<path d="M4 20h84l-8 14H16z"/><path d="M38 20l8-8h7l-3 8z"/><rect x="88" y="18" width="4" height="12" rx="1.5"/>'),
         cabinato: svg('<path d="M4 22h86l-8 12H14z"/><path d="M24 22l8-10h26l10 10z"/>'),
-        flybridge: svg('<path d="M4 24h88l-8 11H14z"/><path d="M20 24v-8h46l8 8z"/><path d="M32 16v-7h22l4 7z"/>'),
+        yacht: svg('<path d="M4 24h88l-8 11H14z"/><path d="M20 24v-8h46l8 8z"/><path d="M32 16v-7h22l4 7z"/>'),
         vela: svg('<path d="M6 28h80l-8 8H16z"/><rect x="45" y="2" width="2" height="26"/><path d="M43 4v22H18z"/><path d="M49 7l22 19H49z"/>')
     };
 

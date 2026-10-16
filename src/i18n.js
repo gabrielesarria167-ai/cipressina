@@ -146,11 +146,7 @@
     R("fld.colorCode", "Codice colore / gelcoat", "Colour / gelcoat code", "Código de color / gelcoat", "Code couleur / gelcoat");
     R("fld.firstName", "Nome", "First name", "Nombre", "Prénom");
     R("fld.lastName", "Cognome", "Last name", "Apellidos", "Nom");
-    R("fld.region", "Regione", "Region", "Región", "Région");
-    R("fld.province", "Provincia", "Province", "Provincia", "Province");
-    R("fld.country", "Paese", "Country", "País", "Pays");
     R("fld.phone", "Telefono", "Phone", "Teléfono", "Téléphone");
-    R("fld.phoneIntl", "Telefono con prefisso internazionale", "Phone with country code", "Teléfono con prefijo internacional", "Téléphone avec indicatif international");
     R("fld.email", "Email", "Email", "Correo electrónico", "E-mail");
     R("fld.notes", "Note", "Notes", "Notas", "Notes");
     R("fld.optional", "(opzionale)", "(optional)", "(opcional)", "(facultatif)");
@@ -173,25 +169,26 @@
         "Telle qu'elle figure sur les papiers. <span class=\"ph\">Format à vérifier.</span>");
     R("hint.engineHours", "La trovi sul contaore del motore.", "You can read it on the engine hour meter.", "La encuentras en el horómetro del motor.", "Vous la trouvez sur le compteur d'heures du moteur.");
     R("hint.location",
-        "Porto, rimessaggio o altro: ci aiuta a organizzare l'intervento.",
-        "Marina, storage yard or elsewhere: it helps us plan the job.",
-        "Puerto, varadero u otro lugar: nos ayuda a organizar la intervención.",
-        "Port, hivernage ou autre : cela nous aide à organiser l'intervention.");
+        "Solo zona di Venezia: porto, rimessaggio o località.",
+        "Venice area only: marina, storage yard or place.",
+        "Solo zona de Venecia: puerto, varadero o localidad.",
+        "Région de Venise uniquement : port, hivernage ou localité.");
     R("hint.colorCode.h",
         "Spesso è nel manuale del cantiere. <span class=\"ph\">Da verificare.</span>",
         "Often in the builder's manual. <span class=\"ph\">To be checked.</span>",
         "Suele estar en el manual del astillero. <span class=\"ph\">Por verificar.</span>",
         "Souvent dans le manuel du chantier. <span class=\"ph\">À vérifier.</span>");
-    R("hint.phone", "Cellulare (3…) o fisso (0…), senza prefisso.", "Mobile (3…) or landline (0…), without the prefix.", "Móvil (3…) o fijo (0…), sin prefijo.", "Mobile (3…) ou fixe (0…), sans indicatif.");
+    R("hint.phone",
+        "Cellulare (3…) o fisso (0…). Per un numero estero scrivi anche il prefisso, ad esempio +33.",
+        "Mobile (3…) or landline (0…). For a non-Italian number, include the prefix, for example +33.",
+        "Móvil (3…) o fijo (0…). Para un número extranjero, escribe también el prefijo, por ejemplo +33.",
+        "Mobile (3…) ou fixe (0…). Pour un numéro étranger, ajoutez l'indicatif, par exemple +33.");
     R("hint.email", "Qui ti inviamo il codice di monitoraggio.", "This is where we send your tracking code.", "Aquí te enviamos el código de seguimiento.", "C'est ici que nous vous envoyons le code de suivi.");
     R("ph.notes",
         "Danni da riparare, tempi, dove si trova la barca o altri dettagli utili",
         "Damage to repair, timing, where the boat is, or any other useful detail",
         "Daños que reparar, plazos, dónde está el barco u otros detalles útiles",
         "Dégâts à réparer, délais, lieu où se trouve le bateau ou autres détails utiles");
-    R("opt.choose", "Scegli…", "Choose…", "Elige…", "Choisir…");
-    R("opt.chooseRegion", "Scegli prima la regione", "Choose the region first", "Elige primero la región", "Choisissez d'abord la région");
-    R("opt.estero", "Estero / Fuori Italia", "Abroad / Outside Italy", "Extranjero / Fuera de Italia", "Étranger / Hors d'Italie");
     R("opt.registrata", "Immatricolata", "Registered", "Matriculado", "Immatriculé");
     R("opt.natante", "Natante (non immatricolata)", "Unregistered («natante»)", "Sin matricular («natante»)", "Non immatriculé («natante»)");
     R("opt.berth.acqua", "In acqua", "In the water", "En el agua", "À l'eau");
@@ -214,11 +211,11 @@
         "Sport cruiser, hard-top, sterndrive",
         "Sport cruiser, hard-top, intra-fueraborda",
         "Sport cruiser, hard-top, inbord à embase");
-    R("type.sub.flybridge",
-        "Motoryacht, navetta, trawler",
-        "Motor yacht, navetta, trawler",
-        "Yate a motor, navetta, trawler",
-        "Yacht à moteur, navetta, trawler");
+    R("type.sub.yacht",
+        "Motoryacht, flybridge, navetta, trawler",
+        "Motor yacht, flybridge, navetta, trawler",
+        "Yate a motor, flybridge, navetta, trawler",
+        "Yacht à moteur, flybridge, navetta, trawler");
     R("type.sub.vela",
         "Cabinata, monoscafo",
         "Cabin sailboat, monohull",
@@ -240,6 +237,18 @@
         "<span class=\"ph\">Pleasure craft over 10 m have to be registered: please check the details.</span>",
         "<span class=\"ph\">Las embarcaciones de recreo de más de 10 m deben matricularse: revisa los datos.</span>",
         "<span class=\"ph\">Au-delà de 10 m, les unités de plaisance doivent être immatriculées : vérifiez les données.</span>");
+    // Where the job is done: the body shop for small boats, the local
+    // shipyard for bigger ones. The length limit and the yard are placeholders.
+    R("note.site.shop.h",
+        "Lavoriamo solo nella zona di Venezia. Fino a <span class=\"ph\">{max} m</span> il lavoro si fa <strong>in carrozzeria</strong>, a Olmo di Martellago.",
+        "We only work in the Venice area. Up to <span class=\"ph\">{max} m</span> the work is done <strong>at our body shop</strong> in Olmo di Martellago.",
+        "Solo trabajamos en la zona de Venecia. Hasta <span class=\"ph\">{max} m</span> el trabajo se hace <strong>en nuestro taller</strong> de Olmo di Martellago.",
+        "Nous travaillons uniquement dans la région de Venise. Jusqu'à <span class=\"ph\">{max} m</span>, le travail se fait <strong>dans notre atelier</strong> d'Olmo di Martellago.");
+    R("note.site.yard.h",
+        "Lavoriamo solo nella zona di Venezia. Oltre <span class=\"ph\">{max} m</span> il lavoro si fa <strong>in cantiere</strong>, <span class=\"ph\">cantiere da confermare</span>.",
+        "We only work in the Venice area. Over <span class=\"ph\">{max} m</span> the work is done <strong>at the local shipyard</strong>, <span class=\"ph\">yard to be confirmed</span>.",
+        "Solo trabajamos en la zona de Venecia. Con más de <span class=\"ph\">{max} m</span> el trabajo se hace <strong>en el astillero</strong> de la zona, <span class=\"ph\">astillero por confirmar</span>.",
+        "Nous travaillons uniquement dans la région de Venise. Au-delà de <span class=\"ph\">{max} m</span>, le travail se fait <strong>au chantier naval</strong> local, <span class=\"ph\">chantier à confirmer</span>.");
     R("zones.cleared",
         "Le zone scelte sono state azzerate perché hai cambiato tipo di barca.",
         "Your selected zones were cleared because you changed the type of boat.",
@@ -278,20 +287,11 @@
     R("err.engineHours", "Le ore motore non possono superare {max}.", "Engine hours can't exceed {max}.", "Las horas de motor no pueden superar {max}.", "Les heures moteur ne peuvent pas dépasser {max}.");
     R("err.firstName", "Inserisci il nome.", "Enter your first name.", "Escribe tu nombre.", "Saisissez votre prénom.");
     R("err.lastName", "Inserisci il cognome.", "Enter your last name.", "Escribe tus apellidos.", "Saisissez votre nom.");
-    R("err.region", "Scegli la regione.", "Choose your region.", "Elige la región.", "Choisissez la région.");
-    R("err.province", "Scegli la provincia.", "Choose your province.", "Elige la provincia.", "Choisissez la province.");
-    R("err.provinceText", "Indica la provincia.", "Enter your province.", "Indica la provincia.", "Indiquez la province.");
-    R("err.country", "Indica il Paese.", "Enter your country.", "Indica el país.", "Indiquez le pays.");
     R("err.phone",
-        "Inserisci un numero italiano valido dopo +39: cellulare (3…) o fisso (0…).",
-        "Enter a valid Italian number after +39: mobile (3…) or landline (0…).",
-        "Introduce un número italiano válido después de +39: móvil (3…) o fijo (0…).",
-        "Saisissez un numéro italien valide après +39 : mobile (3…) ou fixe (0…).");
-    R("err.phoneIntl",
-        "Inserisci il numero con il prefisso internazionale, ad esempio +33 6 12 34 56 78.",
-        "Enter the number with the international prefix, for example +33 6 12 34 56 78.",
-        "Introduce el número con prefijo internacional, por ejemplo +33 6 12 34 56 78.",
-        "Saisissez le numéro avec l'indicatif international, par exemple +33 6 12 34 56 78.");
+        "Inserisci un numero valido: cellulare (3…) o fisso (0…), oppure con il prefisso internazionale (+33…).",
+        "Enter a valid number: mobile (3…) or landline (0…), or with the international prefix (+33…).",
+        "Introduce un número válido: móvil (3…) o fijo (0…), o con el prefijo internacional (+33…).",
+        "Saisissez un numéro valide : mobile (3…) ou fixe (0…), ou avec l'indicatif international (+33…).");
     R("err.email.empty",
         "Scrivi la tua email: lì ti inviamo il codice di monitoraggio.",
         "Enter your email: that's where we send your tracking code.",
@@ -351,8 +351,6 @@
     R("view.destra", "Destra", "Starboard", "Estribor", "Tribord");
     R("view.alto", "Alto", "Top", "Arriba", "Dessus");
     R("view.sotto", "Sotto", "Underside", "Abajo", "Dessous");
-    R("viewer.water.hide", "Nascondi acqua", "Hide water", "Ocultar agua", "Masquer l'eau");
-    R("viewer.water.show", "Mostra acqua", "Show water", "Mostrar agua", "Afficher l'eau");
     R("viewer.hint",
         "Tocca una zona della barca per selezionarla o toglierla. Usa i pulsanti, o scorri di lato, per cambiare vista.",
         "Tap a zone of the boat to select or deselect it. Use the buttons, or swipe sideways, to change the view.",
