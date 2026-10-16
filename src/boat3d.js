@@ -145,6 +145,7 @@ const HOVER_THROTTLE_MS = 50;
 const DRAG_PX = 6;            // a pointer that moves further than this is a swipe, not a tap
 const SWIPE_PX = 40;          // a horizontal swipe this long steps to the next side view
 const MS_PER_QUARTER_TURN = 620;
+const MS_PER_QUARTER_SPIN = 460;   // a flat spin on the top or bottom view
 const MIN_FLIGHT_MS = 420;
 const MAX_FLIGHT_MS = 1150;
 const SPIN_MS_PER_TURN = 26000;
@@ -232,7 +233,8 @@ const VIEW_DIRS = {
   sotto: new THREE.Vector3(0, -1, 0),
 };
 // Each view's screen-up. From above and below the beam is up, so the hull
-// lies along the wide canvas, bow to the right in both.
+// lies along the wide canvas, bow to the right in both. A flight may land on
+// top or bottom upside down instead (bow left): see flyToView.
 const VIEW_UPS = {
   prua: new THREE.Vector3(0, 1, 0),
   poppa: new THREE.Vector3(0, 1, 0),
@@ -424,6 +426,7 @@ export function mountBoat3D(options) {
   const spinPitchGiven = spinTilt !== SPIN_TILT_DEG;
   let waterWanted = !!showWater;
   let currentView = null;
+  let currentUp = null;          // the current view's screen-up, as landed
   let pendingView = null;        // a setView() that arrived before the model did
   function applyWater() {
     if (!waterGroup) return;
@@ -587,66 +590,106 @@ export function mountBoat3D(options) {
     const toRadius = toDir.length() || 1;
     toDir.divideScalar(toRadius);
 
-    // Opposite views have no single arc between them: route them over the
-    // top, or (top to bottom) round the port side.
-    const via = Math.abs(fromDir.dot(UP_AXIS)) < 0.9 ? UP_AXIS.clone() : VIEW_DIRS.sinistra.clone();
-    const waypoints = fromDir.dot(toDir) < -0.9 ? [fromDir, via, toDir] : [fromDir, toDir];
-    const angles = [];
-    let totalAngle = 0;
-    for (let i = 0; i < waypoints.length - 1; i++) {
-      const angle = Math.acos(clamp(waypoints[i].dot(waypoints[i + 1]), -1, 1));
-      angles.push(angle);
-      totalAngle += angle;
+    // Screen-up at the start, square to the line of sight.
+    const fromUp = camera.up.clone().addScaledVector(fromDir, -camera.up.dot(fromDir));
+    if (fromUp.lengthSq() < 1e-10) fromUp.copy(upHintFor(fromDir.clone().negate()));
+    fromUp.normalize();
+    // Top and bottom accept either way round (the framing is the same), so a
+    // flight lands the way it arrives: from the port side the bow stays on
+    // the left instead of the boat spinning half a turn.
+    const upChoices = Math.abs(toDir.dot(UP_AXIS)) > 0.9
+      ? [VIEW_UPS[view], VIEW_UPS[view].clone().negate()]
+      : [VIEW_UPS[view]];
+
+    // A route is a chain of great-circle arcs through axis views. The
+    // starting up is carried along it (each leg's rotation applied to it);
+    // `roll` is what is still missing to land on the view's own up.
+    function planRoute(waypoints, toUp) {
+      const angles = [], legAxes = [];
+      let totalAngle = 0;
+      for (let i = 0; i < waypoints.length - 1; i++) {
+        const angle = Math.acos(clamp(waypoints[i].dot(waypoints[i + 1]), -1, 1));
+        const axis = new THREE.Vector3().crossVectors(waypoints[i], waypoints[i + 1]);
+        angles.push(angle);
+        legAxes.push(axis.lengthSq() > 1e-12 ? axis.normalize() : null);
+        totalAngle += angle;
+      }
+      const carryUp = (leg, f, out) => {
+        out.copy(fromUp);
+        for (let i = 0; i <= leg; i++) {
+          if (legAxes[i]) out.applyAxisAngle(legAxes[i], angles[i] * (i < leg ? 1 : f));
+        }
+        return out;
+      };
+      const endUp = carryUp(angles.length - 1, 1, new THREE.Vector3());
+      const roll = Math.atan2(toDir.dot(new THREE.Vector3().crossVectors(endUp, toUp)), endUp.dot(toUp));
+      // Going round a side (top to bottom), the boat must pass it upright,
+      // not lying on its side: that counts against the route like roll.
+      let tilt = 0;
+      if (waypoints.length === 3 && Math.abs(waypoints[1].dot(UP_AXIS)) < 0.1) {
+        tilt = Math.acos(clamp(carryUp(0, 1, new THREE.Vector3()).dot(UP_AXIS), -1, 1));
+      }
+      return { waypoints, angles, totalAngle, carryUp, roll, toUp, cost: Math.abs(roll) + tilt };
     }
 
-    const toUp = VIEW_UPS[view];
-    if (immediate || totalAngle < 1e-4 || prefersReducedMotion()) {
+    // Opposite views have no single arc between them, so the flight follows a
+    // path through a third view: two sides go over the top (left -> top ->
+    // right), top and bottom go round whichever side the boat passes upright.
+    let candidates;
+    if (fromDir.dot(toDir) >= -0.9) candidates = [[fromDir, toDir]];
+    else if (Math.abs(fromDir.dot(UP_AXIS)) < 0.9) candidates = [[fromDir, UP_AXIS.clone(), toDir]];
+    else candidates = RING.map((side) => [fromDir, VIEW_DIRS[side].clone(), toDir]);
+    let route = null;
+    for (const waypoints of candidates) {
+      for (const up of upChoices) {
+        const r = planRoute(waypoints, up);
+        if (!route || r.cost < route.cost - 1e-3) route = r;
+      }
+    }
+    const { waypoints, angles, totalAngle, carryUp, roll, toUp } = route;
+    currentUp = toUp;
+
+    if (immediate || (totalAngle < 1e-4 && Math.abs(roll) < 1e-3) || prefersReducedMotion()) {
       placeCamera(target, toUp);
       flying = false;
       return;
     }
 
-    // Screen-up during the flight: the starting up is carried along the arc
-    // (the rotation of each leg applied to it), and whatever roll is still
-    // missing to land on the view's own up is spread over the whole flight.
-    // A per-frame guess from fixed axes flipped the boat in one frame on
-    // arcs over the top.
-    const fromUp = camera.up.clone().addScaledVector(fromDir, -camera.up.dot(fromDir));
-    if (fromUp.lengthSq() < 1e-10) fromUp.copy(upHintFor(fromDir.clone().negate()));
-    fromUp.normalize();
-    const legAxes = [];
-    for (let i = 0; i < waypoints.length - 1; i++) {
-      const axis = new THREE.Vector3().crossVectors(waypoints[i], waypoints[i + 1]);
-      legAxes.push(axis.lengthSq() > 1e-12 ? axis.normalize() : null);
+    // Leftover roll is its own flat spin, done while looking straight down or
+    // up: after the arc when the flight ends on top or bottom (a quarter turn
+    // from bow or stern), before it when it leaves from there (half a turn
+    // from a flipped top to the starboard side). Rolling while the camera
+    // swings made the boat corkscrew. Only a flight redirected mid-air, with
+    // neither end vertical, spreads it out.
+    let spinAt = 'spread';
+    if (Math.abs(roll) > 1e-3) {
+      if (Math.abs(toDir.dot(UP_AXIS)) > 0.9) spinAt = 'end';
+      else if (Math.abs(fromDir.dot(UP_AXIS)) > 0.9) spinAt = 'start';
     }
-    const carryUp = (leg, f, out) => {
-      out.copy(fromUp);
-      for (let i = 0; i <= leg; i++) {
-        if (legAxes[i]) out.applyAxisAngle(legAxes[i], angles[i] * (i < leg ? 1 : f));
-      }
-      return out;
-    };
-    const endUp = carryUp(angles.length - 1, 1, new THREE.Vector3());
-    const roll = Math.atan2(toDir.dot(new THREE.Vector3().crossVectors(endUp, toUp)), endUp.dot(toUp));
+    const arcMs = totalAngle > 1e-4
+      ? clamp(MS_PER_QUARTER_TURN * (totalAngle / (Math.PI / 2)), MIN_FLIGHT_MS, MAX_FLIGHT_MS) : 0;
+    const spinMs = spinAt === 'spread' ? 0
+      : clamp(MS_PER_QUARTER_SPIN * (Math.abs(roll) / (Math.PI / 2)), MIN_FLIGHT_MS, MAX_FLIGHT_MS);
+    const arcDelay = spinAt === 'start' ? spinMs : 0;
+    const spinDelay = spinAt === 'end' ? arcMs : 0;
     const flightUp = new THREE.Vector3();
-
-    const duration = clamp(MS_PER_QUARTER_TURN * (totalAngle / (Math.PI / 2)), MIN_FLIGHT_MS, MAX_FLIGHT_MS);
     const startTime = performance.now();
     flying = true;
 
     function step(now) {
       if (destroyed || id !== flightId) return;   // superseded by a newer flight
-      const t = Math.min(1, (now - startTime) / duration);
-      const eased = easeInOutSine(t);
-      let travelled = eased * totalAngle;
+      const elapsed = now - startTime;
+      const arcT = arcMs ? easeInOutSine(clamp((elapsed - arcDelay) / arcMs, 0, 1)) : 1;
+      const spinT = spinMs ? easeInOutSine(clamp((elapsed - spinDelay) / spinMs, 0, 1)) : arcT;
+      let travelled = arcT * totalAngle;
       let leg = 0;
       while (leg < angles.length - 1 && travelled > angles[leg]) { travelled -= angles[leg]; leg++; }
       const f = angles[leg] > 1e-6 ? travelled / angles[leg] : 1;
       slerpDirection(waypoints[leg], waypoints[leg + 1], f, flightDir);
-      flightPos.copy(center).addScaledVector(flightDir, lerp(fromRadius, toRadius, eased));
-      carryUp(leg, f, flightUp).applyAxisAngle(flightDir, roll * eased);
+      flightPos.copy(center).addScaledVector(flightDir, lerp(fromRadius, toRadius, arcT));
+      carryUp(leg, f, flightUp).applyAxisAngle(flightDir, roll * spinT);
       placeCamera(flightPos, flightUp);
-      if (t < 1) requestAnimationFrame(step);
+      if (elapsed < arcMs + spinMs) requestAnimationFrame(step);
       else {
         // Land on the preset as it is NOW: a resize during the flight
         // recomputed the presets.
@@ -1070,7 +1113,8 @@ export function mountBoat3D(options) {
     const first = pendingView && presets[pendingView] ? pendingView : spin ? null : DEFAULT_VIEW;
     pendingView = null;
     currentView = first;
-    if (first) placeCamera(presets[first], VIEW_UPS[first]);
+    currentUp = first ? VIEW_UPS[first] : null;
+    if (first) placeCamera(presets[first], currentUp);
     else placeCamera(spinHome);
     syncViewButtons();
     applyWater();
@@ -1190,7 +1234,7 @@ export function mountBoat3D(options) {
     // Framing depends on the aspect ratio: re-place the current view at the
     // recomputed distance.
     const here = currentView && presets[currentView];
-    if (here && !flying) placeCamera(here, VIEW_UPS[currentView]);
+    if (here && !flying) placeCamera(here, currentUp || VIEW_UPS[currentView]);
     else if (!currentView && spin && !spinCancelled && !flying) placeCamera(spinHome);
   }
   const resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(onResize) : null;
