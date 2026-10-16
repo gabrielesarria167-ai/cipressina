@@ -116,7 +116,7 @@ Ora è facoltativo. Se è obbligatorio, sapete sempre se la barca è nella zona 
 
 | Dato | Segnaposto attuale | Dove | Dato vero |
 |---|---|---|---|
-| Orari di apertura | «Orari: da confermare» | `src/i18n.js:518` | ______ |
+| Orari di apertura | Fatto: lun–ven 07:15–12:30 e 13:30–19:15, sab 07:30–12:00, dom chiuso, presi dalla scheda di Google Maps (16/10/2026) | `src/i18n.js:518` | ✓ |
 | Numero WhatsApp | Fatto: +39 339 181 0099, preso dal pulsante WhatsApp del vostro sito, con lo stesso aspetto e lo stesso messaggio precompilato | `index.html` (pulsante e «Contatti») | ✓ |
 | Tempo per inviare il preventivo | «entro 24 ore» | `src/i18n.js:119` | ______ |
 | Tempi di risposta | «da confermare» | `src/site.js:46` | ______ |
@@ -158,9 +158,9 @@ Le 8 risposte dicono tutte «Risposta da confermare con l'officina» (`src/i18n.
 
 ### B4-bis. Indirizzo
 
-Il sito dice «Via N. Sauro, 15». La scheda di Google Maps dice «Viale Nazario Sauro, 13-15».
+Il vecchio sito diceva «Via N. Sauro, 15». La scheda di Google Maps dice «Viale Nazario Sauro, 13-15».
 
-- [ ] Quale indirizzo scriviamo? ______________________________
+- [x] Usiamo «Viale Nazario Sauro, 13-15 · 30030 Olmo di Martellago (VE)» (16/10/2026). È aggiornato in «Contatti», nel link e nella mappa di Google Maps e nel piè di pagina di entrambe le pagine.
 
 ### B5. Piccole verifiche
 

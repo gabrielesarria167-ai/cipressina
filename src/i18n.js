@@ -515,11 +515,11 @@
     R("contact.hours", "Orari", "Opening hours", "Horario", "Horaires");
     R("contact.mapTitle", "Mappa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Map: Officina Carrozzeria Cipressina, Olmo di Martellago", "Mapa: Officina Carrozzeria Cipressina, Olmo di Martellago", "Carte : Officina Carrozzeria Cipressina, Olmo di Martellago");
     R("contact.whatsapp", "WhatsApp", "WhatsApp", "WhatsApp", "WhatsApp");
-    R("contact.hoursTbc.h",
-        "<span class=\"ph\">Orari: da confermare</span>",
-        "<span class=\"ph\">Opening hours: to be confirmed</span>",
-        "<span class=\"ph\">Horario: por confirmar</span>",
-        "<span class=\"ph\">Horaires : à confirmer</span>");
+    R("contact.openingHours.h",
+        "Lun–Ven: 07:15–12:30, 13:30–19:15<br>Sab: 07:30–12:00<br>Dom: chiuso",
+        "Mon–Fri: 07:15–12:30, 13:30–19:15<br>Sat: 07:30–12:00<br>Sun: closed",
+        "Lun–Vie: 07:15–12:30, 13:30–19:15<br>Sáb: 07:30–12:00<br>Dom: cerrado",
+        "Lun–Ven : 07:15–12:30, 13:30–19:15<br>Sam : 07:30–12:00<br>Dim : fermé");
     R("contact.whatsappTbc.h",
         "<span class=\"ph\">WhatsApp: numero da confermare</span>",
         "<span class=\"ph\">WhatsApp: number to be confirmed</span>",
