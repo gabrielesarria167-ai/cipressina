@@ -79,12 +79,18 @@ const LABELS_IT = {
   tube_starboard: 'Tubolare destro',
 };
 
+// The page's asset version (?v= on app.js, passed on to this module's URL),
+// so a new release also refetches the models instead of using cached ones.
+const ASSET_VERSION = new URL(import.meta.url).searchParams.get('v');
+
 function modelEntry(type, parts, dims, labelOverrides = {}, extra = {}) {
   const defaultLabelsIt = {};
   for (const id of parts) defaultLabelsIt[id] = labelOverrides[id] || LABELS_IT[id];
+  // Resolved against this module, so it works wherever the site is served.
+  const url = new URL(`../models/${type}.glb`, import.meta.url);
+  if (ASSET_VERSION) url.searchParams.set('v', ASSET_VERSION);
   return {
-    // Resolved against this module, so it works wherever the site is served.
-    url: new URL(`../models/${type}.glb`, import.meta.url).href,
+    url: url.href,
     parts,
     defaultLabelsIt,
     dims,

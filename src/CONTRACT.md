@@ -10,14 +10,15 @@ Words: **R** = required (the logic breaks or degrades without it), **O** = optio
 <!-- inside <head>, before the content: the import map from brief.md (R) -->
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 <!-- at the end of <body>, in this order (R); paths shown for index.html, pgs/ uses ../src/ -->
-<script src="src/site.js" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
-<script src="src/zones.js" defer></script>
-<script src="src/regioni.js" defer></script>
-<script src="src/i18n.js" defer></script>
-<script src="src/app.js" defer></script>
+<script src="src/site.js?v=2026-10-16b" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
+<script src="src/zones.js?v=2026-10-16b" defer></script>
+<script src="src/regioni.js?v=2026-10-16b" defer></script>
+<script src="src/i18n.js?v=2026-10-16b" defer></script>
+<script src="src/app.js?v=2026-10-16b" defer></script>
 ```
 
 - `boat3d.js` is imported by `app.js` (dynamic `import()`, absolute URL derived from `app.js`'s own `src`, so it resolves to `src/boat3d.js`; the models are `../models/<type>.glb` relative to that; an external classic script's `import()` is relative to the script, not the document). Override: `window.CIPRESSINA_BOAT3D_URL`.
+- **Asset version.** Every `src/*.js` and `styles.css` tag carries the same `?v=<version>`; change it in both pages on every release that touches them or the models. `app.js` passes its own `v` to the `boat3d.js` import and `boat3d.js` to the `.glb` URLs. Without it a browser can keep an old `boat3d.js` (imported only when the 3D step opens, so not even a hard reload refreshes it) next to a new `app.js`: «Unknown boat type».
 - The page must be served over http(s): ES modules do not load from `file://`.
 - `CIPRESSINA_CONFIG.theme` / `heroTheme` are passed to `mountBoat3D({theme})` for the wizard viewer and the hero. `heroTheme.bottom` also sets the colour of the «Originale» swatch. (O)
 - `CIPRESSINA_CONFIG.heroSpinPitch` (number, degrees, optional) is passed to the hero's `mountBoat3D({spinPitch})`: the camera pitch of the turntable. Positive looks down from above (default 14); negative puts the camera below the waterline looking slightly up, which shows the bottom (opera viva) together with the topsides, like a boat on a cradle seen from the ground. The hero has no water, so use about `-10` to preview antifouling colours. Clamped to -30..60. With `prefers-reduced-motion` the static picture uses the same pitch when it is set. (O)

@@ -47,9 +47,18 @@
     // inline script it is the document. Deriving the URL from our own src
     // makes both cases land on src/boat3d.js; the page can still
     // override it with window.CIPRESSINA_BOAT3D_URL.
+    // The page's ?v= on app.js is passed on to boat3d.js (which passes it on
+    // to the .glb files): the module is imported only when the 3D step opens,
+    // after the page load, so even a hard reload would leave an old cached
+    // copy next to a new app.js. Bumping ?v= in the page refetches them all.
     var SELF = document.currentScript;
-    var BOAT_URL = window.CIPRESSINA_BOAT3D_URL ||
-        (SELF && SELF.src ? new URL("./boat3d.js", SELF.src).href : "./boat3d.js");
+    var BOAT_URL = window.CIPRESSINA_BOAT3D_URL || (function () {
+        if (!SELF || !SELF.src) return "./boat3d.js";
+        var u = new URL("./boat3d.js", SELF.src);
+        var v = new URL(SELF.src).searchParams.get("v");
+        if (v) u.searchParams.set("v", v);
+        return u.href;
+    })();
 
     /* ==================================================================
        1. Helpers
@@ -189,7 +198,13 @@
     // stays failed until reload, and that is what the checklist is for.
     function loadBoat3D() {
         if (!boatModule) {
-            var attempt = import(BOAT_URL + (boatRetries ? "?reintento=" + boatRetries : ""));
+            var url = BOAT_URL;
+            if (boatRetries) {
+                var u = new URL(BOAT_URL, document.baseURI);
+                u.searchParams.set("reintento", String(boatRetries));
+                url = u.href;
+            }
+            var attempt = import(url);
             boatModule = attempt;
             // Holding on to a rejected promise would make every later caller
             // fail without fetching anything, so the failure drops it. Done
