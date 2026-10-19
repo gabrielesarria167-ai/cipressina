@@ -899,7 +899,7 @@
         addRule({ id: "phone", step: 4,
             format: function (v) { return v.charAt(0) === "+" ? "+" + digitsOnly(v, 15) : digitsOnly(v, 11); },
             ok: function (v) { return PHONE_IT.test(v) || PHONE_INTL.test(v); }, msg: "err.phone" });
-        addRule({ id: "email", step: 4,
+        addRule({ id: "email", step: 4, max: 254,
             format: function (v) { return v.replace(EMAIL_DISALLOWED, ""); },
             ok: function (v) { return EMAIL_PATTERN.test(v); },
             // Empty and malformed are different failures and say different
@@ -1040,7 +1040,8 @@
         var valid = isStepValid(current);
         nextBtn.textContent = mainLabel();
         nextBtn.setAttribute("aria-disabled", String(!valid || submitting));
-        if (valid && hintKey) setHint(null);
+        // A failed send happens on a valid step, so only a new send clears it.
+        if (valid && hintKey && hintKey.indexOf("send.err.") !== 0) setHint(null);
     }
 
     function showChrome(visible) {
@@ -1685,41 +1686,47 @@
         };
     }
 
-    // A 10-digit code, first digit non-zero. The modulo bias of a 32-bit
-    // value over 9 or 10 is far below anything a demo code could care about.
-    function demoCode() {
-        var buf = new Uint32Array(10);
-        if (window.crypto && window.crypto.getRandomValues) {
-            window.crypto.getRandomValues(buf);
-        } else {
-            for (var k = 0; k < buf.length; k++) buf[k] = Math.floor(Math.random() * 4294967296);
-        }
-        var code = String(1 + (buf[0] % 9));
-        for (var i = 1; i < buf.length; i++) code += String(buf[i] % 10);
-        return code;
+    // The server's answer to a failed send, as the hint under the button.
+    // 400/403/415 mean the form and the server disagree (or an old page);
+    // anything else (503 while Neon wakes, no network, a static host with no
+    // API) is «try again in a minute, nothing was saved».
+    function sendErrorKey(status) {
+        if (status === 429) return "send.err.busy";
+        if (status === 400 || status === 403 || status === 415) return "send.err.bad";
+        return "send.err.down";
     }
 
-    // Simulated: autocolor POSTed to a server, here a timer stands in for it.
-    // The success screen still appears only after the "server" answers.
+    // POST to server/server.js, which stores the request in Neon and answers
+    // with its 10-digit code. The success screen appears only after that.
     function submitRequest() {
         if (submitting) return;
         submitting = true;
         setHint(null);
         refreshMain();
         var payload = buildPayload();
-        setTimeout(function () {
-            var code = demoCode();
-            console.info("[cipressina] demo payload (nothing was sent):", payload, "code", code);
-            lastSubmission = {
-                code: code,
-                boat: payload.builder + " " + payload.model,
-                name: payload.firstName + " " + payload.lastName
-            };
+        var failed = function (status) {
             submitting = false;
-            submitted = true;
-            history.pushState({ view: "wizard", step: "success" }, "", WIZARD_URL);
-            renderSuccess({ focus: true });
-        }, 600);
+            refreshMain();
+            setHint(sendErrorKey(status));
+        };
+        fetch("/api/requests", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).then(function (response) {
+            if (response.status !== 201) return failed(response.status);
+            return response.json().then(function (created) {
+                lastSubmission = {
+                    code: created.id,
+                    boat: payload.builder + " " + payload.model,
+                    name: payload.firstName + " " + payload.lastName
+                };
+                submitting = false;
+                submitted = true;
+                history.pushState({ view: "wizard", step: "success" }, "", WIZARD_URL);
+                renderSuccess({ focus: true });
+            });
+        }).catch(function () { failed(0); });
     }
 
     function renderSuccess(options) {
@@ -1920,22 +1927,13 @@
     }
 
     /* ==================================================================
-       8. Lookup (demo)
+       8. Lookup (GET /api/requests/<code>)
        ================================================================== */
 
-    var STATUS_KEYS = ["ricevuta", "alaggio", "trasporto", "preparazione", "verniciatura",
-        "antivegetativa", "varo", "pronta", "consegnata", "annullata"];
+    // Statuses (status.<id> in i18n.js) are the CHECK list in server/schema.sql.
     var lookupResult = null;     // what is on screen, so a language change can redraw it
     var lookupErrorKey = null;
     var lookupBusy = false;
-
-    function setPh(el, text) {
-        el.textContent = "";
-        var span = document.createElement("span");
-        span.className = "ph";
-        span.textContent = text;
-        el.appendChild(span);
-    }
 
     function renderLookupError() {
         var el = byId("lookupError"), input = byId("lookupId");
@@ -1954,14 +1952,8 @@
         box.hidden = !lookupResult;
         if (!lookupResult) return;
         setText("resultId", lookupResult.code);
-        var boat = byId("resultBoat"), name = byId("resultName");
-        if (lookupResult.known) {
-            if (boat) boat.textContent = lookupResult.known.boat;
-            if (name) name.textContent = lookupResult.known.name;
-        } else {
-            if (boat) setPh(boat, t("lookup.res.sample"));
-            if (name) setPh(name, t("lookup.res.sample"));
-        }
+        setText("resultBoat", lookupResult.boat);
+        setText("resultName", lookupResult.name);
         var status = byId("resultStatus");
         if (status) {
             status.textContent = t("status." + lookupResult.status);
@@ -1993,24 +1985,31 @@
             renderLookupError();
             lookupBusy = true;
             if (button) { button.textContent = t("lookup.busy"); button.setAttribute("aria-disabled", "true"); }
-            // Any 10 digits get a demo status, picked from the digits so the
-            // same code always shows the same one. The code just "sent" in
-            // this session is received, and shows its own boat and name.
-            setTimeout(function () {
-                var sum = 0;
-                for (var i = 0; i < code.length; i++) sum += Number(code.charAt(i));
-                var known = lastSubmission && lastSubmission.code === code ? lastSubmission : null;
-                lookupResult = {
-                    code: code,
-                    status: known ? "ricevuta" : STATUS_KEYS[sum % (STATUS_KEYS.length - 1)],
-                    known: known
-                };
+            var done = function (result, errorKey) {
                 lookupBusy = false;
                 if (button) { button.textContent = t("lookup.submit"); button.removeAttribute("aria-disabled"); }
+                lookupResult = result;
+                lookupErrorKey = errorKey;
+                renderLookupError();
                 renderLookupResult();
                 var box = byId("lookupResult");
-                if (box) { box.setAttribute("tabindex", "-1"); box.focus(); }
-            }, 400);
+                if (result && box) { box.setAttribute("tabindex", "-1"); box.focus(); }
+                else input.focus();
+            };
+            fetch("/api/requests/" + code, { headers: { Accept: "application/json" } }).then(function (response) {
+                // A static host with no API (GitHub Pages) also answers 404, but not in JSON.
+                var json = /json/.test(response.headers.get("Content-Type") || "");
+                if (response.status === 404 && json) return done(null, "lookup.notFound");
+                if (!response.ok) return done(null, "lookup.down");
+                return response.json().then(function (found) {
+                    done({
+                        code: found.id,
+                        status: found.status,
+                        boat: found.builder + " " + found.model,
+                        name: found.firstName + " " + found.lastName
+                    }, null);
+                });
+            }).catch(function () { done(null, "lookup.down"); });
         });
     }
 

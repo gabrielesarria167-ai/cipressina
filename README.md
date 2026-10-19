@@ -2,7 +2,7 @@
 
 A boat version of the autocolor quote site for Officina Carrozzeria Cipressina (Martellago, VE). It has a front page and a 4-step quote wizard, with zones picked on a 3D model of the boat. The site is in Italian, with English, Spanish and French translations. This is a design draft: prices and photos are placeholders.
 
-Plain HTML, CSS and JS with no build step. GitHub Pages serves the repo root.
+Plain HTML, CSS and JS with no build step. One small Node server (`server/`) serves the site and the API on Render, and stores each request in a Neon Postgres database. See «Backend» below.
 
 - **Pages:**
   - `index.html`: the front page.
@@ -20,4 +20,27 @@ Plain HTML, CSS and JS with no build step. GitHub Pages serves the repo root.
   - GitHub Pages serves `.glb` fine. The `.json` copies were only needed for Claude artifacts; `node design/models/glb2json.mjs` still makes them on demand.
 - **Design archive:** `design/sketches/`. `c-laguna.html` was the approved single-page draft (home, wizard and lookup as hash-routed views). The other sketches, the research and specs (`research.md`, `flow-spec.md`, `brief.md`, `cipressina-look.md`) are there too. They load `../../src/`.
 
-To run it locally: `python3 -m http.server 8791` in the repo root (ES modules need http, not `file://`).
+To run it locally: `npm install`, `cp .env.example .env` (fill in `DATABASE_URL`), `npm run db:migrate` once, then `npm start` and open http://localhost:3000. `python3 -m http.server 8791` still serves the pages, but sending a request and the lookup need the server.
+
+## Backend
+
+Ported from autocolor's `server/`, keeping only the public part. The only dependency is `pg`.
+
+- `server/server.js` serves the site through an allowlist: `index.html`, `styles.css`, and `pgs/`, `src/`, `img/`, `models/`. Nothing else is served (`.env`, `server/`, `design/`, the docs). It also serves the API:
+  - `POST /api/requests`: the wizard's request. It is validated again by `server/validate.js`, using the same ids and prices as `src/zones.js`. The server recomputes the estimate itself and stores the request in Neon. The answer is `201 { id, status, createdAt }`, where `id` is the 10-digit tracking code.
+  - `GET /api/requests/<code>`: the lookup at `#stato`. It returns the boat, the name and the status, never the phone, the email or the notes.
+  - `GET /healthz`: Render's health check. It never touches the database.
+  - Gates on `POST`: JSON only, the site's own `Origin`, 10 per minute and 30 a day per address. The lookup allows 30 per minute.
+- `server/db.js`: the pool. It retries getting a connection while Neon wakes up, but never retries a query.
+- `server/schema.sql`: the `requests` table. Apply it with `npm run db:migrate`, by hand. It is idempotent.
+- `npm test`: the validation tests (`test/`).
+
+### First deploy (free plans)
+
+1. **Neon**: create a project in AWS Frankfurt (`eu-central-1`). Copy the **direct** connection string (not `-pooler`), change it to `sslmode=verify-full` and remove `channel_binding`. Then, from this machine, run `DATABASE_URL='postgresql://…' npm run db:migrate`.
+2. **Render**: New → Blueprint, pointing at this repository. `render.yaml` creates the `cipressina` web service (free, Frankfurt). Paste the Neon URL into the `DATABASE_URL` variable when asked.
+3. Every push to `main` redeploys. When `server/schema.sql` changes, repeat step 1's migrate.
+
+On the free plan the service sleeps after 15 idle minutes, and the first visit after that waits up to a minute. Neon's free compute also sleeps. Render's limit counters live in memory and reset when the service sleeps.
+
+**GitHub Pages** still publishes `main` as a copy of the site with no API: there, sending a request answers «Il servizio non risponde». Turn Pages off (Settings → Pages) once Render is live.

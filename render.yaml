@@ -1,0 +1,45 @@
+# Deploy on Render (https://render.com): one web service serves the site and
+# the API from the same origin. The database is Neon (https://neon.tech),
+# separate; both on their free plans.
+#
+# Free plan, so: the service sleeps after 15 idle minutes and the next
+# visitor waits up to a minute while it wakes (Neon's free compute also
+# sleeps; server/db.js retries the connection). The rate-limit counters live
+# in memory and reset on every deploy and every sleep.
+#
+# The schema is NOT applied here: `npm run db:migrate`, by hand, from the
+# work machine (see server/migrate.js).
+
+services:
+  - type: web
+    name: cipressina
+    runtime: node
+    plan: free
+    # Frankfurt, next to a Neon project in AWS eu-central-1 (Frankfurt): the
+    # round trips between the app and the database dominate response time.
+    region: frankfurt
+    branch: main
+    buildCommand: npm ci
+    startCommand: npm start
+    # Answers without touching the database (server/server.js).
+    healthCheckPath: /healthz
+    autoDeploy: true
+
+    envVars:
+      # Render only sees a process bound to 0.0.0.0; it provides PORT itself.
+      - key: HOST
+        value: "0.0.0.0"
+
+      # The proxies in front that append to X-Forwarded-For. 3 is what
+      # autocolor measured on Render (client, Cloudflare, Render's router).
+      # shortcut: copied, not measured for this service. After the first
+      # deploy, send one request and read its «[requests] new request» log
+      # line: «x-forwarded-for hops» must equal this number, or the rate
+      # limits count visitors wrong. Change it here if it does not.
+      - key: TRUST_PROXY
+        value: "3"
+
+      # The Neon URL, typed by hand in Render's dashboard (never in the repo):
+      # the direct one, with sslmode=verify-full and no channel_binding.
+      - key: DATABASE_URL
+        sync: false

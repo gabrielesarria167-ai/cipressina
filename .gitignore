@@ -5,3 +5,8 @@ design/models/src/
 design/models/out/
 __pycache__/
 .DS_Store
+node_modules/
+# The .env and any copy of it (a .env.bak carries the same credentials). The repo is public.
+.env
+.env.*
+!.env.example

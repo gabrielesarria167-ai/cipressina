@@ -10,10 +10,10 @@ Words: **R** = required (the logic breaks or degrades without it), **O** = optio
 <!-- inside <head>, before the content: the import map from brief.md (R) -->
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 <!-- at the end of <body>, in this order (R); paths shown for index.html, pgs/ uses ../src/ -->
-<script src="src/site.js?v=2026-10-16b" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
-<script src="src/zones.js?v=2026-10-16b" defer></script>
-<script src="src/i18n.js?v=2026-10-16b" defer></script>
-<script src="src/app.js?v=2026-10-16b" defer></script>
+<script src="src/site.js?v=2026-10-19a" defer></script>   <!-- optional plain data: copy and 3D theme, see below -->
+<script src="src/zones.js?v=2026-10-19a" defer></script>
+<script src="src/i18n.js?v=2026-10-19a" defer></script>
+<script src="src/app.js?v=2026-10-19a" defer></script>
 ```
 
 - `boat3d.js` is imported by `app.js` (dynamic `import()`, absolute URL derived from `app.js`'s own `src`, so it resolves to `src/boat3d.js`; the models are `../models/<type>.glb` relative to that; an external classic script's `import()` is relative to the script, not the document). Override: `window.CIPRESSINA_BOAT3D_URL`.
@@ -59,7 +59,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | `[data-status="…"]` | `#resultStatus` | lookup status id |
 
 ### Placeholders
-`<span class="ph">…</span>` marks anything unconfirmed. Each skin styles `.ph` (dashed amber outline) in its own palette. JS never creates `.ph` itself, except in the lookup result (sample boat and name). Strings with a `.ph` come from the keys ending in `.h` (trusted HTML), used with `data-i18n-html`.
+`<span class="ph">…</span>` marks anything unconfirmed. Each skin styles `.ph` (dashed amber outline) in its own palette. JS never creates `.ph` itself. Strings with a `.ph` come from the keys ending in `.h` (trusted HTML), used with `data-i18n-html`.
 
 ### i18n attributes
 - `data-i18n="key"` sets `textContent`. Put it on a leaf element (the contents are replaced).
@@ -240,7 +240,7 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `notes` | `<textarea>` | `data-i18n-attr="placeholder:ph.notes"` |
 | privacy line | `data-i18n-html="privacy.h"` | `.ph` |
 
-**Success** (inside the wizard view, `#success`, `hidden`): `<h1 data-i18n="success.title">`, `data-i18n="success.lede"`, label `success.code` + a `.ph` `success.demo`, `#successCode` (App writes the 10 digits; keep it selectable), `button#successCopy[data-copy="#successCode"]`, `success.demoNote.h`, `<a href="#stato">` (`success.lookup`), `button#resetBtn` («Nuova richiesta»).
+**Success** (inside the wizard view, `#success`, `hidden`): `<h1 data-i18n="success.title">`, `data-i18n="success.lede"`, label `success.code`, `#successCode` (App writes the 10-digit code the server returned; keep it selectable), `button#successCopy[data-copy="#successCode"]`, `<a href="#stato">` (`success.lookup`), `button#resetBtn` («Nuova richiesta»). The main button sends `POST /api/requests`; a failed send stays on step 4 with `send.err.busy` / `send.err.bad` / `send.err.down` in `#stepHint`.
 
 ### 3.3 Lookup (`#view-lookup`)
 
@@ -254,12 +254,11 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
     <p id="lookupError" role="alert" hidden></p>
   </form>
   <div id="lookupResult" hidden>   <!-- App focuses it (tabindex -1) -->
-    <dl>… <dd id="resultId"> <dd id="resultBoat"> <dd id="resultName"> <dd><span class="ph" id="resultStatus"></span></dd></dl>
-    <p data-i18n-html="lookup.demoNote.h"></p>
+    <dl>… <dd id="resultId"> <dd id="resultBoat"> <dd id="resultName"> <dd><span id="resultStatus"></span></dd></dl>
   </div>
 </section>
 ```
-`#lookupSubmit` text is swapped to «Verifica in corso…» while busy and restored. Any 10 digits give a demo status (`.ph`); the code just «sent» in this session shows its own boat and name.
+`#lookupSubmit` text is swapped to «Verifica in corso…» while busy and restored. The page asks `GET /api/requests/<code>` (server/server.js): the stored boat, name and status, or `lookup.notFound` / `lookup.down` in `#lookupError`.
 
 ## 4. What the JS does that a skin can rely on
 
