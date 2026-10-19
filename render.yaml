@@ -18,7 +18,8 @@ services:
     # Frankfurt, next to a Neon project in AWS eu-central-1 (Frankfurt): the
     # round trips between the app and the database dominate response time.
     region: frankfurt
-    branch: main
+    # shortcut: deploys the feature branch while the owner still reviews on GitHub Pages; set to main when merging.
+    branch: backend-neon
     buildCommand: npm ci
     startCommand: npm start
     # Answers without touching the database (server/server.js).
