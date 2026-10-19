@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Officina | Cipressina Barche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../styles.css?v=2026-10-19a">
+<link rel="stylesheet" href="../staff.css?v=2026-10-19b">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+</head>
+<body class="staff">
+<!-- The workshop panel. Nothing in this page protects data: the server checks
+     the session on every call (server/server.js, handleStaff). -->
+
+<header id="siteHeader">
+  <div class="hdr">
+    <a class="logo" href="../index.html" aria-label="Cipressina Barche">
+      <img src="../img/logo-cipressina.jpg" width="450" height="131" alt="">
+    </a>
+    <span class="staff-who" id="staffWho" hidden></span>
+    <span class="hdr__spacer"></span>
+    <span class="staff-clock" id="staffClock" hidden></span>
+    <button type="button" class="btn btn--outline" id="staffOut" hidden>Esci</button>
+  </div>
+</header>
+
+<p class="staff-error" id="staffError" role="alert" hidden></p>
+
+<main id="contenuto" tabindex="-1">
+
+<!-- ========================= LOGIN ========================= -->
+<section class="view" id="viewLogin" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1">Accesso officina</h1></div>
+  <div class="page">
+    <form class="staff-card staff-login" id="loginForm" novalidate>
+      <div class="field">
+        <label for="loginCode">Codice</label>
+        <input type="text" id="loginCode" autocomplete="username" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" autocomplete="current-password">
+      </div>
+      <p class="field__error" id="loginError" hidden></p>
+      <button type="submit" class="btn" id="loginSubmit">Entra</button>
+    </form>
+  </div>
+</section>
+
+<!-- ========================= SHOP: TEAM ========================= -->
+<section class="view" id="viewTeam" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1">Oggi in officina</h1></div>
+  <div class="page">
+    <section class="staff-section" aria-labelledby="crewTitle">
+      <div class="staff-section__head">
+        <h2 id="crewTitle">La squadra</h2>
+        <p class="note" id="crewSummary"></p>
+      </div>
+      <p class="note">Tocca il tuo nome per iniziare o finire il turno e vedere le tue barche.</p>
+      <ul class="crew" id="crewList"></ul>
+      <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
+    </section>
+
+    <section class="staff-section" aria-labelledby="boardTitle">
+      <div class="staff-section__head"><h2 id="boardTitle">Cose da fare</h2></div>
+      <form class="board-form" id="boardForm" novalidate>
+        <div class="field">
+          <label for="boardText">Cosa c'è da fare</label>
+          <input type="text" id="boardText" maxlength="200" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="boardTo">Per</label>
+          <select id="boardTo"><option value="">Tutti</option></select>
+        </div>
+        <div class="field">
+          <label for="boardFrom">Scritto da</label>
+          <select id="boardFrom"></select>
+        </div>
+        <button type="submit" class="btn">Aggiungi</button>
+      </form>
+      <p class="field__error" id="boardError" role="alert" hidden></p>
+      <ul class="board" id="boardList"></ul>
+      <p class="note" id="boardEmpty" hidden>Niente da fare. Ottimo.</p>
+    </section>
+  </div>
+  <div class="staff-dock">
+    <button type="button" class="btn" data-go="boats">Barche in officina <span class="staff-count" id="dockCount"></span></button>
+  </div>
+</section>
+
+<!-- ========================= SHOP: A WORKER'S AREA ========================= -->
+<section class="view" id="viewZone" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1" id="zoneTitle">Dipendente</h1></div>
+  <div class="page">
+    <div class="staff-actions">
+      <button type="button" class="btn" id="zoneDone">Fatto, esci</button>
+    </div>
+    <section class="staff-section" aria-labelledby="zoneShiftTitle">
+      <h2 id="zoneShiftTitle">Il mio turno</h2>
+      <div class="staff-card zone-shift">
+        <p class="zone-shift__state" id="zoneShiftState"></p>
+        <p class="note" id="zoneShiftNote" hidden></p>
+        <button type="button" class="btn shift-btn" id="zoneShiftBtn"></button>
+      </div>
+    </section>
+    <section class="staff-section" aria-labelledby="zoneBoatsTitle">
+      <h2 id="zoneBoatsTitle">Le mie barche</h2>
+      <ul class="boat-list" id="zoneBoats"></ul>
+      <p class="note" id="zoneBoatsEmpty" hidden>Nessuna barca assegnata. Chi è al computer può assegnartene una in «Barche in officina».</p>
+    </section>
+    <section class="staff-section" aria-labelledby="zoneMineTitle">
+      <h2 id="zoneMineTitle">Le mie presenze</h2>
+      <div id="zoneMine"></div>
+      <p class="note" id="zoneMineNone" hidden>Per vedere le tue presenze ti serve un PIN: chiedilo al titolare.</p>
+    </section>
+    <p class="note">Questa pagina si chiude da sola dopo un minuto senza tocchi.</p>
+  </div>
+</section>
+
+<!-- ========================= BOATS ========================= -->
+<section class="view" id="viewBoats" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1">Barche in officina</h1></div>
+  <div class="page page--wide">
+    <div class="staff-actions">
+      <button type="button" class="btn btn--outline" data-go="home">Indietro</button>
+      <a class="btn btn--outline" id="boatsNew" href="preventivo.html" target="_blank" rel="noopener" hidden>Nuovo preventivo al banco</a>
+    </div>
+    <p class="note" id="boatsReadOnly" hidden>Da qui le barche si guardano. Stati e assegnazioni si cambiano dal computer dell'officina.</p>
+    <div class="boats-tools">
+      <div class="field">
+        <label for="boatsSearch">Cerca</label>
+        <input type="search" id="boatsSearch" placeholder="Barca, cliente, telefono o codice" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="boatsStatus">Stato</label>
+        <select id="boatsStatus"><option value="">Tutti gli stati</option></select>
+      </div>
+      <p class="note boats-count" id="boatsCount" aria-live="polite"></p>
+    </div>
+    <div class="table-wrap">
+      <table class="boats">
+        <thead>
+          <tr><th scope="col">Barca</th><th scope="col">Cliente</th><th scope="col">Arrivata</th><th scope="col">Lavori</th><th scope="col">Stato</th><th scope="col">Chi ci lavora</th></tr>
+        </thead>
+        <tbody id="boatsBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="boatsEmpty" hidden>Nessuna barca.</p>
+  </div>
+</section>
+
+<!-- ========================= OWNER: PROFILE ========================= -->
+<section class="view" id="viewProfile" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1" id="profileTitle">Buongiorno</h1></div>
+  <div class="page">
+    <section class="staff-section" aria-labelledby="alertsTitle">
+      <h2 id="alertsTitle">Da guardare questa settimana</h2>
+      <ul class="alerts" id="alertsList"></ul>
+      <p class="note" id="alertsNone" hidden>Tutto in ordine.</p>
+    </section>
+    <div class="tiles">
+      <button type="button" class="tile" data-go="squad">
+        <span class="tile__title">Squadra</span>
+        <span class="tile__body">Chi è in turno, su cosa lavora, presenze, orari e PIN</span>
+        <span class="tile__line" id="tileSquad"></span>
+      </button>
+      <button type="button" class="tile" data-go="boats">
+        <span class="tile__title">Barche</span>
+        <span class="tile__body">Tutte le richieste, con lo stato e chi ci lavora</span>
+        <span class="tile__line" id="tileBoats"></span>
+      </button>
+      <a class="tile" href="preventivo.html" target="_blank" rel="noopener">
+        <span class="tile__title">Nuovo preventivo al banco</span>
+        <span class="tile__body">Il modulo del sito, per un cliente in officina: alla fine ti dà il codice da consegnargli</span>
+      </a>
+    </div>
+    <section class="staff-section" aria-labelledby="notepadTitle">
+      <h2 id="notepadTitle">I miei appunti</h2>
+      <label class="sr-only" for="notepad">I miei appunti</label>
+      <textarea id="notepad" rows="5" placeholder="Restano solo su questo computer."></textarea>
+    </section>
+  </div>
+</section>
+
+<!-- ========================= OWNER: SQUAD ========================= -->
+<section class="view" id="viewSquad" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1">Squadra</h1></div>
+  <div class="page">
+    <div class="staff-actions">
+      <button type="button" class="btn btn--outline" data-go="home">Indietro</button>
+      <span class="tabs" role="group" aria-label="Squadra">
+        <button type="button" class="tab is-active" aria-pressed="true">Adesso</button>
+        <button type="button" class="tab" aria-pressed="false" data-go="attendance">Presenze</button>
+      </span>
+      <button type="button" class="btn btn--outline" id="squadRefresh">Aggiorna</button>
+    </div>
+    <section class="staff-section" id="pendingSection" aria-labelledby="pendingTitle" hidden>
+      <h2 id="pendingTitle">Turni da completare</h2>
+      <p class="note">Questi turni si sono chiusi da soli (dopo 12 ore o alle 23:00). Indica a che ora è uscito davvero.</p>
+      <ul class="cards" id="pendingList"></ul>
+    </section>
+    <section class="staff-section" aria-labelledby="onShiftTitle">
+      <h2 id="onShiftTitle">In turno adesso</h2>
+      <ul class="cards" id="onShiftList"></ul>
+      <p class="note" id="onShiftNone" hidden>Nessuno è in turno.</p>
+    </section>
+    <section class="staff-section" aria-labelledby="monitorTitle">
+      <h2 id="monitorTitle">Barche e note</h2>
+      <p class="note" id="monitorSummary"></p>
+      <ul class="cards" id="monitorList"></ul>
+    </section>
+    <details class="staff-section history">
+      <summary><h2>Storico dei turni</h2></summary>
+      <div id="historyList"></div>
+    </details>
+  </div>
+</section>
+
+<!-- ========================= OWNER: ATTENDANCE ========================= -->
+<section class="view" id="viewAttendance" hidden>
+  <div class="band"><h1 class="band__title" tabindex="-1">Presenze</h1></div>
+  <div class="page page--wide">
+    <div class="staff-actions no-print">
+      <button type="button" class="btn btn--outline" data-go="home">Indietro</button>
+      <span class="tabs" role="group" aria-label="Squadra">
+        <button type="button" class="tab" aria-pressed="false" data-go="squad">Adesso</button>
+        <button type="button" class="tab is-active" aria-pressed="true">Presenze</button>
+      </span>
+    </div>
+    <form class="att-range no-print" id="attRange" novalidate>
+      <span class="tabs" role="group" aria-label="Periodo">
+        <button type="button" class="tab" data-preset="week" aria-pressed="true">Questa settimana</button>
+        <button type="button" class="tab" data-preset="lastWeek" aria-pressed="false">Settimana scorsa</button>
+        <button type="button" class="tab" data-preset="month" aria-pressed="false">Questo mese</button>
+      </span>
+      <div class="field"><label for="attFrom">Dal</label><input type="date" id="attFrom"></div>
+      <div class="field"><label for="attTo">Al</label><input type="date" id="attTo"></div>
+      <button type="submit" class="btn btn--outline">Mostra</button>
+      <a class="btn btn--outline" id="attCsv" href="#">Scarica CSV</a>
+      <button type="button" class="btn btn--outline" id="attPrint">Stampa</button>
+    </form>
+    <p class="field__error" id="attError" role="alert" hidden></p>
+    <h2 class="print-only" id="attPrintTitle"></h2>
+    <div class="table-wrap">
+      <table class="att">
+        <thead>
+          <tr><th scope="col">Dipendente</th><th scope="col">Giorni</th><th scope="col">Ore</th><th scope="col">Ritardi</th><th scope="col">Assenze</th><th scope="col">Straordinari</th><th scope="col">Da completare</th><th scope="col" class="no-print"><span class="sr-only">Azioni</span></th></tr>
+        </thead>
+        <tbody id="attBody"></tbody>
+      </table>
+    </div>
+    <p class="note">Tocca un nome per vedere i giorni. Ritardi e straordinari contano oltre <span id="attGrace">10</span> minuti di tolleranza.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ========================= DIALOGS ========================= -->
+<dialog class="staff-dialog pin" id="pinDialog" aria-labelledby="pinName">
+  <h2 id="pinName">Dipendente</h2>
+  <p id="pinLead"></p>
+  <div class="pin__dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="sr-only" id="pinStatus" aria-live="polite"></p>
+  <p class="pin__message" id="pinMessage" role="alert" hidden></p>
+  <div class="pin__keys" id="pinKeys">
+    <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+    <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+    <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+    <button type="button" data-key="cancel">Annulla</button><button type="button" data-key="0">0</button><button type="button" data-key="back" aria-label="Cancella l'ultima cifra">⌫</button>
+  </div>
+</dialog>
+
+<dialog class="staff-dialog boat" id="boatDialog" aria-labelledby="boatDialogTitle">
+  <div class="staff-dialog__head">
+    <h2 id="boatDialogTitle">Barca</h2>
+    <button type="button" class="dialog-close" data-close aria-label="Chiudi">✕</button>
+  </div>
+  <div class="boat__grid">
+    <div class="boat__3d" id="boatCanvasWrap">
+      <canvas id="boatCanvas"></canvas>
+      <div id="boatOverlay"><p id="boatLoading">Caricamento del modello 3D…</p><p id="boatError" hidden></p></div>
+    </div>
+    <dl class="boat__facts" id="boatFacts"></dl>
+  </div>
+</dialog>
+
+<dialog class="staff-dialog" id="pendingDialog" aria-labelledby="pendingDialogTitle">
+  <div class="staff-dialog__head">
+    <h2 id="pendingDialogTitle">Turni da completare</h2>
+    <button type="button" class="dialog-close" data-close aria-label="Chiudi">✕</button>
+  </div>
+  <p>Questi turni si sono chiusi da soli. Indica a che ora è uscito davvero ciascuno.</p>
+  <ul class="cards" id="pendingDialogList"></ul>
+  <button type="button" class="btn btn--outline" data-close>Più tardi</button>
+</dialog>
+
+<dialog class="staff-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+  <form id="settingsForm" novalidate>
+    <div class="staff-dialog__head">
+      <h2 id="settingsTitle">Orario e PIN</h2>
+      <button type="button" class="dialog-close" data-close aria-label="Chiudi">✕</button>
+    </div>
+    <fieldset>
+      <legend>PIN</legend>
+      <p class="note" id="settingsPinState"></p>
+      <div class="field">
+        <label for="settingsPin">Nuovo PIN <span>(4 cifre; vuoto per lasciarlo com'è)</span></label>
+        <input type="text" id="settingsPin" inputmode="numeric" maxlength="4" autocomplete="off">
+      </div>
+      <label class="check"><input type="checkbox" id="settingsPinClear"> Togli il PIN</label>
+    </fieldset>
+    <fieldset>
+      <legend>Orario della settimana</legend>
+      <p class="note">Lascia vuoto un giorno di riposo. Le ore sono quelle di Roma.</p>
+      <div class="week" id="settingsWeek"></div>
+    </fieldset>
+    <p class="field__error" id="settingsError" role="alert" hidden></p>
+    <div class="staff-actions">
+      <button type="submit" class="btn">Salva</button>
+      <button type="button" class="btn btn--outline" data-close>Annulla</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../src/zones.js?v=2026-10-19a" defer></script>
+<script src="../src/i18n.js?v=2026-10-19a" defer></script>
+<script src="../src/staff.js?v=2026-10-19b" defer></script>
+</body>
+</html>

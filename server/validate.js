@@ -14,10 +14,12 @@
 require('../src/zones.js');
 const Z = globalThis.CIPRESSINA_ZONES;
 
+// `code`, when given, travels with the message for the few answers a page acts on.
 class HttpError extends Error {
-    constructor(status, message) {
+    constructor(status, message, code) {
         super(message);
         this.status = status;
+        this.code = code;
     }
 }
 
@@ -145,4 +147,4 @@ function validateRequest(body) {
     };
 }
 
-module.exports = { validateRequest, HttpError, BadRequest };
+module.exports = { validateRequest, text, HttpError, BadRequest };

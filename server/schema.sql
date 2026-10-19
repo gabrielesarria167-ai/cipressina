@@ -60,3 +60,83 @@ CREATE TABLE IF NOT EXISTS requests (
 
 -- The workshop's list, newest first.
 CREATE INDEX IF NOT EXISTS requests_created_at_idx ON requests (created_at DESC);
+
+-- =============================================================================
+-- The workshop panel (pgs/officina.html). Ported from autocolor's attendance
+-- branch: who is working which boat, shifts, schedules and PINs, the shared
+-- to-do list and the owner's notes to each worker.
+--
+-- No foreign keys to people: the roster lives in the environment
+-- (CIPRESSINA_WORKER_IDS, see server/auth.js), not in a table. The CHECK on
+-- the code shape (two letters, five digits) keeps typos out, and nothing is
+-- deleted when somebody leaves the roster, so their history stays.
+-- =============================================================================
+
+-- Who has the boat in hand, by code, empty when nobody does. Two at most: a
+-- pair works one boat. The CHECK reads the array joined by commas (a subquery
+-- is not allowed in a CHECK); array_position keeps out a stray NULL, and the
+-- comparison stops one person holding it twice.
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS occupied_by text[] NOT NULL DEFAULT '{}';
+ALTER TABLE requests DROP CONSTRAINT IF EXISTS requests_occupied_by_check;
+ALTER TABLE requests ADD CONSTRAINT requests_occupied_by_check
+    CHECK (cardinality(occupied_by) <= 2
+           AND array_position(occupied_by, NULL) IS NULL
+           AND (cardinality(occupied_by) < 2 OR occupied_by[1] <> occupied_by[2])
+           AND array_to_string(occupied_by, ',') ~ '^([A-Z]{2}[0-9]{5}(,[A-Z]{2}[0-9]{5})?)?$');
+
+-- What the owner has told each worker: one note per worker, so writing
+-- replaces. Shown pinned on the shop's «Cose da fare» list.
+CREATE TABLE IF NOT EXISTS worker_notes (
+    worker_id  text        PRIMARY KEY CHECK (worker_id ~ '^[A-Z]{2}[0-9]{5}$'),
+    note       text        NOT NULL CHECK (length(btrim(note)) BETWEEN 1 AND 500),
+    written_by text        NOT NULL,
+    updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- A worker's shift («turno»), NOT a login: logging out leaves it running.
+-- Both instants come from the database's now(), never from a browser; the
+-- length is derived from them. ended_at NULL means open, and the partial
+-- unique index below allows one open shift per worker.
+--
+-- closed_by: the owner's code when he closed it for a worker who forgot.
+-- auto_closed_at: when the server closed it itself (12 h, or 23:00 in Rome);
+-- until the owner gives the real end (closed_by set) it is «da completare».
+CREATE TABLE IF NOT EXISTS work_shifts (
+    id             bigserial   PRIMARY KEY,
+    worker_id      text        NOT NULL CHECK (worker_id ~ '^[A-Z]{2}[0-9]{5}$'),
+    started_at     timestamptz NOT NULL DEFAULT now(),
+    ended_at       timestamptz CHECK (ended_at IS NULL OR ended_at >= started_at),
+    closed_by      text,
+    auto_closed_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS work_shifts_pending_idx
+    ON work_shifts (started_at) WHERE auto_closed_at IS NOT NULL AND closed_by IS NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS work_shifts_one_open_per_worker_idx
+    ON work_shifts (worker_id) WHERE ended_at IS NULL;
+CREATE INDEX IF NOT EXISTS work_shifts_worker_started_idx
+    ON work_shifts (worker_id, started_at DESC);
+
+-- Each worker's 4-digit PIN (salt:hash from scrypt, server/auth.js; NULL = no
+-- PIN) and weekly schedule: seven entries, index = weekday with 0 Sunday, each
+-- null (day off) or {"from":"08:00","to":"17:00"} in Rome time. Days before
+-- schedule_since are not measured, so a schedule set on Thursday makes no
+-- absences on Monday.
+CREATE TABLE IF NOT EXISTS worker_settings (
+    worker_id      text        PRIMARY KEY CHECK (worker_id ~ '^[A-Z]{2}[0-9]{5}$'),
+    pin_hash       text,
+    schedule       jsonb       CHECK (schedule IS NULL OR jsonb_array_length(schedule) = 7),
+    schedule_since date,
+    updated_at     timestamptz NOT NULL DEFAULT now()
+);
+
+-- The shop's «Cose da fare»: to_worker NULL is «Tutti». A note ticked off is
+-- kept (done_at), never deleted, so a mis-tap loses nothing.
+CREATE TABLE IF NOT EXISTS board_notes (
+    id          bigserial   PRIMARY KEY,
+    to_worker   text        CHECK (to_worker ~ '^[A-Z]{2}[0-9]{5}$'),
+    from_worker text        NOT NULL CHECK (from_worker ~ '^[A-Z]{2}[0-9]{5}$'),
+    note        text        NOT NULL CHECK (length(btrim(note)) BETWEEN 1 AND 200),
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    done_at     timestamptz CHECK (done_at IS NULL OR done_at >= created_at)
+);
+CREATE INDEX IF NOT EXISTS board_notes_open_idx ON board_notes (created_at DESC) WHERE done_at IS NULL;

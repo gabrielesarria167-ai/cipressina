@@ -1,0 +1,251 @@
+/* =========================================================================
+   staff.css: the workshop panel (pgs/officina.html), on top of styles.css.
+   Same sober look as the site: white, blue text, hairline borders, 4px
+   corners, no shadows, one type family. Big targets, because it is used
+   standing up at the shop computer or on a tablet with dirty hands.
+   ========================================================================= */
+
+.staff .band { padding: 28px var(--gutter) 24px; }
+.staff .band__title { margin: 0; font-size: clamp(1.5rem, 4vw, 2rem); }
+.page--wide { max-width: 1400px; }
+.staff .page { padding-bottom: 48px; }
+
+.staff-who { font-weight: 700; text-transform: uppercase; font-size: .9375rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.staff-clock { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+/* styles.css hides the header's quote button on small screens; the panel's «Esci» must stay. */
+.staff .hdr > .btn { display: inline-flex; min-height: 44px; }
+.staff .hdr > .btn[hidden] { display: none; }
+@media (max-width: 520px) { .staff-clock { display: none; } }
+
+.staff-error {
+  max-width: 1140px; margin: 16px auto 0; padding: 12px 16px;
+  background: #fbeaec; color: var(--err); border: 1px solid #f1c3c9; border-radius: 4px; font-weight: 600;
+}
+@media (max-width: 1172px) { .staff-error { margin-inline: var(--gutter); } }
+
+.staff-section { margin-block: 32px; }
+.staff-section:first-child { margin-top: 0; }
+.staff-section__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+.staff-section__head h2 { margin-bottom: 8px; }
+.staff-section__head .note { margin: 0; }
+.staff-card { border: 1px solid var(--border); border-radius: 4px; padding: 20px; background: #fff; }
+.staff-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 20px; }
+.staff-actions:last-child { margin-bottom: 0; }
+.sub { display: block; font-size: .875rem; color: var(--muted); line-height: 1.4; }
+.linkish {
+  display: inline; padding: 0; min-height: 0; background: none; border: 0; color: var(--primary-dark);
+  font-weight: 600; text-align: left; text-decoration: underline; text-underline-offset: .15em;
+}
+.linkish:hover { color: var(--secondary-dark); }
+.check { display: flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600; }
+.check input { width: 20px; height: 20px; }
+input[type="password"], input[type="search"], input[type="date"], input[type="time"] {
+  display: block; width: 100%; min-height: 44px; padding: 6px 12px; font-size: 1rem; line-height: 1.5;
+  background: #fff; color: var(--text); border: 1px solid var(--input-border); border-radius: 4px;
+}
+input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+  outline: none; border-color: #80bdff; box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+/* ---- Login ---------------------------------------------------------------- */
+.staff-login { display: grid; gap: 20px; max-width: 420px; margin-inline: auto; }
+.staff-login .btn { justify-self: start; min-width: 140px; }
+
+/* ---- Team cards ----------------------------------------------------------- */
+.crew { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin: 16px 0; }
+.crew-card {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 92px; padding: 16px;
+  background: #fff; border: 1px solid var(--input-border); border-left: 4px solid var(--border); border-radius: 4px; text-align: left; color: var(--text);
+}
+.crew-card:hover { border-color: var(--primary); }
+.crew-card.is-on { border-left-color: var(--green); }
+.avatar {
+  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%;
+  background: var(--primary-soft); color: var(--primary-dark); font-weight: 700; font-size: 1.125rem;
+}
+.crew-card__text { display: grid; gap: 2px; min-width: 0; }
+.crew-card__name { font-weight: 700; font-size: 1.125rem; }
+.crew-card__state { color: var(--muted); font-size: .9375rem; }
+.crew-card.is-on .crew-card__state { color: var(--green); font-weight: 600; }
+.crew-card__boats { font-size: .875rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timer { font-variant-numeric: tabular-nums; }
+
+.staff-dock {
+  position: sticky; bottom: 0; z-index: 30; display: flex; justify-content: center;
+  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid var(--border);
+}
+.staff-dock .btn { min-height: 52px; min-width: min(100%, 360px); font-size: 1.0625rem; }
+.staff-count { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 14px; background: #fff; color: var(--primary-dark); font-size: .9375rem; }
+
+/* ---- «Cose da fare» -------------------------------------------------------- */
+.board-form { display: grid; gap: 12px; align-items: end; margin-bottom: 12px; }
+@media (min-width: 768px) { .board-form { grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) auto; } }
+.board { display: grid; gap: 8px; margin-top: 8px; }
+.board__item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; }
+.board__item.is-boss { background: var(--primary-soft); border-left: 4px solid var(--primary); }
+.board__text { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.board__to { font-size: .8125rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+.board__note { font-weight: 600; overflow-wrap: anywhere; }
+.board__meta { font-size: .875rem; color: var(--muted); }
+.board__item .btn { flex: none; }
+
+/* ---- A worker's area ------------------------------------------------------ */
+.zone-shift { display: grid; gap: 12px; justify-items: start; }
+.zone-shift__state { margin: 0; font-size: 1.25rem; font-weight: 700; }
+.zone-shift .note { margin: 0; }
+.shift-btn { min-height: 64px; min-width: min(100%, 320px); font-size: 1.25rem; }
+.shift-btn[data-shift="on"] { background: #fff; color: var(--primary-dark); }
+.shift-btn[data-shift="on"]:hover { background: var(--primary); color: #fff; }
+.shift-btn[data-shift="confirm"], .shift-btn[data-shift="confirm"]:hover { background: var(--err); border-color: var(--err); color: #fff; }
+.shift-btn:disabled { opacity: .7; cursor: progress; }
+.boat-list { display: grid; gap: 8px; }
+.boat-list__item { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; }
+.boat-list__item .badge { margin-left: auto; }
+.mine-totals { font-weight: 600; }
+
+/* ---- Badges, chips, tabs -------------------------------------------------- */
+.badge {
+  display: inline-block; padding: 2px 10px; border: 1px solid var(--border); border-radius: 4px;
+  background: var(--panel); color: var(--text); font-size: .875rem; font-weight: 600; white-space: nowrap;
+}
+.badge--pronta, .badge--consegnata { border-color: #b7dfc7; background: #eaf6ef; color: #0b6b35; }
+.badge--annullata { color: var(--muted); }
+.chip { display: inline-flex; align-items: center; gap: 4px; margin: 0 6px 6px 0; padding: 2px 4px 2px 10px; border: 1px solid var(--input-border); border-radius: 4px; background: var(--panel); font-weight: 600; }
+.chip__x { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; background: none; border: 0; border-radius: 4px; color: var(--muted); }
+.chip__x:hover { background: #fff; color: var(--err); }
+.tabs { display: inline-flex; border: 1px solid var(--primary); border-radius: 4px; overflow: hidden; }
+.tab { min-height: 44px; padding: 6px 16px; background: #fff; border: 0; border-left: 1px solid var(--primary); color: var(--primary-dark); font-weight: 600; }
+.tab:first-child { border-left: 0; }
+.tab:hover { background: var(--primary-soft); }
+.tab.is-active { background: var(--primary); color: #fff; }
+
+/* ---- Boats table ---------------------------------------------------------- */
+.boats-tools { display: grid; gap: 12px; align-items: end; margin-bottom: 16px; }
+@media (min-width: 768px) { .boats-tools { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; } }
+.boats-count { margin: 0; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: .8125rem; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.boats th, .boats td, .att th, .att td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.boats thead th, .att thead th { border-bottom: 2px solid var(--border); white-space: nowrap; }
+.boats td strong { display: block; }
+.boats td .linkish { display: block; margin-top: 2px; }
+.boats select { min-width: 180px; }
+.holders .assign { margin-top: 2px; }
+/* Under 900 px each boat is a card: the cells stack with their header as a label. */
+@media (max-width: 899px) {
+  .boats thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .boats, .boats tbody, .boats tr, .boats td { display: block; }
+  .boats tr { margin-bottom: 12px; padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; }
+  .boats td { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .boats td:last-child { border-bottom: 0; }
+  .boats td::before { content: attr(data-label); display: block; font-size: .8125rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+  .boats select { width: 100%; }
+}
+
+/* ---- Owner: profile ------------------------------------------------------- */
+.alerts { display: grid; gap: 8px; }
+.alert {
+  display: block; width: 100%; padding: 12px 16px; background: var(--ph-bg); border: 1px solid #f0d9a0; border-left: 4px solid var(--ph-line);
+  border-radius: 4px; color: var(--ph-ink); font-weight: 600; text-align: left;
+}
+.alert:hover { border-color: var(--ph-line); }
+.alert--noPin, .alert--noSchedule { background: var(--panel); border-color: var(--border); border-left-color: var(--muted); color: var(--text); }
+.tiles { display: grid; gap: 12px; margin-block: 32px; }
+@media (min-width: 768px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tile {
+  display: grid; align-content: start; gap: 8px; min-height: 150px; padding: 24px; background: #fff;
+  border: 1px solid var(--input-border); border-top: 4px solid var(--primary); border-radius: 4px; color: var(--text); text-align: left; text-decoration: none;
+}
+.tile:hover { border-color: var(--primary); color: var(--text); }
+.tile__title { font-size: 1.25rem; font-weight: 700; text-transform: uppercase; }
+.tile__body { color: var(--muted); }
+.tile__line { font-weight: 600; }
+.tile__line.is-alert { color: var(--err); }
+#notepad { min-height: 140px; }
+
+/* ---- Owner: squad --------------------------------------------------------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.card { display: grid; align-content: start; gap: 10px; padding: 16px 20px; border: 1px solid var(--border); border-radius: 4px; }
+.card h3 { margin: 0; }
+.card__line { margin: 0; }
+.card--warn { background: var(--ph-bg); border-color: #f0d9a0; border-left: 4px solid var(--ph-line); }
+.card--idle h3, .card--idle .card__line { color: var(--muted); }
+.card__boats { display: grid; gap: 6px; }
+.card__boats li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 8px; }
+.card__note { margin: 0; overflow-wrap: anywhere; }
+.card__note:empty { display: none; }
+.card .staff-actions { margin: 0; }
+.exit-form { display: grid; gap: 8px; }
+.exit-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.exit-form .note, .exit-form .field__error { margin: 0; }
+.note-editor { display: grid; gap: 8px; }
+.note-editor .note { margin: 0; }
+.history summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.history summary::-webkit-details-marker { display: none; }
+.history summary::before { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--primary); }
+.history[open] summary::before { content: "–"; }
+.history summary h2 { margin: 0; }
+.history__worker { margin-top: 24px; }
+
+/* ---- Attendance ------------------------------------------------------------ */
+.att-range { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-bottom: 20px; }
+.att-range .field { width: 170px; }
+.att th[scope="row"] { font-size: 1rem; text-transform: none; color: var(--text); }
+.att td { white-space: nowrap; }
+.att .btn { white-space: nowrap; }
+.att .is-gone th { opacity: .7; }
+.att-days > td { background: var(--panel); }
+.days { font-size: .9375rem; background: #fff; }
+.days th, .days td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.days tr.is-today td { font-weight: 700; }
+.is-flag { color: var(--err); font-weight: 600; }
+.print-only { display: none; }
+
+/* ---- Dialogs ---------------------------------------------------------------- */
+.staff-dialog {
+  width: min(560px, calc(100vw - 2 * var(--gutter))); max-height: calc(100vh - 32px); padding: 24px;
+  border: 1px solid var(--border); border-radius: 4px; color: var(--text); background: #fff;
+}
+.staff-dialog::backdrop { background: rgba(1, 56, 116, .45); }
+.staff-dialog__head { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.staff-dialog__head h2 { margin: 0; text-transform: none; }
+.dialog-close { flex: none; width: 44px; height: 44px; padding: 0; background: #fff; border: 1px solid var(--input-border); border-radius: 4px; font-size: 1.125rem; }
+.dialog-close:hover { border-color: var(--primary); color: var(--primary); }
+.staff-dialog fieldset { padding-bottom: 16px; }
+.week { display: grid; gap: 8px; }
+.week__day { display: grid; grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 8px; }
+.week__name { font-weight: 600; }
+
+.boat { width: min(1000px, calc(100vw - 2 * var(--gutter))); }
+.boat__grid { display: grid; gap: 20px; }
+@media (min-width: 800px) { .boat__grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } }
+.boat__3d { aspect-ratio: 4 / 3; background: var(--panel); border-radius: 4px; overflow: hidden; }
+#boatOverlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--muted); font-weight: 600; }
+#boatOverlay p { margin: 0; }
+.boat__facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; align-content: start; }
+.boat__facts dt { font-weight: 700; }
+.boat__facts dd { margin: 0; overflow-wrap: anywhere; }
+.zone-list { list-style: disc; padding-left: 1.1rem; }
+
+.pin { width: min(360px, calc(100vw - 2 * var(--gutter))); text-align: center; }
+.pin h2 { text-transform: none; margin-bottom: 4px; }
+.pin__dots { display: flex; justify-content: center; gap: 16px; margin: 16px 0; }
+.pin__dots span { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text); }
+.pin__dots span.is-filled { background: var(--text); }
+.pin__message { margin: 0 auto 12px; color: var(--err); font-weight: 600; }
+.pin__message.is-ok { color: var(--green); }
+.pin__keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pin__keys button { min-height: 64px; background: #fff; border: 1px solid var(--input-border); border-radius: 4px; font-size: 1.5rem; font-weight: 600; color: var(--text); }
+.pin__keys button:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.pin__keys button:disabled { opacity: .45; cursor: default; }
+.pin__keys [data-key="cancel"] { font-size: 1rem; }
+
+/* ---- Print: the attendance report only -------------------------------------- */
+@media print {
+  #siteHeader, .band, .staff-error, .no-print, .staff-dock { display: none !important; }
+  .print-only { display: block; }
+  body.print-days .att-days { display: table-row !important; }
+  .page { padding: 0; max-width: none; }
+  .table-wrap { overflow: visible; }
+}

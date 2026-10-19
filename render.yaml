@@ -43,3 +43,26 @@ services:
       # the direct one, with sslmode=verify-full and no channel_binding.
       - key: DATABASE_URL
         sync: false
+
+      # ---- The workshop panel (pgs/officina.html, server/auth.js) ----------
+      # Typed by hand in Render's dashboard: the repository is public, and
+      # between them these say who works at the shop. All read once at
+      # startup, so changing one means a restart. Without the password, or
+      # with neither login code, the panel answers 503 and stays off.
+      #
+      # The shared password, for the shop's login and the owner's.
+      - key: CIPRESSINA_STAFF_PASSWORD
+        sync: false
+      # The shop computer's login, «CODE:Name», e.g. OFFICINA:Officina.
+      - key: CIPRESSINA_SHOP_ID
+        sync: false
+      # The owner's login, same shape, e.g. TITOLARE:Mario Rossi.
+      - key: CIPRESSINA_BOSS_ID
+        sync: false
+      # The workers, «AB12345:Anna Bianchi,CD67890:Luca Verdi»: initials and
+      # five digits. They do not log in; the shop names them on each action.
+      - key: CIPRESSINA_WORKER_IDS
+        sync: false
+      # The site is https, so the session cookie travels Secure.
+      - key: CIPRESSINA_STAFF_COOKIE_SECURE
+        value: "1"

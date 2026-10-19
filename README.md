@@ -35,11 +35,34 @@ Ported from autocolor's `server/`, keeping only the public part. The only depend
 - `server/schema.sql`: the `requests` table. Apply it with `npm run db:migrate`, by hand. It is idempotent.
 - `npm test`: the validation tests (`test/`).
 
+### The workshop panel (`pgs/officina.html`)
+
+Ported from autocolor's `attendance` branch and kept simple for the shop. It is in Italian only. The code is `src/staff.js` and `staff.css`; the server side is `server/auth.js`, `server/attendance.js` and the `/api/staff/*` routes in `server/server.js`.
+
+- **Two logins** share one password (`CIPRESSINA_STAFF_PASSWORD`):
+  - the shop computer (`CIPRESSINA_SHOP_ID`). Its session ends at 23:00, Rome time.
+  - the owner (`CIPRESSINA_BOSS_ID`). His session lasts 8 hours, and a new tab asks him to log in again.
+- **Workers** (`CIPRESSINA_WORKER_IDS`) do not log in. The shop computer names them on each action.
+- **Shop computer:**
+  - **Team cards.** A worker taps their name, typing their PIN if they have one, to open their area: the shift button, their boats and their attendance. The area closes after a minute untouched.
+  - **«Cose da fare».** A shared to-do list. A worker with a PIN signs their notes with it. The owner's notes to each worker are pinned on top.
+  - **«Barche in officina».** The boats list. The shop gives a boat to up to two workers who are on shift, then changes its status. «Dettagli» shows the boat's zones on the 3D model.
+- **Owner:**
+  - **Alerts.** Shifts to complete, late arrivals, absences, overtime, and workers without a PIN or schedule.
+  - **«Squadra».** Who is on shift, closing a forgotten shift at the real exit time, the boats each worker holds and his notes to them, and the shift history.
+  - **«Presenze».** A week, a month or any range, with CSV export and printing, and each worker's «Orario e PIN».
+  - **Boats list.** Look only.
+  - **«Nuovo preventivo al banco».** Opens the public form for a customer at the counter.
+- **Shift rules** (server side): under 5 minutes a shift is not kept. After 12 hours, or at 23:00 in Rome, an open shift closes itself and waits for the owner to give the real exit time. Five wrong PINs within 5 minutes lock that worker's PIN until those 5 minutes are up (a new PIN from the owner unlocks it). The panel needs `npm run db:migrate` first: without its tables its routes answer 500, while the public site keeps working.
+- **Left out on purpose:** worker photos (the repository is public), autocolor's paint orders and discounts, and the old notepad import. The walk-in form is replaced by the public quote form.
+- **Locally:** add the four `CIPRESSINA_*` lines (see `render.yaml`) to `.env`, then open http://localhost:3000/pgs/officina.html. Tests: `npm test` (`test/attendance.test.js`).
+
 ### First deploy (free plans)
 
 1. **Neon**: create a project in AWS Frankfurt (`eu-central-1`). Copy the **direct** connection string (not `-pooler`), change it to `sslmode=verify-full` and remove `channel_binding`. Then, from this machine, run `DATABASE_URL='postgresql://…' npm run db:migrate`.
 2. **Render**: New → Blueprint, pointing at this repository. `render.yaml` creates the `cipressina` web service (free, Frankfurt). Paste the Neon URL into the `DATABASE_URL` variable when asked.
-3. Every push to `main` redeploys. When `server/schema.sql` changes, repeat step 1's migrate.
+3. For the panel, also type `CIPRESSINA_STAFF_PASSWORD`, `CIPRESSINA_SHOP_ID`, `CIPRESSINA_BOSS_ID` and `CIPRESSINA_WORKER_IDS` in the service's Environment (see `render.yaml`).
+4. Every push redeploys. When `server/schema.sql` changes, repeat step 1's migrate.
 
 On the free plan the service sleeps after 15 idle minutes, and the first visit after that waits up to a minute. Neon's free compute also sleeps. Render's limit counters live in memory and reset when the service sleeps.
 
