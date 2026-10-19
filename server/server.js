@@ -30,7 +30,7 @@ const brotli = promisify(zlib.brotliCompress);
 const gzip = promisify(zlib.gzip);
 const db = require('./db');
 const { createRequest, findRequest, ping, describe, pool, DATABASE_URL, unreachable } = db;
-const { validateRequest, text, HttpError, BadRequest } = require('./validate');
+const { validateRequest, validatePhoto, MAX_PHOTO_BYTES, text, HttpError, BadRequest } = require('./validate');
 const auth = require('./auth');
 const attendance = require('./attendance');
 
@@ -196,13 +196,13 @@ function sendJson(res, status, payload) {
     res.end(body);
 }
 
-function readJsonBody(req) {
+function readJsonBody(req, maxBytes = MAX_BODY_BYTES) {
     return new Promise((resolve, reject) => {
         let size = 0;
         const chunks = [];
         const onData = (chunk) => {
             size += chunk.length;
-            if (size > MAX_BODY_BYTES) {
+            if (size > maxBytes) {
                 // Stop buffering but keep the socket, so the 400 still reaches the browser.
                 req.off('data', onData);
                 req.pause();
@@ -213,7 +213,7 @@ function readJsonBody(req) {
         };
         req.on('data', onData);
         req.on('end', () => {
-            if (size > MAX_BODY_BYTES) return;
+            if (size > maxBytes) return;
             try {
                 resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'));
             } catch {
@@ -430,6 +430,8 @@ const STAFF_PATH = /^\/api\/staff\/requests\/([0-9]{10})$/;
 const OCCUPANCY_PATH = /^\/api\/staff\/requests\/([0-9]{10})\/occupancy$/;
 const WORKER_NOTE_PATH = /^\/api\/staff\/workers\/([A-Za-z]{2}[0-9]{5})\/note$/;
 const WORKER_SETTINGS_PATH = /^\/api\/staff\/workers\/([A-Za-z]{2}[0-9]{5})\/settings$/;
+const WORKER_PHOTO_PATH = /^\/api\/staff\/workers\/([A-Za-z]{2}[0-9]{5})\/photo$/;
+const STAFF_PHOTO_PATH = /^\/api\/staff\/photo\/([A-Za-z]{2}[0-9]{5})$/;
 const STAFF_SHIFT_PATH = /^\/api\/staff\/shifts\/([0-9]{1,15})$/;
 const STAFF_BOARD_PATH = /^\/api\/staff\/board\/([0-9]{1,15})$/;
 const DAY_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
@@ -508,8 +510,8 @@ async function workerSettings() {
 // press repaints the screen from one reply. The roster comes from the
 // environment, so a worker who never started a shift is still on screen.
 async function teamPayload() {
-    const [today, pending, occupied, settings] = await Promise.all([
-        db.listTodayShifts(), db.listNewestPendingShifts(), db.listOccupied(), workerSettings(),
+    const [today, pending, occupied, settings, photos] = await Promise.all([
+        db.listTodayShifts(), db.listNewestPendingShifts(), db.listOccupied(), workerSettings(), db.listPhotoVersions(),
     ]);
     const pendingBy = new Map(pending.map((shift) => [shift.workerId, shift]));
     const workers = sortedRoster().map(function (workerId) {
@@ -519,6 +521,7 @@ async function teamPayload() {
         return {
             workerId,
             name: nameFor(workerId),
+            photo: photos.get(workerId) || null,
             hasPin: !!(settings.get(workerId) || {}).pinHash,
             shift: open ? { id: open.id, startedAt: open.startedAt, seconds: open.seconds } : null,
             // Today's worked seconds, closed shifts included.
@@ -678,6 +681,8 @@ async function handleStaff(req, res, pathname, ip) {
     if (pathname === '/api/staff/logout' && req.method === 'POST') {
         auth.destroySession(auth.readToken(req));
         res.setHeader('Set-Cookie', auth.clearCookieHeader());
+        // The photos are cached for a year on a shared computer: gone with the session.
+        res.setHeader('Clear-Site-Data', '"cache"');
         return res.writeHead(204).end();
     }
 
@@ -884,6 +889,41 @@ async function handleStaff(req, res, pathname, ip) {
         return sendJson(res, 200, { workerId, hasPin: !!saved.pinHash, schedule: saved.schedule || null });
     }
 
+    // The owner sets a worker's photo (a data: URL) or takes it away.
+    const photoMatch = WORKER_PHOTO_PATH.exec(pathname);
+    if (photoMatch && (req.method === 'PUT' || req.method === 'DELETE')) {
+        requireBoss(req);
+        const workerId = photoMatch[1].toUpperCase();
+        if (!auth.isRosterWorker(workerId)) return sendJson(res, 404, { error: 'Quel codice non è di nessun dipendente.' });
+        if (req.method === 'DELETE') {
+            await db.clearWorkerPhoto(workerId);
+            return sendJson(res, 200, { workerId, photo: null });
+        }
+        // Base64 is 4/3 of the bytes, plus the JSON around it.
+        const body = requireObject(await readJsonBody(req, Math.ceil(MAX_PHOTO_BYTES * 4 / 3) + 1024));
+        const { image, mime } = validatePhoto(body.image);
+        const version = await db.setWorkerPhoto(workerId, image, mime);
+        console.log(`[officina] ${workerId}: photo updated (${image.length} bytes)`);
+        return sendJson(res, 200, { workerId, photo: version });
+    }
+
+    // A worker's photo, to any signed-in session. Its address carries the
+    // version (?v=), so the browser may keep it: a new photo is a new address.
+    const photoGet = STAFF_PHOTO_PATH.exec(pathname);
+    if (photoGet && req.method === 'GET') {
+        requireStaff(req);
+        const workerId = photoGet[1].toUpperCase();
+        const photo = auth.isRosterWorker(workerId) ? await db.getWorkerPhoto(workerId) : null;
+        if (!photo) return sendJson(res, 404, { error: 'Nessuna foto.' });
+        res.writeHead(200, {
+            'Content-Type': photo.mime,
+            'Content-Length': photo.image.length,
+            'Cache-Control': 'private, max-age=31536000, immutable',
+            'X-Content-Type-Options': 'nosniff',
+        });
+        return res.end(photo.image);
+    }
+
     // Every worker's latest shifts, plus the ones waiting for the owner's end time.
     if (pathname === '/api/staff/shifts' && req.method === 'GET') {
         requireBoss(req);
@@ -953,7 +993,10 @@ async function handleStaff(req, res, pathname, ip) {
             });
             return res.end(csv);
         }
-        const workers = summary.workers.map((worker) => Object.assign({ name: nameFor(worker.workerId) }, worker));
+        const photos = await db.listPhotoVersions();
+        const workers = summary.workers.map((worker) => Object.assign({
+            name: nameFor(worker.workerId), photo: photos.get(worker.workerId) || null,
+        }, worker));
         workers.sort((a, b) => (a.name || a.workerId).localeCompare(b.name || b.workerId, 'it'));
         return sendJson(res, 200, Object.assign({}, summary, { workers, alerts: attendance.alertsFrom(summary) }));
     }

@@ -629,6 +629,42 @@ async function markBoardNoteDone(id) {
     return rows.length > 0 ? { id: Number(rows[0].id), doneAt: rows[0].done_at } : null;
 }
 
+/* ---- worker_photos: the team cards' faces ---- */
+
+// workerId -> version (ms of the last change), for the photo's address: a new
+// photo is a new address, so the old one can be cached for good.
+async function listPhotoVersions() {
+    let rows;
+    try {
+        ({ rows } = await query(`SELECT worker_id, (extract(epoch FROM updated_at) * 1000)::bigint AS version FROM worker_photos`));
+    } catch (err) {
+        // 42P01: the table is not there yet (schema.sql not applied). Initials
+        // for everybody, rather than a shop screen down over the photos.
+        if (err.code !== '42P01') throw err;
+        return new Map();
+    }
+    return new Map(rows.map((row) => [row.worker_id, String(row.version)]));
+}
+
+async function getWorkerPhoto(workerId) {
+    const { rows } = await query(`SELECT image, mime FROM worker_photos WHERE worker_id = $1`, [workerId]);
+    return rows.length > 0 ? { image: rows[0].image, mime: rows[0].mime } : null;
+}
+
+async function setWorkerPhoto(workerId, image, mime) {
+    const { rows } = await query(
+        `INSERT INTO worker_photos (worker_id, image, mime) VALUES ($1, $2, $3)
+         ON CONFLICT (worker_id) DO UPDATE SET image = EXCLUDED.image, mime = EXCLUDED.mime, updated_at = now()
+         RETURNING (extract(epoch FROM updated_at) * 1000)::bigint AS version`,
+        [workerId, image, mime]
+    );
+    return String(rows[0].version);
+}
+
+async function clearWorkerPhoto(workerId) {
+    await query(`DELETE FROM worker_photos WHERE worker_id = $1`, [workerId]);
+}
+
 // Several attempts at startup on Neon: this runs before the port opens, and a
 // failure there fails the deploy.
 async function ping(attempts) {
@@ -662,4 +698,5 @@ module.exports = {
     SHIFT_MIN_SECONDS, SHIFT_MAX_SECONDS, SHIFT_LONGEST_SECONDS, SHIFT_CLOSE_HOUR, SHIFT_TIME_ZONE,
     listWorkerSettings, putWorkerSettings,
     listBoardNotes, createBoardNote, markBoardNoteDone,
+    listPhotoVersions, getWorkerPhoto, setWorkerPhoto, clearWorkerPhoto,
 };

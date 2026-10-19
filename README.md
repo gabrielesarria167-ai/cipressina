@@ -50,7 +50,7 @@ Ported from autocolor's `attendance` branch and kept simple for the shop. It is 
 - **Owner:**
   - **Alerts.** Shifts to complete, late arrivals, absences, overtime, and workers without a PIN or schedule.
   - **«Squadra».** Who is on shift, closing a forgotten shift at the real exit time, the boats each worker holds and his notes to them, and the shift history.
-  - **«Presenze».** A week, a month or any range, with CSV export and printing, and each worker's «Orario e PIN».
+  - **«Presenze».** A week, a month or any range, with CSV export and printing, and each worker's «Foto, orario e PIN».
   - **Boats list.** Look only.
   - **«Nuovo preventivo al banco».** Opens the public form for a customer at the counter.
 - **Shift rules** (server side): under 5 minutes a shift is not kept. After 12 hours, or at 23:00 in Rome, an open shift closes itself and waits for the owner to give the real exit time. Five wrong PINs within 5 minutes lock that worker's PIN until those 5 minutes are up (a new PIN from the owner unlocks it). The panel needs `npm run db:migrate` first: without its tables its routes answer 500, while the public site keeps working.

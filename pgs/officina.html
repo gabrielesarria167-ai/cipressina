@@ -7,7 +7,7 @@
 <title>Officina | Cipressina Barche</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="../styles.css?v=2026-10-19a">
-<link rel="stylesheet" href="../staff.css?v=2026-10-19b">
+<link rel="stylesheet" href="../staff.css?v=2026-10-20a">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body class="staff">
@@ -58,8 +58,17 @@
         <h2 id="crewTitle">La squadra</h2>
         <p class="note" id="crewSummary"></p>
       </div>
-      <p class="note">Tocca il tuo nome per iniziare o finire il turno e vedere le tue barche.</p>
-      <ul class="crew" id="crewList"></ul>
+      <p class="note">Tocca la tua foto per iniziare o finire il turno e vedere le tue barche.</p>
+      <div class="field crew-search">
+        <label for="crewSearch">Cerca il tuo nome</label>
+        <input type="search" id="crewSearch" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
+      <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
+      <div class="crew-wrap">
+        <ul class="crew" id="crewList"></ul>
+        <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
+      </div>
       <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
     </section>
 
@@ -299,9 +308,21 @@
 <dialog class="staff-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
   <form id="settingsForm" novalidate>
     <div class="staff-dialog__head">
-      <h2 id="settingsTitle">Orario e PIN</h2>
+      <h2 id="settingsTitle">Foto, orario e PIN</h2>
       <button type="button" class="dialog-close" data-close aria-label="Chiudi">✕</button>
     </div>
+    <fieldset>
+      <legend>Foto</legend>
+      <div class="settings-photo">
+        <span id="settingsPhotoPreview"></span>
+        <div>
+          <input type="file" id="settingsPhoto" class="sr-only" accept="image/*">
+          <label class="btn btn--outline" for="settingsPhoto">Scegli una foto</label>
+          <p class="note">Si vede sulla sua scheda in officina. Meglio una foto del viso, in verticale.</p>
+          <label class="check" id="settingsPhotoClearRow"><input type="checkbox" id="settingsPhotoClear"> Togli la foto</label>
+        </div>
+      </div>
+    </fieldset>
     <fieldset>
       <legend>PIN</legend>
       <p class="note" id="settingsPinState"></p>
@@ -326,6 +347,6 @@
 
 <script src="../src/zones.js?v=2026-10-19a" defer></script>
 <script src="../src/i18n.js?v=2026-10-19a" defer></script>
-<script src="../src/staff.js?v=2026-10-19b" defer></script>
+<script src="../src/staff.js?v=2026-10-20a" defer></script>
 </body>
 </html>

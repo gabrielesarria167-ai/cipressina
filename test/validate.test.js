@@ -68,3 +68,19 @@ test('optional and dependent fields', () => {
     assert.equal(validateRequest(payload({ lang: 'de' })).lang, 'it');
     assert.equal(validateRequest(payload({ serviceSite: null })).serviceSite, null);
 });
+
+test('a worker photo must really be the WebP or JPEG it says, and small', () => {
+    const { validatePhoto, MAX_PHOTO_BYTES } = require('../server/validate');
+    const url = (mime, bytes) => `data:${mime};base64,${Buffer.from(bytes).toString('base64')}`;
+    const webp = Buffer.concat([Buffer.from('RIFF\0\0\0\0WEBPVP8 '), Buffer.alloc(16)]);
+    const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10]);
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    assert.equal(validatePhoto(url('image/webp', webp)).mime, 'image/webp');
+    assert.equal(validatePhoto(url('image/jpeg', jpeg)).image.length, jpeg.length);
+    assert.throws(() => validatePhoto(url('image/jpeg', png)), BadRequest);
+    assert.throws(() => validatePhoto(url('image/webp', jpeg)), BadRequest);
+    assert.throws(() => validatePhoto(url('image/png', png)), BadRequest);
+    assert.throws(() => validatePhoto(url('image/svg+xml', '<svg/>')), BadRequest);
+    assert.throws(() => validatePhoto(42), BadRequest);
+    assert.throws(() => validatePhoto(url('image/jpeg', Buffer.concat([jpeg, Buffer.alloc(MAX_PHOTO_BYTES)]))), /troppo grande/);
+});

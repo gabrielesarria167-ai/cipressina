@@ -67,6 +67,24 @@
         return String(name || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p.charAt(0); }).join("").toUpperCase();
     }
     function nameOf(person) { return person ? person.name || person.workerId : ""; }
+    // «Nicolò» -> «nicolo»: the search and the letters ignore accents and case.
+    function fold(text) { return String(text).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+
+    // The worker's face, or their initials in the same frame when there is none
+    // (or it does not arrive).
+    function photoFrame(worker) {
+        var frame = el("span", "photo");
+        var initialsEl = el("span", "photo__initials", initials(nameOf(worker)));
+        initialsEl.setAttribute("aria-hidden", "true");
+        if (!worker.photo) { frame.appendChild(initialsEl); return frame; }
+        var img = el("img");
+        img.alt = "";
+        img.loading = "lazy";
+        img.src = "/api/staff/photo/" + worker.workerId + "?v=" + worker.photo;
+        img.addEventListener("error", function () { if (img.parentNode) frame.replaceChild(initialsEl, img); });
+        frame.appendChild(img);
+        return frame;
+    }
 
     function formatDuration(seconds) {
         var minutes = Math.max(0, Math.floor(seconds / 60));
@@ -396,6 +414,9 @@
 
     function showTeam() {
         paintView("team");
+        // The next person starts from the whole crew.
+        byId("crewSearch").value = "";
+        renderTeam();
         paintOutButton();
         loadTeam(false);
         loadBoard();
@@ -435,28 +456,47 @@
         var list = byId("crewList");
         clear(list);
         if (!team) return;
+        var letters = byId("crewLetters");
+        clear(letters);
         byId("crewSummary").textContent = team.workers.length === 0
             ? "Nessun dipendente configurato."
             : team.onShift + " di " + team.workers.length + " in turno";
-        team.workers.forEach(function (worker) {
+        var query = fold(byId("crewSearch").value.trim());
+        var shown = team.workers.filter(function (worker) { return fold(nameOf(worker)).indexOf(query) !== -1; });
+        show(byId("crewNone"), team.workers.length > 0 && shown.length === 0);
+        var seen = {};
+        shown.forEach(function (worker) {
             var item = el("li");
+            var letter = fold(nameOf(worker)).charAt(0).toUpperCase();
             var card = el("button", "crew-card" + (worker.shift ? " is-on" : ""));
             card.type = "button";
             card.dataset.worker = worker.workerId;
-            card.appendChild(el("span", "avatar", initials(nameOf(worker))));
-            var text = el("span", "crew-card__text");
-            text.appendChild(el("span", "crew-card__name", nameOf(worker)));
+            card.appendChild(photoFrame(worker));
+            card.appendChild(el("span", "crew-card__name", nameOf(worker)));
             var state = el("span", "crew-card__state");
             state.appendChild(shiftLine(worker, team.at));
-            text.appendChild(state);
-            if (worker.boats.length) text.appendChild(el("span", "crew-card__boats", worker.boats.map(boatTitle).join(", ")));
-            card.appendChild(text);
+            card.appendChild(state);
+            if (worker.boats.length) card.appendChild(el("span", "crew-card__boats", worker.boats.map(boatTitle).join(", ")));
             card.addEventListener("click", function () { enterZone(worker.workerId); });
             item.appendChild(card);
             list.appendChild(item);
+            // The rail on the right: one button per letter a shown name starts with.
+            if (seen[letter]) return;
+            seen[letter] = true;
+            var jump = button(letter, "crew-letters__btn");
+            jump.setAttribute("aria-label", "Nomi con la " + letter);
+            jump.addEventListener("click", function () {
+                card.scrollIntoView({ behavior: "smooth", block: "start" });
+                card.focus({ preventScroll: true });
+            });
+            letters.appendChild(jump);
         });
+        letters.style.setProperty("--n", String(letters.children.length));
+        show(letters, shown.length > 1);
         fillBoardSelects();
     }
+
+    byId("crewSearch").addEventListener("input", renderTeam);
 
     /* ---------- a worker's area ---------- */
 
@@ -1062,21 +1102,27 @@
         late: function (a, names) { return [(a.count === 1 ? "1 ritardo" : a.count + " ritardi") + ": " + names, "attendance"]; },
         absent: function (a, names) { return [(a.count === 1 ? "1 assenza" : a.count + " assenze") + ": " + names, "attendance"]; },
         overtime: function (a, names) { return ["Straordinari: " + names, "attendance"]; },
-        noPin: function (a, names) { return ["Senza PIN: " + names + ". Daglielo in Presenze → Orario e PIN", "attendance"]; },
-        noSchedule: function (a, names) { return ["Senza orario: " + names + ". Impostalo in Presenze → Orario e PIN", "attendance"]; }
+        noPin: function (a, names) { return ["Senza PIN: " + names + ". Daglielo in Presenze → Foto, orario e PIN", "attendance"]; },
+        noSchedule: function (a, names) { return ["Senza orario: " + names + ". Impostalo in Presenze → Foto, orario e PIN", "attendance"]; }
     };
 
     function loadAlerts() {
         api("GET", "/api/staff/attendance").then(function (data) {
             var names = {};
             data.workers.forEach(function (w) { names[w.workerId] = w.name || w.workerId; });
+            var rosterSize = data.workers.filter(function (w) { return w.onRoster; }).length;
             var list = byId("alertsList");
             clear(list);
             data.alerts.forEach(function (alert) {
-                var words = ALERTS[alert.kind](alert, alert.workers.map(function (id) { return names[id] || id; }).join(", "));
+                var who = alert.workers.map(function (id) { return names[id] || id; });
+                // With forty people a full list is a wall: three names and how many more.
+                var shortList = who.length === rosterSize && who.length > 4 ? "tutti (" + who.length + ")"
+                    : who.length > 4 ? who.slice(0, 3).join(", ") + " e altri " + (who.length - 3) : who.join(", ");
+                var words = ALERTS[alert.kind](alert, shortList);
                 var item = el("li");
                 var link = button(words[0], "alert alert--" + alert.kind);
                 link.setAttribute("data-go", words[1]);
+                if (who.length > 4) link.title = who.join(", ");
                 item.appendChild(link);
                 list.appendChild(item);
             });
@@ -1504,7 +1550,7 @@
             });
             var actions = el("td", "no-print");
             if (worker.onRoster) {
-                var settings = button("Orario e PIN");
+                var settings = button("Foto, orario e PIN");
                 settings.addEventListener("click", function () { openSettings(worker, settings); });
                 actions.appendChild(settings);
             }
@@ -1525,12 +1571,62 @@
         });
     }
 
-    /* ---------- «Orario e PIN» ---------- */
+    /* ---------- «Foto, orario e PIN» ---------- */
 
     var settingsDialog = byId("settingsDialog");
     var settingsWorker = null;
     var settingsTrigger = null;
     var settingsBefore = "null";
+    var settingsPhoto = null; // the chosen photo, cropped: a data: URL
+    var PHOTO_W = 480, PHOTO_H = 600;
+
+    function paintSettingsPhoto() {
+        var preview = byId("settingsPhotoPreview");
+        clear(preview);
+        var cleared = byId("settingsPhotoClear").checked;
+        preview.appendChild(photoFrame({
+            workerId: settingsWorker.workerId, name: settingsWorker.name, photo: cleared ? null : settingsWorker.photo,
+        }));
+        if (settingsPhoto && !cleared) preview.firstChild.replaceChildren(Object.assign(el("img"), { src: settingsPhoto, alt: "" }));
+    }
+
+    // A 4:5 crop, centred across and a little high, because faces sit in the
+    // top half of a portrait. WebP where the browser can write it, else JPEG.
+    function cropPhoto(file) {
+        return new Promise(function (resolve, reject) {
+            var url = URL.createObjectURL(file);
+            var img = new Image();
+            img.onload = function () {
+                URL.revokeObjectURL(url);
+                var scale = Math.max(PHOTO_W / img.naturalWidth, PHOTO_H / img.naturalHeight);
+                var sw = PHOTO_W / scale, sh = PHOTO_H / scale;
+                var canvas = document.createElement("canvas");
+                canvas.width = PHOTO_W;
+                canvas.height = PHOTO_H;
+                canvas.getContext("2d").drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * 0.3, sw, sh, 0, 0, PHOTO_W, PHOTO_H);
+                var webp = canvas.toDataURL("image/webp", 0.82);
+                resolve(webp.indexOf("data:image/webp") === 0 ? webp : canvas.toDataURL("image/jpeg", 0.85));
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); reject(new Error("Questo file non si apre come immagine.")); };
+            img.src = url;
+        });
+    }
+
+    byId("settingsPhoto").addEventListener("change", function () {
+        var file = this.files && this.files[0];
+        this.value = "";
+        if (!file) return;
+        cropPhoto(file).then(function (dataUrl) {
+            settingsPhoto = dataUrl;
+            byId("settingsPhotoClear").checked = false;
+            show(byId("settingsError"), false);
+            paintSettingsPhoto();
+        }, function (err) {
+            byId("settingsError").textContent = err.message;
+            show(byId("settingsError"), true);
+        });
+    });
+    byId("settingsPhotoClear").addEventListener("change", paintSettingsPhoto);
 
     (function buildWeek() {
         var week = byId("settingsWeek");
@@ -1552,7 +1648,11 @@
     function openSettings(worker, trigger) {
         settingsWorker = worker;
         settingsTrigger = trigger;
-        byId("settingsTitle").textContent = "Orario e PIN · " + nameOf(worker);
+        byId("settingsTitle").textContent = "Foto, orario e PIN · " + nameOf(worker);
+        settingsPhoto = null;
+        byId("settingsPhotoClear").checked = false;
+        show(byId("settingsPhotoClearRow"), !!worker.photo);
+        paintSettingsPhoto();
         byId("settingsPinState").textContent = worker.hasPin ? "Ha già un PIN. Scrivine uno nuovo per cambiarlo." : "Non ha ancora un PIN.";
         byId("settingsPin").value = "";
         byId("settingsPinClear").checked = false;
@@ -1566,10 +1666,22 @@
             [1, 2, 3, 4, 5].forEach(function (d) { setDay(d, "07:15", "19:15"); });
             setDay(6, "07:30", "12:00");
         }
-        settingsBefore = JSON.stringify(worker.schedule || null);
+        settingsBefore = JSON.stringify(readWeek().schedule);
         show(byId("settingsError"), false);
         settingsDialog.showModal();
-        byId("settingsPin").focus();
+        byId("settingsPhoto").focus();
+    }
+    // The seven days as the server takes them (null for none at all), and the first mistake.
+    function readWeek() {
+        var problem = "";
+        var schedule = [0, 1, 2, 3, 4, 5, 6].map(function (d) {
+            var from = settingsDialog.querySelector('input[data-day="' + d + '"][data-end="from"]').value;
+            var to = settingsDialog.querySelector('input[data-day="' + d + '"][data-end="to"]').value;
+            if (!from && !to) return null;
+            if (!from || !to || from >= to) problem = problem || WEEKDAYS[d] + ": l'entrata deve venire prima dell'uscita.";
+            return { from: from, to: to };
+        });
+        return { schedule: schedule.some(Boolean) ? schedule : null, problem: problem };
     }
     function setDay(d, from, to) {
         settingsDialog.querySelector('input[data-day="' + d + '"][data-end="from"]').value = from;
@@ -1584,29 +1696,30 @@
     byId("settingsForm").addEventListener("submit", function (event) {
         event.preventDefault();
         var errorText = byId("settingsError");
-        var problem = "";
-        var schedule = [0, 1, 2, 3, 4, 5, 6].map(function (d) {
-            var from = settingsDialog.querySelector('input[data-day="' + d + '"][data-end="from"]').value;
-            var to = settingsDialog.querySelector('input[data-day="' + d + '"][data-end="to"]').value;
-            if (!from && !to) return null;
-            if (!from || !to || from >= to) problem = problem || WEEKDAYS[d] + ": l'entrata deve venire prima dell'uscita.";
-            return { from: from, to: to };
-        });
+        var week = readWeek();
+        var problem = week.problem;
         var body = {};
-        var wanted = schedule.some(Boolean) ? schedule : null;
-        // The opening hours are only a suggestion: setting just a PIN must not give a schedule.
-        if (JSON.stringify(wanted) !== settingsBefore) body.schedule = wanted;
+        // Compared with what the dialog showed, so the opening hours it
+        // suggests are only saved when the owner touches them.
+        if (JSON.stringify(week.schedule) !== settingsBefore) body.schedule = week.schedule;
         var newPin = byId("settingsPin").value;
         if (byId("settingsPinClear").checked) body.pin = null;
         else if (newPin) {
             if (!/^[0-9]{4}$/.test(newPin)) problem = problem || "Il PIN è di 4 cifre.";
             body.pin = newPin;
         }
-        if (!problem && Object.keys(body).length === 0) problem = "Niente da salvare: scrivi un PIN o cambia l'orario.";
+        var base = "/api/staff/workers/" + settingsWorker.workerId;
+        var photoCall = byId("settingsPhotoClear").checked ? function () { return api("DELETE", base + "/photo"); }
+            : settingsPhoto ? function () { return api("PUT", base + "/photo", { image: settingsPhoto }); } : null;
+        // Salva with nothing else to save, on someone without hours: he accepts the suggestion.
+        if (!photoCall && Object.keys(body).length === 0 && !settingsWorker.schedule && week.schedule) body.schedule = week.schedule;
+        if (!problem && !photoCall && Object.keys(body).length === 0) problem = "Niente da salvare: scegli una foto, scrivi un PIN o cambia l'orario.";
         errorText.textContent = problem;
         show(errorText, !!problem);
         if (problem) return;
-        api("PUT", "/api/staff/workers/" + settingsWorker.workerId + "/settings", body).then(function () {
+        Promise.resolve(photoCall && photoCall()).then(function () {
+            if (Object.keys(body).length > 0) return api("PUT", base + "/settings", body);
+        }).then(function () {
             settingsDialog.close();
             loadAttendance();
             loadAlerts();

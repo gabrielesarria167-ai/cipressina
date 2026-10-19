@@ -140,3 +140,14 @@ CREATE TABLE IF NOT EXISTS board_notes (
     done_at     timestamptz CHECK (done_at IS NULL OR done_at >= created_at)
 );
 CREATE INDEX IF NOT EXISTS board_notes_open_idx ON board_notes (created_at DESC) WHERE done_at IS NULL;
+
+-- Each worker's photo for the team cards, set by the owner. In the database
+-- and not in the repository, which is public: it only leaves the server to a
+-- signed-in session (GET /api/staff/photo/:code). A 480x600 crop, made in
+-- the owner's browser, so a few tens of KB.
+CREATE TABLE IF NOT EXISTS worker_photos (
+    worker_id  text        PRIMARY KEY CHECK (worker_id ~ '^[A-Z]{2}[0-9]{5}$'),
+    image      bytea       NOT NULL CHECK (octet_length(image) <= 307200),
+    mime       text        NOT NULL CHECK (mime IN ('image/webp', 'image/jpeg')),
+    updated_at timestamptz NOT NULL DEFAULT now()
+);

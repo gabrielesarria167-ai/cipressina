@@ -52,22 +52,60 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 .staff-login .btn { justify-self: start; min-width: 140px; }
 
 /* ---- Team cards ----------------------------------------------------------- */
-.crew { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin: 16px 0; }
+/* Upright cards, the face first and the name under it (as autocolor's), four
+   to a row at most and never under 160px, so a phone gets two. The letters
+   sit on the right, under the header while the cards scroll. */
+.crew-search { max-width: 420px; margin-top: 16px; }
+.crew-wrap { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; margin: 16px 0; }
+.crew {
+  display: grid; gap: 16px; margin: 0; padding: 0; list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(max(160px, calc((100% - 3 * 16px) / 4)), 1fr));
+}
 .crew-card {
-  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 92px; padding: 16px;
-  background: #fff; border: 1px solid var(--input-border); border-left: 4px solid var(--border); border-radius: 4px; text-align: left; color: var(--text);
+  display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 100%; height: 100%; padding: 0 0 16px; overflow: hidden;
+  background: #fff; border: 1px solid var(--input-border); border-top: 4px solid var(--border); border-radius: 4px;
+  text-align: center; color: var(--text);
 }
 .crew-card:hover { border-color: var(--primary); }
-.crew-card.is-on { border-left-color: var(--green); }
-.avatar {
-  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%;
-  background: var(--primary-soft); color: var(--primary-dark); font-weight: 700; font-size: 1.125rem;
+.crew-card.is-on { border-top-color: var(--green); }
+.photo {
+  display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px;
+  background: var(--primary-soft); color: var(--primary-dark);
 }
-.crew-card__text { display: grid; gap: 2px; min-width: 0; }
-.crew-card__name { font-weight: 700; font-size: 1.125rem; }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo__initials { font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: .02em; }
+.crew-card .photo { margin-bottom: 8px; border-radius: 0; }
+.crew-card > :not(.photo) { padding-inline: 12px; }
+.crew-card__name { font-weight: 700; font-size: 1.375rem; line-height: 1.2; overflow-wrap: anywhere; }
 .crew-card__state { color: var(--muted); font-size: .9375rem; }
 .crew-card.is-on .crew-card__state { color: var(--green); font-weight: 600; }
 .crew-card__boats { font-size: .875rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crew-letters {
+  position: sticky; top: calc(var(--hdr-h) + 16px); display: flex; flex-direction: column; gap: 2px;
+  max-height: calc(100vh - var(--hdr-h) - 120px); overflow-y: auto;
+}
+/* Every letter on screen at once: they share the height left between the
+   header and the dock (--n, set by staff.js, is how many there are). */
+.crew-letters[hidden] { display: none; }
+.crew-wrap:has(> .crew-letters[hidden]) { grid-template-columns: 1fr; }
+.crew-letters__btn {
+  min-width: 44px; height: clamp(24px, calc((100vh - var(--hdr-h) - 140px) / var(--n, 20) - 2px), 44px); min-height: 0; padding: 0; background: #fff; color: var(--primary-dark);
+  border: 1px solid var(--border); border-radius: 4px; font-weight: 700; font-size: 1.0625rem;
+}
+.crew-letters__btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+@media (max-width: 520px) {
+  .crew-wrap { gap: 8px; }
+  .crew { gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .crew-card__name { font-size: 1.125rem; }
+  .crew-letters__btn { min-width: 36px; }
+}
+
+/* The owner's photo field: the preview at the size of a small card. */
+.settings-photo { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.settings-photo .photo { width: 120px; }
+.settings-photo .photo__initials { font-size: 2.25rem; }
+.settings-photo .note { margin: 8px 0 0; max-width: 32ch; }
+#settingsPhoto:focus-visible + label { outline: 3px solid #80bdff; outline-offset: 2px; }
 .timer { font-variant-numeric: tabular-nums; }
 
 .staff-dock {

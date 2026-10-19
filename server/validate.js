@@ -147,4 +147,22 @@ function validateRequest(body) {
     };
 }
 
-module.exports = { validateRequest, text, HttpError, BadRequest };
+// The decoded photo; the browser sends a 480x600 crop, far under it.
+const MAX_PHOTO_BYTES = 300 * 1024;
+// A data: URL of an image, and the first bytes that prove it is one.
+const PHOTO_DATA_RE = /^data:(image\/(?:webp|jpeg));base64,([A-Za-z0-9+/]+={0,2})$/;
+const PHOTO_MAGIC = {
+    'image/webp': (b) => b.length > 12 && b.toString('latin1', 0, 4) === 'RIFF' && b.toString('latin1', 8, 12) === 'WEBP',
+    'image/jpeg': (b) => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
+};
+
+/** A worker's photo as the owner's page sends it (a data: URL) -> { image, mime }, or BadRequest. */
+function validatePhoto(value) {
+    const match = typeof value === 'string' ? PHOTO_DATA_RE.exec(value) : null;
+    const image = match ? Buffer.from(match[2], 'base64') : null;
+    if (!image || !PHOTO_MAGIC[match[1]](image)) throw new BadRequest('La foto va inviata come immagine WebP o JPEG.');
+    if (image.length > MAX_PHOTO_BYTES) throw new BadRequest('La foto è troppo grande.');
+    return { image, mime: match[1] };
+}
+
+module.exports = { validateRequest, validatePhoto, MAX_PHOTO_BYTES, text, HttpError, BadRequest };
