@@ -31,12 +31,11 @@ services:
       - key: HOST
         value: "0.0.0.0"
 
-      # The proxies in front that append to X-Forwarded-For. 3 is what
-      # autocolor measured on Render (client, Cloudflare, Render's router).
-      # shortcut: copied, not measured for this service. After the first
-      # deploy, send one request and read its «[requests] new request» log
-      # line: «x-forwarded-for hops» must equal this number, or the rate
-      # limits count visitors wrong. Change it here if it does not.
+      # The proxies in front that append to X-Forwarded-For (client,
+      # Cloudflare, Render's router). Measured on this service on 2026-10-19:
+      # the «[requests] new request» log line said «x-forwarded-for hops 3».
+      # If that number ever differs from this one, the rate limits count
+      # visitors wrong: change it here.
       - key: TRUST_PROXY
         value: "3"
 
