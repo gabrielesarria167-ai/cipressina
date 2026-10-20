@@ -366,7 +366,6 @@ function mapShift(row) {
         closedBy: row.closed_by,
         autoClosed,
         pending: autoClosed && row.closed_by === null,
-        sinceStart: row.since_start,
     };
 }
 
@@ -519,10 +518,10 @@ async function listShifts(perWorker) {
     return rows.map((row) => Object.assign(mapShift(row), { total: row.total }));
 }
 
-/* Every shift waiting for the owner, oldest first, with the seconds from its start to now(). */
+/* Every shift waiting for the owner, oldest first. */
 async function listPendingShifts() {
     const { rows } = await query(
-        `SELECT ${SHIFT_COLUMNS}, floor(extract(epoch FROM (now() - started_at)))::integer AS since_start
+        `SELECT ${SHIFT_COLUMNS}
            FROM work_shifts WHERE ${SHIFT_PENDING} ORDER BY started_at, id`
     );
     return rows.map(mapShift);
@@ -696,7 +695,7 @@ module.exports = {
     listWorkerNotes, setWorkerNote, clearWorkerNote,
     tidyShifts, listNewestPendingShifts, startShift, endShift, closeShift, listShifts, listPendingShifts,
     listTodayShifts, listShiftsBetween,
-    SHIFT_MIN_SECONDS, SHIFT_MAX_SECONDS, SHIFT_LONGEST_SECONDS, SHIFT_CLOSE_HOUR, SHIFT_TIME_ZONE,
+    SHIFT_MIN_SECONDS, SHIFT_MAX_SECONDS, SHIFT_LONGEST_SECONDS, SHIFT_CLOSE_HOUR,
     listWorkerSettings, putWorkerSettings,
     listBoardNotes, createBoardNote, markBoardNoteDone,
     listPhotoVersions, getWorkerPhoto, setWorkerPhoto, clearWorkerPhoto,

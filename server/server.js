@@ -482,15 +482,12 @@ async function runShiftRules() {
 // Sent with every shift answer, so the page words its warnings with the server's numbers.
 const SHIFT_LIMITS = Object.freeze({
     minimumSeconds: db.SHIFT_MIN_SECONDS,
-    autoCloseAfter: db.SHIFT_MAX_SECONDS,
-    closeHour: db.SHIFT_CLOSE_HOUR,
-    longestSeconds: db.SHIFT_LONGEST_SECONDS,
 });
 
 function shiftView(shift) {
     return {
         id: shift.id, startedAt: shift.startedAt, endedAt: shift.endedAt, open: shift.open, seconds: shift.seconds,
-        closedByBoss: shift.closedBy !== null, autoClosed: shift.autoClosed, pending: shift.pending, sinceStart: shift.sinceStart,
+        closedByBoss: shift.closedBy !== null, autoClosed: shift.autoClosed, pending: shift.pending,
     };
 }
 
@@ -637,7 +634,6 @@ function viewerFor(workerId) {
     return { workerId, name: nameFor(workerId) || (shop ? 'Officina' : 'Titolare'), isBoss: auth.isBoss(workerId), isShop: shop };
 }
 
-const NOT_FOUND_REQUEST = 'Nessuna richiesta con questo codice.';
 const BOSS_HANDS_OFF = 'Il titolare non prende barche e non cambia gli stati: si fa dal computer dell\'officina.';
 
 async function handleStaff(req, res, pathname, ip) {
@@ -706,7 +702,7 @@ async function handleStaff(req, res, pathname, ip) {
         const body = requireObject(await readJsonBody(req));
         if (!STATUSES.has(body.status)) throw new BadRequest('Stato non valido.');
         const result = await db.updateRequestStatus(statusMatch[1], body.status);
-        if (!result.ok && result.reason === 'not_found') return sendJson(res, 404, { error: NOT_FOUND_REQUEST });
+        if (!result.ok && result.reason === 'not_found') return sendJson(res, 404, { error: NOT_FOUND });
         if (!result.ok) {
             return sendJson(res, 403, { error: 'Prima scegli chi ci lavora, poi cambia lo stato.', code: 'not-held' });
         }
@@ -727,7 +723,7 @@ async function handleStaff(req, res, pathname, ip) {
             const workerId = rosterCode(body.workerId);
             await runShiftRules();
             const result = await db.occupyRequest(occupancy[1], workerId);
-            if (!result.ok && result.reason === 'not_found') return sendJson(res, 404, { error: NOT_FOUND_REQUEST });
+            if (!result.ok && result.reason === 'not_found') return sendJson(res, 404, { error: NOT_FOUND });
             if (!result.ok && result.reason === 'off_shift') {
                 return sendJson(res, 409, { error: `${nameFor(workerId) || workerId} non ha iniziato il turno.`, code: 'off-shift' });
             }
@@ -743,7 +739,7 @@ async function handleStaff(req, res, pathname, ip) {
         const code = typeof body.workerId === 'string' ? body.workerId.trim().toUpperCase() : '';
         if (!auth.CODE_RE.test(code)) throw new BadRequest('Quel codice non ha la forma di un dipendente.');
         const result = await db.releaseRequest(occupancy[1], code);
-        if (!result.ok) return sendJson(res, 404, { error: NOT_FOUND_REQUEST });
+        if (!result.ok) return sendJson(res, 404, { error: NOT_FOUND });
         console.log(`[officina] ${occupancy[1]} released by ${code}`);
         return sendJson(res, 200, withHolders({ id: occupancy[1], occupiedBy: result.occupiedBy }));
     }

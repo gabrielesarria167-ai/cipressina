@@ -132,7 +132,7 @@ function summarize({ shifts, settings, roster, from, to, now, graceMin }) {
         const own = settings.get(workerId) || {};
         const schedule = own.schedule || null;
         const totals = {
-            daysWorked: 0, workedSec: 0, plannedMin: 0, lateCount: 0, lateMin: 0,
+            daysWorked: 0, workedSec: 0, lateCount: 0, lateMin: 0,
             overtimeMin: 0, absences: 0, incomplete: 0,
         };
         const rows = days.map(function (d) {
@@ -145,7 +145,6 @@ function summarize({ shifts, settings, roster, from, to, now, graceMin }) {
                 day: d, scheduled, planned, firstIn: null, lastOut: null, open: false, workedSec: 0,
                 lateMin: 0, overtimeMin: 0, absent: false, missing: false, incomplete: false,
             };
-            if (planned && d <= today) totals.plannedMin += toMinutes(planned.to) - toMinutes(planned.from);
 
             if (dayShifts.length === 0) {
                 if (planned && d < today) row.absent = true;
@@ -245,5 +244,5 @@ function toCsv(summary, nameFor) {
 
 module.exports = {
     summarize, alertsFrom, toCsv, parseSchedule,
-    romeDay, romeMinutes, romeInstant, addDays, weekStart, monthStart, monthEnd, TIME_ZONE,
+    romeDay, romeMinutes, romeInstant, addDays, weekStart, monthStart, monthEnd,
 };
