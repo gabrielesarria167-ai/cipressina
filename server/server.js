@@ -774,20 +774,14 @@ async function handleStaff(req, res, pathname, ip) {
         return sendJson(res, 200, Object.assign(await teamPayload(), { result }));
     }
 
-    // «Cose da fare»: open notes newest first, with the owner's notes to each
-    // worker pinned on top (nobody ticks those: they are his).
+    // «Cose da fare»: open notes newest first. The owner's notes are not here:
+    // each is private to its worker (POST /api/staff/note/mine).
     if (pathname === '/api/staff/board' && req.method === 'GET') {
         requireShop(req);
-        const [rows, bossNotes] = await Promise.all([db.listBoardNotes(), db.listWorkerNotes()]);
-        const roster = sortedRoster();
-        const pinned = roster
-            .map((workerId) => bossNotes.find((note) => note.workerId === workerId))
-            .filter(Boolean)
-            .map((note) => ({ id: null, kind: 'boss', to: holderOf(note.workerId), from: null, text: note.note, createdAt: note.updatedAt }));
-        const notes = rows.map((note) => ({
-            id: note.id, kind: 'note', to: note.to ? holderOf(note.to) : null, from: holderOf(note.from), text: note.text, createdAt: note.createdAt,
+        const notes = (await db.listBoardNotes()).map((note) => ({
+            id: note.id, to: note.to ? holderOf(note.to) : null, from: holderOf(note.from), text: note.text, createdAt: note.createdAt,
         }));
-        return sendJson(res, 200, { notes: pinned.concat(notes), workers: roster.map(holderOf) });
+        return sendJson(res, 200, { notes, workers: sortedRoster().map(holderOf) });
     }
 
     if (pathname === '/api/staff/board' && req.method === 'POST') {
@@ -1001,6 +995,18 @@ async function handleStaff(req, res, pathname, ip) {
         }, worker));
         workers.sort((a, b) => (a.name || a.workerId).localeCompare(b.name || b.workerId, 'it'));
         return sendJson(res, 200, Object.assign({}, summary, { workers, alerts: attendance.alertsFrom(summary) }));
+    }
+
+    // The owner's note to one worker, for their own area on the shop computer:
+    // behind their PIN when they have one (without, their area is open anyway).
+    if (pathname === '/api/staff/note/mine' && req.method === 'POST') {
+        requireShop(req);
+        const body = requireObject(await readJsonBody(req));
+        const workerId = rosterCode(body.workerId);
+        const own = (await workerSettings()).get(workerId);
+        if (own && own.pinHash) requirePin(workerId, own.pinHash, body.pin);
+        const note = (await db.listWorkerNotes()).find((row) => row.workerId === workerId);
+        return sendJson(res, 200, { note: note ? { text: note.note, updatedAt: note.updatedAt } : null });
     }
 
     // A worker's own attendance on the shop computer, behind their PIN. POST so

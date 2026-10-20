@@ -545,10 +545,16 @@
         zone.pin = enteredPin;
         zone.mine = mine;
         zone.confirm = false;
+        zone.message = null;
         paintView("zone");
         paintOutButton();
         renderZone();
         armZoneIdle();
+        api("POST", "/api/staff/note/mine", { workerId: workerId, pin: enteredPin || undefined }).then(function (data) {
+            if (zone.id !== workerId) return;
+            zone.message = data.note;
+            renderZone();
+        }, function (err) { if (err.unauthorized) fail(err); });
     }
 
     function leaveZoneQuietly() {
@@ -596,6 +602,10 @@
             list.appendChild(item);
         });
         show(byId("zoneBoatsEmpty"), worker.boats.length === 0);
+
+        byId("zoneMessageText").textContent = zone.message ? zone.message.text : "";
+        byId("zoneMessageMeta").textContent = zone.message ? "Scritto " + when(zone.message.updatedAt) : "";
+        show(byId("zoneMessage"), !!zone.message);
 
         renderMine();
     }
@@ -749,21 +759,19 @@
         var list = byId("boardList");
         clear(list);
         board.notes.forEach(function (note) {
-            var item = el("li", "board__item" + (note.kind === "boss" ? " is-boss" : ""));
+            var item = el("li", "board__item");
             var text = el("div", "board__text");
             text.appendChild(el("span", "board__to", note.to ? "Per " + nameOf(note.to) : "Per tutti"));
             text.appendChild(el("span", "board__note", note.text));
-            text.appendChild(el("span", "board__meta", (note.kind === "boss" ? "Dal titolare" : "Scritta da " + nameOf(note.from)) + ", " + when(note.createdAt)));
+            text.appendChild(el("span", "board__meta", "Scritta da " + nameOf(note.from) + ", " + when(note.createdAt)));
             item.appendChild(text);
-            if (note.kind !== "boss") {
-                var done = button("Fatto");
-                done.setAttribute("aria-label", "Segna come fatta: " + note.text);
-                done.addEventListener("click", function () {
-                    done.disabled = true;
-                    api("PATCH", "/api/staff/board/" + note.id, { done: true }).then(loadBoard, function (err) { done.disabled = false; fail(err); });
-                });
-                item.appendChild(done);
-            }
+            var done = button("Fatto");
+            done.setAttribute("aria-label", "Segna come fatta: " + note.text);
+            done.addEventListener("click", function () {
+                done.disabled = true;
+                api("PATCH", "/api/staff/board/" + note.id, { done: true }).then(loadBoard, function (err) { done.disabled = false; fail(err); });
+            });
+            item.appendChild(done);
             list.appendChild(item);
         });
         show(byId("boardEmpty"), board.notes.length === 0);
@@ -1437,7 +1445,7 @@
         area.value = worker.note ? worker.note.text : "";
         area.setAttribute("aria-label", "Nota per " + nameOf(worker));
         form.appendChild(area);
-        form.appendChild(el("p", "note", "La vede sul computer dell'officina, in «Cose da fare»."));
+        form.appendChild(el("p", "note", "La vede solo lui, nella sua pagina sul computer dell'officina (dietro il suo PIN, se ne ha uno)."));
         var row = el("div", "staff-actions");
         var save = el("button", "btn", "Salva");
         save.type = "submit";

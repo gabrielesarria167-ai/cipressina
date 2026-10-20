@@ -45,7 +45,7 @@ Ported from autocolor's `attendance` branch and kept simple for the shop. It is 
 - **Workers** (`CIPRESSINA_WORKER_IDS`) do not log in. The shop computer names them on each action.
 - **Shop computer:**
   - **Team cards.** A worker taps their name, typing their PIN if they have one, to open their area: the shift button, their boats and their attendance. The area closes after a minute untouched.
-  - **«Cose da fare».** A shared to-do list. A worker with a PIN signs their notes with it. The owner's notes to each worker are pinned on top.
+  - **«Cose da fare».** A shared to-do list. A worker with a PIN signs their notes with it. The owner's note to a worker is not here: it shows only in that worker's own area, behind their PIN if they have one.
   - **«Barche in officina».** The boats list. The shop gives a boat to up to two workers who are on shift, then changes its status. «Dettagli» shows the boat's zones on the 3D model.
 - **Owner:**
   - **Alerts.** Shifts to complete, late arrivals, absences, overtime, and workers without a PIN or schedule.

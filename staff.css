@@ -118,11 +118,15 @@ button.crew-card:hover { border-color: var(--primary); }
 .staff-count { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 14px; background: #fff; color: var(--primary-dark); font-size: .9375rem; }
 
 /* ---- «Cose da fare» -------------------------------------------------------- */
+/* The owner's note, in the worker's own area only. */
+.zone-message { padding: 16px 20px; background: var(--primary-soft); border-left: 4px solid var(--primary); border-radius: 4px; }
+.zone-message h2 { margin-bottom: 4px; }
+.zone-message__text { margin: 0 0 4px; font-size: 1.125rem; overflow-wrap: anywhere; }
+.zone-message .note { margin: 0; }
 .board-form { display: grid; gap: 12px; align-items: end; margin-bottom: 12px; }
 @media (min-width: 768px) { .board-form { grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) auto; } }
 .board { display: grid; gap: 8px; margin-top: 8px; }
 .board__item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; }
-.board__item.is-boss { background: var(--primary-soft); border-left: 4px solid var(--primary); }
 .board__text { display: grid; gap: 2px; flex: 1; min-width: 0; }
 .board__to { font-size: .8125rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
 .board__note { font-weight: 600; overflow-wrap: anywhere; }
