@@ -827,6 +827,7 @@ async function handleStaff(req, res, pathname, ip) {
         requireBoss(req);
         const held = new Map(auth.listWorkerIds().map((workerId) => [workerId, []]));
         const notes = new Map((await db.listWorkerNotes()).map((note) => [note.workerId, note]));
+        const photos = await db.listPhotoVersions();
         for (const row of await db.listOccupied()) {
             for (const workerId of row.occupiedBy) {
                 if (!held.has(workerId)) held.set(workerId, []);
@@ -835,7 +836,10 @@ async function handleStaff(req, res, pathname, ip) {
         }
         const workers = Array.from(held, ([workerId, boats]) => {
             const note = notes.get(workerId);
-            return { workerId, name: nameFor(workerId), boats, note: note ? { text: note.note, updatedAt: note.updatedAt } : null };
+            return {
+                workerId, name: nameFor(workerId), photo: photos.get(workerId) || null, boats,
+                note: note ? { text: note.note, updatedAt: note.updatedAt } : null,
+            };
         });
         // Who is working first, then by name.
         workers.sort((a, b) => ((b.boats.length > 0) - (a.boats.length > 0))

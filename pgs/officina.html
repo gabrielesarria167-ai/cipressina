@@ -87,8 +87,18 @@
       </div>
       <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
       <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
+      <!-- Who is on shift first, then the others: the same cards, the same letters. -->
       <div class="crew-wrap">
-        <ul class="crew" id="crewList"></ul>
+        <div class="crew-groups">
+          <div id="sessionGroup">
+            <h3 id="sessionTitle">Sessioni in corso</h3>
+            <ul class="crew" id="sessionList" aria-labelledby="sessionTitle"></ul>
+          </div>
+          <div id="offGroup">
+            <h3 id="offTitle">Fuori turno</h3>
+            <ul class="crew" id="crewList" aria-labelledby="offTitle"></ul>
+          </div>
+        </div>
         <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
       </div>
       <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
@@ -210,15 +220,22 @@
       <p class="note">Questi turni si sono chiusi da soli (dopo 12 ore o alle 23:00). Indica a che ora è uscito davvero.</p>
       <ul class="cards" id="pendingList"></ul>
     </section>
-    <section class="staff-section" aria-labelledby="onShiftTitle">
-      <h2 id="onShiftTitle">In turno adesso</h2>
-      <ul class="cards" id="onShiftList"></ul>
-      <p class="note" id="onShiftNone" hidden>Nessuno è in turno.</p>
-    </section>
-    <section class="staff-section" aria-labelledby="monitorTitle">
-      <h2 id="monitorTitle">Barche e note</h2>
-      <p class="note" id="monitorSummary"></p>
-      <ul class="cards" id="monitorList"></ul>
+    <!-- The same big cards as the shop's «La squadra», with the owner's buttons on them. -->
+    <section class="staff-section" aria-labelledby="squadCrewTitle">
+      <div class="staff-section__head">
+        <h2 id="squadCrewTitle">La squadra</h2>
+        <p class="note" id="monitorSummary"></p>
+      </div>
+      <div class="crew-groups">
+        <div id="squadOnGroup">
+          <h3 id="squadOnTitle">Sessioni in corso</h3>
+          <ul class="crew" id="onShiftList" aria-labelledby="squadOnTitle"></ul>
+        </div>
+        <div id="squadOffGroup">
+          <h3 id="squadOffTitle">Fuori turno</h3>
+          <ul class="crew" id="monitorList" aria-labelledby="squadOffTitle"></ul>
+        </div>
+      </div>
     </section>
     <details class="staff-section history">
       <summary><h2>Storico dei turni</h2></summary>
