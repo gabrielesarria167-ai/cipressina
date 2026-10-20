@@ -379,8 +379,18 @@
         vela: svg('<path d="M6 28h80l-8 8H16z"/><rect x="45" y="2" width="2" height="26"/><path d="M43 4v22H18z"/><path d="M49 7l22 19H49z"/>')
     };
 
+    // ---------- Workshop stages --------------------------------------------
+    // A request's status, in workshop order: the CHECK list in
+    // server/schema.sql (test/server.test.js compares them), each with a
+    // `status.<id>` label in i18n.js. FINISHED are the jobs that are over.
+    var STATUSES = ["ricevuta", "alaggio", "trasporto", "preparazione", "verniciatura",
+        "antivegetativa", "varo", "pronta", "consegnata", "annullata"];
+    var FINISHED = ["consegnata", "annullata"];
+
     W.CIPRESSINA_ZONES = {
         PLACEHOLDER: PLACEHOLDER,
+        STATUSES: STATUSES,
+        FINISHED: FINISHED,
         LABELS: LABELS,
         UNVERIFIED: UNVERIFIED,
         BY_TYPE: BY_TYPE,

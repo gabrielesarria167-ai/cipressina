@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS requests (
     id                char(10)     PRIMARY KEY CHECK (id ~ '^[1-9][0-9]{9}$'),
     created_at        timestamptz  NOT NULL DEFAULT now(),
 
-    -- The workshop's stages. Each has a label in src/i18n.js (status.<id>).
+    -- The workshop's stages, as STATUSES in src/zones.js (test/server.test.js
+    -- checks the two match). Each has a label in src/i18n.js (status.<id>).
     -- PLACEHOLDER vocabulary until the owner confirms it.
     status            text         NOT NULL DEFAULT 'ricevuta'
                                    CHECK (status IN ('ricevuta', 'alaggio', 'trasporto', 'preparazione',

@@ -27,15 +27,19 @@
     document.documentElement.lang = "it";
     function it(key, params) { return I18N ? I18N.t(key, params || {}, "it") : key; }
 
-    var STATUSES = ["ricevuta", "alaggio", "trasporto", "preparazione", "verniciatura",
-        "antivegetativa", "varo", "pronta", "consegnata", "annullata"];
-    var FINISHED = ["consegnata", "annullata"];
+    var STATUSES = Z.STATUSES;
+    var FINISHED = Z.FINISHED;
     var NETWORK_MESSAGE = "Il server non risponde. Controlla la connessione e riprova.";
     var LIVE_KEY = "cipressina.officina.vivo";
     var NOTEPAD_KEY = "cipressina.officina.appunti";
     var ZONE_IDLE_MS = 60 * 1000;
     var CONFIRM_MS = 6 * 1000;
     var REFRESH_MS = 30 * 1000;
+    // Neon's free compute sleeps only after 5 quiet minutes, and a screen
+    // reloading all day would use up its monthly hours. After this long
+    // untouched, the refresh only checks the session (no database) and the
+    // screen reloads on the next touch.
+    var IDLE_MS = 10 * 60 * 1000;
     var WEEKDAYS = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
     var SELF = document.currentScript;
@@ -208,9 +212,25 @@
         else if (where === "attendance") showAttendance();
     });
 
+    var lastTouch = Date.now();
+    function isIdle() { return Date.now() - lastTouch > IDLE_MS; }
+    // pointerup, not pointerdown: a reload landing between press and click would swap the card under the finger.
+    ["pointerup", "keyup"].forEach(function (type) {
+        document.addEventListener(type, function () {
+            var wasIdle = isIdle();
+            lastTouch = Date.now();
+            if (wasIdle && !holdRefresh && !document.hidden) refreshNow();
+        }, true);
+    });
+
     function startRefresh() {
         refreshTimer = window.setInterval(function () {
             if (holdRefresh || document.hidden) return;
+            // /me keeps Render awake, so the session in its memory survives, and notices the 23:00 end.
+            if (isIdle()) {
+                api("GET", "/api/staff/me").catch(function (err) { if (err.unauthorized || err.code === "not-shop") fail(err); });
+                return;
+            }
             refreshNow();
         }, REFRESH_MS);
     }

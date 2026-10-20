@@ -424,8 +424,8 @@ async function handleApi(req, res, pathname) {
    Every rule lives here and in server/db.js, never in the browser.
 -------------------------------------------------------------------------- */
 
-const STATUSES = new Set(['ricevuta', 'alaggio', 'trasporto', 'preparazione', 'verniciatura',
-    'antivegetativa', 'varo', 'pronta', 'consegnata', 'annullata']);
+// The list lives in src/zones.js (loaded by ./validate), shared with the panel.
+const STATUSES = new Set(globalThis.CIPRESSINA_ZONES.STATUSES);
 const STAFF_PATH = /^\/api\/staff\/requests\/([0-9]{10})$/;
 const OCCUPANCY_PATH = /^\/api\/staff\/requests\/([0-9]{10})\/occupancy$/;
 const WORKER_NOTE_PATH = /^\/api\/staff\/workers\/([A-Za-z]{2}[0-9]{5})\/note$/;
@@ -651,6 +651,9 @@ async function handleStaff(req, res, pathname, ip) {
         if (!auth.isConfigured() || !auth.hasLogins()) {
             return sendJson(res, 503, { error: 'Il pannello dell\'officina non è configurato su questo server.' });
         }
+        // Read before the checks: from check to count there must be no await, or
+        // logins sent together with slow bodies would all pass the checks first.
+        const body = requireObject(await readJsonBody(req));
         // Only failures count: the whole shop signs in from one address.
         const loginKey = `login:${rateKey(ip)}`;
         const failuresToday = dayCount(loginKey);
@@ -661,7 +664,6 @@ async function handleStaff(req, res, pathname, ip) {
         if (failures && Date.now() <= failures.resetAt && failures.count >= 5) {
             return sendJson(res, 429, { error: 'Troppi tentativi. Aspetta un minuto.' });
         }
-        const body = requireObject(await readJsonBody(req));
         // Both checks always run, and the answer does not say which failed, so
         // neither the timing nor the message tells a prober which codes exist.
         const workerId = auth.verifyLoginCode(body.workerId);
@@ -1100,18 +1102,21 @@ async function start() {
             ? `Workshop panel: /pgs/officina.html (${auth.listWorkerIds().length} workers)`
             : `Workshop panel off: missing ${missing.join(' and ')}.`);
     });
-}
 
-// An unhandled rejection ends the process in Node 20+; log it instead of taking the site down.
-process.on('unhandledRejection', (reason) => {
-    console.error(`[server] unhandled rejection: ${reason instanceof Error ? reason.stack : reason}`);
-});
-
-// Finish what is running before dropping the pool (Render sends SIGTERM on deploy and spin-down).
-for (const signal of ['SIGINT', 'SIGTERM']) {
-    process.on(signal, () => {
-        server.close(() => pool.end().then(() => process.exit(0)));
+    // An unhandled rejection ends the process in Node 20+; log it instead of taking the site down.
+    process.on('unhandledRejection', (reason) => {
+        console.error(`[server] unhandled rejection: ${reason instanceof Error ? reason.stack : reason}`);
     });
+
+    // Finish what is running before dropping the pool (Render sends SIGTERM on deploy and spin-down).
+    for (const signal of ['SIGINT', 'SIGTERM']) {
+        process.on(signal, () => {
+            server.close(() => pool.end().then(() => process.exit(0)));
+        });
+    }
 }
 
-start();
+// Started by `npm start`; a test only loads it (test/server.test.js).
+if (require.main === module) start();
+
+module.exports = { isPublic, clientIp, rateKey };

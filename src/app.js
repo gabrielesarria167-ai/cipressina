@@ -1930,7 +1930,7 @@
        8. Lookup (GET /api/requests/<code>)
        ================================================================== */
 
-    // Statuses (status.<id> in i18n.js) are the CHECK list in server/schema.sql.
+    // Statuses (status.<id> in i18n.js) are STATUSES in zones.js, the CHECK list in server/schema.sql.
     var lookupResult = null;     // what is on screen, so a language change can redraw it
     var lookupErrorKey = null;
     var lookupBusy = false;
