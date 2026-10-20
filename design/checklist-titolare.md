@@ -1,11 +1,11 @@
 # Cipressina Barche · Cosa serve dal titolare
 
-Questa è la checklist della bozza del sito barche (versione del 16/10/2026, ramo `yacht-boat-type`).
+Questa è la checklist del sito barche (versione del 20/10/2026, ramo `main`). Il sito è online su https://cipressina.onrender.com, e il pannello dell'officina è su https://cipressina.onrender.com/pgs/officina.html.
 
 Sul sito ogni dato segnaposto è in un riquadro giallo tratteggiato. Quando arriva il dato vero, si sostituisce il testo e si toglie il riquadro.
 
 - **Novità**: cosa è cambiato in questa versione.
-- **Parte A**: quattro decisioni, due sui prezzi e due sul servizio.
+- **Parte A**: cinque decisioni, due sui prezzi e tre sul servizio.
 - **Parte B**: i dati da fornire.
 - **Parte C**: il lavoro tecnico, che spetta a noi e non al titolare.
 
@@ -13,11 +13,11 @@ Sul sito ogni dato segnaposto è in un riquadro giallo tratteggiato. Quando arri
 
 ## Novità di questa versione
 
-- **Yacht al posto di flybridge.** Il tipo «Flybridge» non c'è più: al suo posto c'è «Yacht» (motoryacht, flybridge, navetta, trawler), perché quasi tutte le barche che lavorate sono yacht. Il modello 3D è uno yacht flybridge di 18 m. Ha queste zone: opera viva, linea di galleggiamento, le due fiancate, specchio di poppa, coperta, sovrastruttura e fly. Eliche e timone non si possono scegliere, perché il modello non li ha.
-- **Solo zona di Venezia.** Il modulo non chiede più regione, provincia o Paese. Sotto «Porto o località» c'è scritto «Solo zona di Venezia».
-- **Carrozzeria o cantiere.** Quando il cliente scrive la lunghezza, il modulo gli dice dove si fa il lavoro. Fino a 8 m si fa in carrozzeria a Olmo di Martellago, oltre si fa in cantiere. Il limite e il cantiere sono da confermare (A3 e B2).
-- **Telefono.** Il campo accetta un numero italiano oppure un numero estero con il prefisso (+33…), per i proprietari stranieri.
-- **Modello 3D.** Il pulsante «Mostra/Nascondi acqua» è stato tolto: l'acqua si vede sempre. I passaggi tra le viste ora seguono un percorso continuo, senza capriole.
+- **Il sito è online.** Il modulo invia davvero la richiesta: il server la salva in un database, con il preventivo calcolato in quel momento, e dà al cliente un codice di 10 cifre. «Verifica la tua richiesta» mostra lo stato vero della barca.
+- **Il pannello dell'officina** (solo in italiano). Si entra con una password, in due modi:
+  - **dal computer dell'officina.** Ci sono le schede della squadra, con foto e nome. Ognuno tocca il suo nome, e il suo PIN se ce l'ha, per iniziare o finire il turno e per vedere le sue barche e le sue presenze. Ci sono anche «Cose da fare», la lista condivisa, e «Barche in officina», dove si assegna ogni barca a una o due persone in turno e se ne cambia lo stato;
+  - **come titolare.** Vede gli avvisi (ritardi, assenze, straordinari, turni da completare) e la squadra in quel momento, con le barche di ognuno. Può scrivere una nota a ogni dipendente. In «Presenze» vede la settimana, il mese o un periodo a scelta, e può stampare o scaricare il file per Excel. Lì imposta anche foto, orario e PIN di ognuno.
+- **Regole dei turni.** Un turno di meno di 5 minuti non viene salvato. Un turno rimasto aperto si chiude da solo dopo 12 ore o alle 23:00, e poi il titolare indica l'ora vera di uscita.
 
 ---
 
@@ -68,6 +68,13 @@ Ora è facoltativo. Se è obbligatorio, sapete sempre se la barca è nella zona 
 - [ ] No, resta facoltativo (come adesso).
 
 > Dove si cambia: `pgs/preventivo.html` (campo `location`) e una nuova regola in `src/app.js` (`defineRules`).
+
+### A5. L'attesa alla prima visita
+
+Il sito usa i piani gratuiti di Render e di Neon. Dopo 15 minuti senza visite il server si spegne, e il primo cliente che arriva dopo aspetta fino a un minuto prima di vedere la pagina. Con un piano a pagamento di Render il server resta sempre acceso (il prezzo è da verificare sul sito di Render).
+
+- [ ] Va bene così, per ora.
+- [ ] Passiamo a un piano a pagamento.
 
 ---
 
@@ -170,18 +177,40 @@ Il vecchio sito diceva «Via N. Sauro, 15». La scheda di Google Maps dice «Via
 | Dove trovare il codice colore o gelcoat: «Spesso è nel manuale del cantiere. Da verificare.» | `src/i18n.js:176` | ______ |
 | «Oltre i 10 m le unità da diporto vanno immatricolate» (è una frase legale, va controllata) | `src/i18n.js:235` | ______ |
 
+### B6. Pannello dell'officina
+
+**Gli stati della barca.** Il cliente li vede in «Verifica la tua richiesta», e l'officina li cambia nel pannello. Per ora sono segnaposto (`src/zones.js`, `STATUSES`, e `server/schema.sql`):
+
+Ricevuta → Alaggio → Trasporto → Preparazione → Verniciatura → Antivegetativa → Varo → Pronta → Consegnata, più Annullata.
+
+- [ ] Vanno bene così.
+- [ ] Da cambiare: ______________________________
+
+**La squadra.** Ora nel pannello ci sono 40 dipendenti di prova.
+
+- [ ] L'elenco vero, con nome e cognome di ognuno. Il codice interno (due lettere e cinque cifre, per esempio AB12345) lo diamo noi.
+- [ ] Il codice con cui il computer dell'officina entra nel pannello. Ora è «OFFICINA», provvisorio.
+- [ ] Dopo: il titolare imposta nel pannello la foto, l'orario e il PIN di ognuno («Presenze» → «Foto, orario e PIN»).
+
+> L'elenco non va nel codice, che è pubblico: si scrive nelle impostazioni di Render (`CIPRESSINA_WORKER_IDS`, vedi `render.yaml`).
+
 ---
 
 ## C. Lavoro tecnico (spetta a noi)
 
-- [x] **Invio della richiesta.** Il modulo invia la richiesta al server (`server/server.js`), che la salva nel database Neon con il preventivo calcolato in quel momento. Manca la messa online su Render (vedi README, «First deploy»). Le email di conferma non ci sono ancora.
-- [x] **Verifica della richiesta.** «Verifica la tua richiesta» legge lo stato vero dal database. Gli stati (Ricevuta, Alaggio, …) sono ancora da confermare con il titolare, e per ora nessuno può cambiarli: servirà il pannello dell'officina.
-- [ ] **Informativa sulla privacy.** Va messo il link all'informativa vera (`src/i18n.js:551`).
+- [x] **Invio della richiesta.** Il modulo invia la richiesta al server, che è online su Render e la salva nel database Neon con il preventivo calcolato in quel momento.
+- [x] **Verifica della richiesta.** «Verifica la tua richiesta» legge lo stato vero dal database, e l'officina lo cambia dal pannello.
+- [x] **Pannello dell'officina.** È online (vedi «Novità»). Tiene il database a riposo quando nessuno lo tocca per 10 minuti, così le ore gratuite di Neon bastano per tutto il mese.
+- [ ] **Email.** Il cliente non riceve un'email di conferma, e l'officina non riceve un avviso quando arriva una richiesta: per ora la vede solo nel pannello. Per gli avvisi serve sapere a quale indirizzo mandarli.
+- [ ] **Informativa sulla privacy.** Il modulo raccoglie nome, telefono ed email, quindi serve il link all'informativa vera (`src/i18n.js:551`).
 - [ ] **Cookie della mappa.** La mappa di Google in «Contatti» carica cookie di terze parti. Prima della messa online serve il consenso ai cookie, oppure una mappa che si carica solo dopo un clic.
 - [ ] **Traduzioni.** Un madrelingua deve rivedere l'inglese, lo spagnolo e il francese, soprattutto i termini nautici segnati come non verificati in `src/zones.js:124`.
 - [ ] **Zone dei modelli 3D.** Le zone dello yacht sono divise in modo approssimativo. Vanno rifinite in Blender (`design/models/blend/yacht.blend`), come per gli altri modelli.
-- [ ] **Aggiornamenti.** A ogni modifica di script, stili o modelli va cambiato il numero di versione `?v=` in tutte e due le pagine, altrimenti i browser tengono i file vecchi (`src/CONTRACT.md`).
+- [ ] **GitHub Pages.** Pubblica ancora una copia del sito senza server, dove l'invio non funziona. Va spenta (Settings → Pages).
+- [ ] **Richiesta di prova.** Nel database c'è la richiesta 1596077196 («TEST / Da cancellare»). Va cancellata prima della messa online.
 - [ ] **Messa online.** Quando tutto è completo, va tolta la fascia gialla «Bozza di design» in alto su tutte e due le pagine (`index.html:12`, `pgs/preventivo.html:13`).
+
+Da ricordare a ogni modifica: va cambiato il numero di versione `?v=` dei file cambiati in tutte le pagine che li usano (`index.html`, `pgs/preventivo.html`, `pgs/officina.html`), altrimenti i browser tengono i file vecchi (`src/CONTRACT.md`).
 
 Questi restano così:
 

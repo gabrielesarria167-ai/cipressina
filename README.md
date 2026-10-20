@@ -54,8 +54,9 @@ Ported from autocolor's `attendance` branch and kept simple for the shop. It is 
   - **Boats list.** Look only.
   - **«Nuovo preventivo al banco».** Opens the public form for a customer at the counter.
 - **Shift rules** (server side): under 5 minutes a shift is not kept. After 12 hours, or at 23:00 in Rome, an open shift closes itself and waits for the owner to give the real exit time. Five wrong PINs within 5 minutes lock that worker's PIN until those 5 minutes are up (a new PIN from the owner unlocks it). The panel needs `npm run db:migrate` first: without its tables its routes answer 500, while the public site keeps working.
-- **Left out on purpose:** worker photos (the repository is public), autocolor's paint orders and discounts, and the old notepad import. The walk-in form is replaced by the public quote form.
-- **Locally:** add the four `CIPRESSINA_*` lines (see `render.yaml`) to `.env`, then open http://localhost:3000/pgs/officina.html. Tests: `npm test` (`test/attendance.test.js`).
+- **Photos:** the owner sets each worker's photo in «Foto, orario e PIN». The browser crops it to 480x600, and the server keeps it in Neon (`worker_photos`), never in the repository, which is public. Only a signed-in session can load it (`GET /api/staff/photo/<code>`).
+- **Left out on purpose:** autocolor's paint orders and discounts, and the old notepad import. The walk-in form is replaced by the public quote form.
+- **Locally:** add the four `CIPRESSINA_*` lines (see `render.yaml`) to `.env`, then open http://localhost:3000/pgs/officina.html. Tests: `npm test` (`test/`).
 
 ### First deploy (free plans)
 
@@ -64,6 +65,6 @@ Ported from autocolor's `attendance` branch and kept simple for the shop. It is 
 3. For the panel, also type `CIPRESSINA_STAFF_PASSWORD`, `CIPRESSINA_SHOP_ID`, `CIPRESSINA_BOSS_ID` and `CIPRESSINA_WORKER_IDS` in the service's Environment (see `render.yaml`).
 4. Every push redeploys. When `server/schema.sql` changes, repeat step 1's migrate.
 
-On the free plan the service sleeps after 15 idle minutes, and the first visit after that waits up to a minute. Neon's free compute also sleeps. Render's limit counters live in memory and reset when the service sleeps.
+On the free plan the service sleeps after 15 idle minutes, and the first visit after that waits up to a minute. Neon's free compute also sleeps, after 5 minutes without a query, and has about 400 hours a month. So after 10 untouched minutes the panel stops reading data (`IDLE_MS` in `src/staff.js`) and only checks its session, which needs no database. Render's limit counters live in memory and reset when the service sleeps.
 
 **GitHub Pages** still publishes `main` as a copy of the site with no API: there, sending a request answers «Il servizio non risponde». Turn Pages off (Settings → Pages) once Render is live.
