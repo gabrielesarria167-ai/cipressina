@@ -142,8 +142,9 @@ async function findRequest(id) {
    a browser, and «today» is Rome's calendar day, worked out by Postgres.
 -------------------------------------------------------------------------- */
 
-// Finished jobs: the list keeps only the newest 200 of them, the part that grows without end.
-const FINISHED = ['consegnata', 'annullata'];
+// Finished jobs (src/zones.js): the list keeps only the newest 200 of them, the part that grows without end.
+require('../src/zones.js');
+const { FINISHED } = globalThis.CIPRESSINA_ZONES;
 const STAFF_COLUMNS = `id, created_at, status, boat_type, builder, model, model_year, loa, registered,
                        registration, berth_kind, engine_hours, location, service_site, boat_name,
                        color_code, tier, zones, antifouling_color, estimate,
@@ -691,7 +692,7 @@ function describe() {
 
 module.exports = {
     createRequest, findRequest, ping, describe, pool, DATABASE_URL, unreachable,
-    listRequests, listOccupied, updateRequestStatus, occupyRequest, releaseRequest, FINISHED,
+    listRequests, listOccupied, updateRequestStatus, occupyRequest, releaseRequest,
     listWorkerNotes, setWorkerNote, clearWorkerNote,
     tidyShifts, listNewestPendingShifts, startShift, endShift, closeShift, listShifts, listPendingShifts,
     listTodayShifts, listShiftsBetween,
