@@ -1,0 +1,18 @@
+{
+  "name": "cipressina",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cipressina Barche: boat quote site and its API",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test",
+    "db:migrate": "node server/migrate.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}

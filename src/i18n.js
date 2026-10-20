@@ -472,6 +472,7 @@
         "¡Gracias! Con el código de abajo podrás consultar el estado de tu solicitud.",
         "Merci ! Le code ci-dessous vous permettra de suivre l'état de votre demande.");
     R("success.code", "Il tuo codice di monitoraggio", "Your tracking code", "Tu código de seguimiento", "Votre code de suivi");
+    // success.demo, success.demoNote.h, lookup.res.sample, lookup.demoNote.h: only the design/sketches use them.
     R("success.demo", "codice dimostrativo", "demo code", "código de demostración", "code de démonstration");
     R("success.demoNote.h",
         "Questa è una bozza di design: <span class=\"ph\">nessuna richiesta è stata davvero inviata.</span>",
@@ -479,6 +480,22 @@
         "Esto es un borrador de diseño: <span class=\"ph\">no se ha enviado ninguna solicitud de verdad.</span>",
         "Ceci est une maquette : <span class=\"ph\">aucune demande n'a réellement été envoyée.</span>");
     R("success.lookup", "Verifica la tua richiesta", "Check your request", "Consulta tu solicitud", "Suivre votre demande");
+    // A failed send (src/app.js sendErrorKey), shown under the main button.
+    R("send.err.busy",
+        "Abbiamo ricevuto troppe richieste dalla tua connessione. Riprova più tardi o scrivici su WhatsApp.",
+        "We've had too many requests from your connection. Try again later or message us on WhatsApp.",
+        "Hemos recibido demasiadas solicitudes desde tu conexión. Inténtalo más tarde o escríbenos por WhatsApp.",
+        "Nous avons reçu trop de demandes depuis votre connexion. Réessayez plus tard ou écrivez-nous sur WhatsApp.");
+    R("send.err.bad",
+        "Alcuni dati non sono stati accettati. Ricarica la pagina, controlla i passaggi e riprova.",
+        "Some details weren't accepted. Reload the page, check the steps and try again.",
+        "Algunos datos no se han aceptado. Recarga la página, revisa los pasos e inténtalo de nuevo.",
+        "Certaines données n'ont pas été acceptées. Rechargez la page, vérifiez les étapes et réessayez.");
+    R("send.err.down",
+        "Il servizio non risponde in questo momento. Riprova tra un minuto: la richiesta non è ancora stata salvata.",
+        "The service isn't answering right now. Try again in a minute: your request hasn't been saved yet.",
+        "El servicio no responde en este momento. Inténtalo de nuevo en un minuto: tu solicitud aún no se ha guardado.",
+        "Le service ne répond pas pour le moment. Réessayez dans une minute : votre demande n'a pas encore été enregistrée.");
 
     R("lookup.title", "Verifica la tua richiesta", "Check your request", "Consulta tu solicitud", "Suivre votre demande");
     R("lookup.sub", "Inserisci il codice di 10 cifre che hai ricevuto.", "Enter the 10-digit code you received.", "Introduce el código de 10 dígitos que recibiste.", "Saisissez le code à 10 chiffres que vous avez reçu.");
@@ -486,6 +503,8 @@
     R("lookup.submit", "Verifica", "Check", "Consultar", "Vérifier");
     R("lookup.busy", "Verifica in corso…", "Checking…", "Consultando…", "Vérification…");
     R("lookup.err", "Il codice ha 10 cifre. Controllalo e riprova.", "The code has 10 digits. Check it and try again.", "El código tiene 10 dígitos. Revísalo e inténtalo de nuevo.", "Le code comporte 10 chiffres. Vérifiez-le et réessayez.");
+    R("lookup.notFound", "Nessuna richiesta con questo codice. Controllalo e riprova.", "No request has this code. Check it and try again.", "No hay ninguna solicitud con este código. Revísalo e inténtalo de nuevo.", "Aucune demande ne correspond à ce code. Vérifiez-le et réessayez.");
+    R("lookup.down", "Non riusciamo a verificare adesso. Riprova tra un minuto.", "We can't check right now. Try again in a minute.", "No podemos consultarlo ahora. Inténtalo de nuevo en un minuto.", "Impossible de vérifier pour le moment. Réessayez dans une minute.");
     R("lookup.res.code", "Codice", "Code", "Código", "Code");
     R("lookup.res.boat", "Barca", "Boat", "Barco", "Bateau");
     R("lookup.res.name", "Intestatario", "Owner", "Titular", "Titulaire");
@@ -496,7 +515,7 @@
         "Demo result: <span class=\"ph\">real statuses and data still to be connected.</span>",
         "Resultado de demostración: <span class=\"ph\">estados y datos reales por conectar.</span>",
         "Résultat de démonstration : <span class=\"ph\">statuts et données réels à raccorder.</span>");
-    // Demo statuses (flow-spec §7 #9); the real vocabulary is a placeholder.
+    // Request statuses: the CHECK list in server/schema.sql. The vocabulary is a placeholder until the owner confirms it.
     R("status.ricevuta", "Ricevuta", "Received", "Recibida", "Reçue");
     R("status.alaggio", "Alaggio", "Haul-out", "Puesta en seco", "Mise à terre");
     R("status.trasporto", "Trasporto", "Transport", "Transporte", "Transport");

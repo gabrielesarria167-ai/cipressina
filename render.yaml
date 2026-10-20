@@ -1,0 +1,67 @@
+# Deploy on Render (https://render.com): one web service serves the site and
+# the API from the same origin. The database is Neon (https://neon.tech),
+# separate; both on their free plans.
+#
+# Free plan, so: the service sleeps after 15 idle minutes and the next
+# visitor waits up to a minute while it wakes (Neon's free compute also
+# sleeps; server/db.js retries the connection). The rate-limit counters live
+# in memory and reset on every deploy and every sleep.
+#
+# The schema is NOT applied here: `npm run db:migrate`, by hand, from the
+# work machine (see server/migrate.js).
+
+services:
+  - type: web
+    name: cipressina
+    runtime: node
+    plan: free
+    # Frankfurt, next to a Neon project in AWS eu-central-1 (Frankfurt): the
+    # round trips between the app and the database dominate response time.
+    region: frankfurt
+    branch: main
+    buildCommand: npm ci
+    startCommand: npm start
+    # Answers without touching the database (server/server.js).
+    healthCheckPath: /healthz
+    autoDeploy: true
+
+    envVars:
+      # Render only sees a process bound to 0.0.0.0; it provides PORT itself.
+      - key: HOST
+        value: "0.0.0.0"
+
+      # The proxies in front that append to X-Forwarded-For (client,
+      # Cloudflare, Render's router). Measured on this service on 2026-10-19:
+      # the «[requests] new request» log line said «x-forwarded-for hops 3».
+      # If that number ever differs from this one, the rate limits count
+      # visitors wrong: change it here.
+      - key: TRUST_PROXY
+        value: "3"
+
+      # The Neon URL, typed by hand in Render's dashboard (never in the repo):
+      # the direct one, with sslmode=verify-full and no channel_binding.
+      - key: DATABASE_URL
+        sync: false
+
+      # ---- The workshop panel (pgs/officina.html, server/auth.js) ----------
+      # Typed by hand in Render's dashboard: the repository is public, and
+      # between them these say who works at the shop. All read once at
+      # startup, so changing one means a restart. Without the password, or
+      # with neither login code, the panel answers 503 and stays off.
+      #
+      # The shared password, for the shop's login and the owner's.
+      - key: CIPRESSINA_STAFF_PASSWORD
+        sync: false
+      # The shop computer's login, «CODE:Name», e.g. OFFICINA:Officina.
+      - key: CIPRESSINA_SHOP_ID
+        sync: false
+      # The owner's login, same shape, e.g. TITOLARE:Mario Rossi.
+      - key: CIPRESSINA_BOSS_ID
+        sync: false
+      # The workers, «AB12345:Anna Bianchi,CD67890:Luca Verdi»: initials and
+      # five digits. They do not log in; the shop names them on each action.
+      - key: CIPRESSINA_WORKER_IDS
+        sync: false
+      # The site is https, so the session cookie travels Secure.
+      - key: CIPRESSINA_STAFF_COOKIE_SECURE
+        value: "1"

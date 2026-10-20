@@ -116,7 +116,7 @@ Ora è facoltativo. Se è obbligatorio, sapete sempre se la barca è nella zona 
 
 | Dato | Segnaposto attuale | Dove | Dato vero |
 |---|---|---|---|
-| Orari di apertura | Fatto: lun–ven 07:15–12:30 e 13:30–19:15, sab 07:30–12:00, dom chiuso, presi dalla scheda di Google Maps (16/10/2026) | `src/i18n.js:518` | ✓ |
+| Orari di apertura | Fatto: lun–ven 07:15–12:30 e 13:30–19:15, sab 07:30–12:00, dom chiuso, presi dalla scheda di Google Maps (16/10/2026) | `src/i18n.js:537` | ✓ |
 | Numero WhatsApp | Fatto: +39 339 181 0099, preso dal pulsante WhatsApp del vostro sito, con lo stesso aspetto e lo stesso messaggio precompilato | `index.html` (pulsante e «Contatti») | ✓ |
 | Tempo per inviare il preventivo | «entro 24 ore» | `src/i18n.js:119` | ______ |
 | Tempi di risposta | «da confermare» | `src/site.js:46` | ______ |
@@ -127,7 +127,7 @@ Ora è facoltativo. Se è obbligatorio, sapete sempre se la barca è nella zona 
 
 ### B3. Domande frequenti
 
-Le 8 risposte dicono tutte «Risposta da confermare con l'officina» (`src/i18n.js:550`).
+Le 8 risposte dicono tutte «Risposta da confermare con l'officina» (`src/i18n.js:569`).
 
 1. **Quanto dura un lavoro?**
    ______________________________
@@ -174,9 +174,9 @@ Il vecchio sito diceva «Via N. Sauro, 15». La scheda di Google Maps dice «Via
 
 ## C. Lavoro tecnico (spetta a noi)
 
-- [ ] **Invio della richiesta.** Ora il modulo non invia niente: registra la richiesta solo nel browser (`src/app.js:1703`). Va collegato a un servizio email o a un piccolo backend. La richiesta contiene già il campo `serviceSite` (carrozzeria o cantiere).
-- [ ] **Verifica della richiesta.** La pagina «Verifica la tua richiesta» e il codice di monitoraggio sono una dimostrazione (`src/app.js:1923`). Vanno collegati a stati reali.
-- [ ] **Informativa sulla privacy.** Va messo il link all'informativa vera (`src/i18n.js:532`).
+- [x] **Invio della richiesta.** Il modulo invia la richiesta al server (`server/server.js`), che la salva nel database Neon con il preventivo calcolato in quel momento. Manca la messa online su Render (vedi README, «First deploy»). Le email di conferma non ci sono ancora.
+- [x] **Verifica della richiesta.** «Verifica la tua richiesta» legge lo stato vero dal database. Gli stati (Ricevuta, Alaggio, …) sono ancora da confermare con il titolare, e per ora nessuno può cambiarli: servirà il pannello dell'officina.
+- [ ] **Informativa sulla privacy.** Va messo il link all'informativa vera (`src/i18n.js:551`).
 - [ ] **Cookie della mappa.** La mappa di Google in «Contatti» carica cookie di terze parti. Prima della messa online serve il consenso ai cookie, oppure una mappa che si carica solo dopo un clic.
 - [ ] **Traduzioni.** Un madrelingua deve rivedere l'inglese, lo spagnolo e il francese, soprattutto i termini nautici segnati come non verificati in `src/zones.js:124`.
 - [ ] **Zone dei modelli 3D.** Le zone dello yacht sono divise in modo approssimativo. Vanno rifinite in Blender (`design/models/blend/yacht.blend`), come per gli altri modelli.
