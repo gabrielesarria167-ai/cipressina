@@ -53,25 +53,6 @@
 <section class="view" id="viewTeam" hidden>
   <div class="band"><h1 class="band__title" tabindex="-1">Oggi in officina</h1></div>
   <div class="page">
-    <section class="staff-section" aria-labelledby="crewTitle">
-      <div class="staff-section__head">
-        <h2 id="crewTitle">La squadra</h2>
-        <p class="note" id="crewSummary"></p>
-      </div>
-      <p class="note">Tocca la tua foto per iniziare o finire il turno e vedere le tue barche.</p>
-      <div class="field crew-search">
-        <label for="crewSearch">Cerca il tuo nome</label>
-        <input type="search" id="crewSearch" autocomplete="off" spellcheck="false">
-      </div>
-      <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
-      <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
-      <div class="crew-wrap">
-        <ul class="crew" id="crewList"></ul>
-        <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
-      </div>
-      <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
-    </section>
-
     <section class="staff-section" aria-labelledby="boardTitle">
       <div class="staff-section__head"><h2 id="boardTitle">Cose da fare</h2></div>
       <form class="board-form" id="boardForm" novalidate>
@@ -92,6 +73,25 @@
       <p class="field__error" id="boardError" role="alert" hidden></p>
       <ul class="board" id="boardList"></ul>
       <p class="note" id="boardEmpty" hidden>Niente da fare. Ottimo.</p>
+    </section>
+
+    <section class="staff-section" aria-labelledby="crewTitle">
+      <div class="staff-section__head">
+        <h2 id="crewTitle">La squadra</h2>
+        <p class="note" id="crewSummary"></p>
+      </div>
+      <p class="note">Tocca la tua foto per iniziare o finire il turno e vedere le tue barche.</p>
+      <div class="field crew-search">
+        <label for="crewSearch">Cerca il tuo nome</label>
+        <input type="search" id="crewSearch" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
+      <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
+      <div class="crew-wrap">
+        <ul class="crew" id="crewList"></ul>
+        <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
+      </div>
+      <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
     </section>
   </div>
   <div class="staff-dock">

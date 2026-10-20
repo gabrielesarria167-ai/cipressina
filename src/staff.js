@@ -67,25 +67,22 @@
         return b;
     }
     function pad(n) { return String(n).padStart(2, "0"); }
-    function initials(name) {
-        return String(name || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p.charAt(0); }).join("").toUpperCase();
-    }
     function nameOf(person) { return person ? person.name || person.workerId : ""; }
     // «Nicolò» -> «nicolo»: the search and the letters ignore accents and case.
     function fold(text) { return String(text).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 
-    // The worker's face, or their initials in the same frame when there is none
-    // (or it does not arrive).
+    // The worker's face, or the default user silhouette in the same frame when
+    // there is none (or it does not arrive).
+    var BLANK_FACE = '<svg class="photo__blank" viewBox="0 0 40 50" aria-hidden="true" focusable="false">' +
+        '<circle cx="20" cy="20" r="8.5"/><path d="M3 50c0-10.5 7.6-17 17-17s17 6.5 17 17z"/></svg>';
     function photoFrame(worker) {
         var frame = el("span", "photo");
-        var initialsEl = el("span", "photo__initials", initials(nameOf(worker)));
-        initialsEl.setAttribute("aria-hidden", "true");
-        if (!worker.photo) { frame.appendChild(initialsEl); return frame; }
+        if (!worker.photo) { frame.innerHTML = BLANK_FACE; return frame; }
         var img = el("img");
         img.alt = "";
         img.loading = "lazy";
         img.src = "/api/staff/photo/" + worker.workerId + "?v=" + worker.photo;
-        img.addEventListener("error", function () { if (img.parentNode) frame.replaceChild(initialsEl, img); });
+        img.addEventListener("error", function () { frame.innerHTML = BLANK_FACE; });
         frame.appendChild(img);
         return frame;
     }
@@ -315,14 +312,18 @@
     });
 
     byId("staffOut").addEventListener("click", function () {
-        // From any screen but home, «Esci» goes home; from home it logs out.
+        // From any screen but home it goes home («Torna…»); from home, «Esci» logs out.
         if (view !== "team" && view !== "profile") return goHome();
         api("POST", "/api/staff/logout").catch(function () { /* the point is to stop showing data */ });
         showLogin();
     });
 
+    // A worker's screen leaves through «Fatto, esci» only: a second way back read as «start the shift».
     function paintOutButton() {
-        byId("staffOut").textContent = view === "team" || view === "profile" ? "Esci" : "Inizio";
+        var out = byId("staffOut");
+        show(out, view !== "zone");
+        out.textContent = view === "team" || view === "profile" ? "Esci"
+            : viewer && viewer.isBoss ? "Torna al pannello" : "Torna all'officina";
     }
 
     /* ---------- the PIN pad ---------- */
@@ -1247,7 +1248,7 @@
         return card;
     }
 
-    // «A che ora è uscito?»: the day (the start's, prefilled) and the time
+    // «A che ora è uscito?»: the day (the start's, preselected) and the time
     // (empty on purpose: closing at the moment he notices would credit the
     // night). `allowNow` adds «Chiudi adesso» for an open shift.
     function exitForm(shift, allowNow, onCancel, inDialog) {
@@ -1256,22 +1257,37 @@
         form.noValidate = true;
         var fields = el("div", "exit-form__fields");
         var dayField = el("div", "field");
-        var dayInput = el("input");
-        dayInput.type = "date";
-        dayInput.value = inputDay(shift.startedAt);
+        // The start's day or the next one (a shift closes itself within 12 hours),
+        // never a day still to come; a list so it reads dd/mm/yyyy on any computer.
+        var dayInput = el("select");
+        var day = new Date(shift.startedAt);
+        for (var i = 0; i < 2 && inputDay(day) <= inputDay(Date.now()); i++) {
+            dayInput.appendChild(new Option(day.toLocaleDateString("it-IT", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }), inputDay(day)));
+            day.setDate(day.getDate() + 1);
+        }
         dayInput.id = "exitDay" + shift.id + (inDialog ? "d" : "");
         var dayLabel = el("label", "", "Giorno di uscita");
         dayLabel.htmlFor = dayInput.id;
         dayField.appendChild(dayLabel);
         dayField.appendChild(dayInput);
         var timeField = el("div", "field");
-        var timeInput = el("input");
-        timeInput.type = "time";
+        // Two lists, not <input type="time">: that one follows the computer's
+        // 12/24 h setting and stays empty until the minutes are typed too.
+        var timeInput = el("select");
         timeInput.id = "exitTime" + shift.id + (inDialog ? "d" : "");
+        timeInput.appendChild(new Option("--", ""));
+        var minuteInput = el("select");
+        minuteInput.setAttribute("aria-label", "Minuti");
+        for (var h = 0; h < 24; h++) timeInput.appendChild(new Option(pad(h), pad(h)));
+        for (var m = 0; m < 60; m++) minuteInput.appendChild(new Option(pad(m), pad(m)));
         var timeLabel = el("label", "", "Ora di uscita");
         timeLabel.htmlFor = timeInput.id;
+        var timeRow = el("div", "exit-form__time");
+        timeRow.appendChild(timeInput);
+        timeRow.appendChild(el("span", "", ":"));
+        timeRow.appendChild(minuteInput);
         timeField.appendChild(timeLabel);
-        timeField.appendChild(timeInput);
+        timeField.appendChild(timeRow);
         fields.appendChild(dayField);
         fields.appendChild(timeField);
         form.appendChild(fields);
@@ -1300,7 +1316,7 @@
 
         function chosen() {
             if (!dayInput.value || !timeInput.value) return null;
-            var end = new Date(dayInput.value + "T" + timeInput.value);
+            var end = new Date(dayInput.value + "T" + timeInput.value + ":" + minuteInput.value);
             return isNaN(end.getTime()) ? null : end;
         }
         function paintPreview() {
@@ -1310,8 +1326,9 @@
             preview.textContent = seconds < 0 ? "L'uscita è prima dell'inizio."
                 : "Durata: " + formatDuration(seconds) + (seconds < squad.shifts.minimumSeconds ? ". Meno di 5 minuti: il turno verrà cancellato." : "");
         }
-        dayInput.addEventListener("input", paintPreview);
-        timeInput.addEventListener("input", paintPreview);
+        dayInput.addEventListener("change", paintPreview);
+        timeInput.addEventListener("change", paintPreview);
+        minuteInput.addEventListener("change", paintPreview);
 
         function send(end) {
             error.hidden = true;

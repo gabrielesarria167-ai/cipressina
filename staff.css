@@ -13,7 +13,7 @@
 .staff-who { font-weight: 700; text-transform: uppercase; font-size: .9375rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .staff-clock { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
 /* styles.css hides the header's quote button on small screens; the panel's «Esci» must stay. */
-.staff .hdr > .btn { display: inline-flex; min-height: 44px; }
+.staff .hdr > .btn { display: inline-flex; min-height: 44px; white-space: nowrap; }
 .staff .hdr > .btn[hidden] { display: none; }
 @media (max-width: 520px) { .staff-clock { display: none; } }
 
@@ -64,16 +64,18 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 .crew-card {
   display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 100%; height: 100%; padding: 0 0 16px; overflow: hidden;
   background: #fff; border: 1px solid var(--input-border); border-top: 4px solid var(--border); border-radius: 4px;
-  text-align: center; color: var(--text);
+  text-align: center; color: var(--text); position: relative;
 }
 .crew-card:hover { border-color: var(--primary); }
-.crew-card.is-on { border-top-color: var(--green); }
+/* On shift: green on all four sides. The extra 3px are drawn inside, so the card keeps the photo and name where the others have them. */
+.crew-card.is-on { border-color: var(--green); background: #eef8f2; }
+.crew-card.is-on::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--green); border-top: 0; pointer-events: none; }
 .photo {
   display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px;
   background: var(--primary-soft); color: var(--primary-dark);
 }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.photo__initials { font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: .02em; }
+.photo__blank { width: 100%; height: 100%; fill: currentColor; opacity: .3; }
 .crew-card .photo { margin-bottom: 8px; border-radius: 0; }
 .crew-card > :not(.photo) { padding-inline: 12px; }
 .crew-card__name { font-weight: 700; font-size: 1.375rem; line-height: 1.2; overflow-wrap: anywhere; }
@@ -103,7 +105,6 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 /* The owner's photo field: the preview at the size of a small card. */
 .settings-photo { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .settings-photo .photo { width: 120px; }
-.settings-photo .photo__initials { font-size: 2.25rem; }
 .settings-photo .note { margin: 8px 0 0; max-width: 32ch; }
 #settingsPhoto:focus-visible + label { outline: 3px solid #80bdff; outline-offset: 2px; }
 .timer { font-variant-numeric: tabular-nums; }
@@ -217,6 +218,8 @@ th { text-align: left; font-size: .8125rem; text-transform: uppercase; color: va
 .exit-form { display: grid; gap: 8px; }
 .exit-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .exit-form .note, .exit-form .field__error { margin: 0; }
+.exit-form__time { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.exit-form__time select { flex: 1; min-width: 0; }
 .note-editor { display: grid; gap: 8px; }
 .note-editor .note { margin: 0; }
 .history summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 44px; }
