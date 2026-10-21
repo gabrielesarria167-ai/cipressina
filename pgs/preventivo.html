@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preventivo barca | Cipressina Barche</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="../styles.css?v=2026-10-19a">
+<link rel="stylesheet" href="../styles.css?v=2026-10-21a">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
@@ -138,11 +138,26 @@
             <p id="yearError" class="field__error" role="alert" hidden></p>
           </div>
 
+          <div class="field wide">
+            <span id="lenUnitLabel" class="flabel" data-i18n="fld.unit"></span>
+            <div id="lenUnit" role="radiogroup" aria-labelledby="lenUnitLabel">
+              <button type="button" role="radio" aria-checked="false" data-value="ft" data-i18n="opt.unit.ft"></button>
+              <button type="button" role="radio" aria-checked="false" data-value="m" data-i18n="opt.unit.m"></button>
+            </div>
+          </div>
+
           <div class="field">
             <label for="loa" data-i18n="fld.loa"></label>
-            <div class="affixed"><input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix">m</span></div>
+            <div class="affixed"><input id="loa" type="text" inputmode="decimal" autocomplete="off"><span class="affix" data-unit>ft</span></div>
             <p id="loaHint" class="field__hint" data-i18n="hint.loa"></p>
             <p id="loaError" class="field__error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="beam" data-i18n="fld.beam"></label>
+            <div class="affixed"><input id="beam" type="text" inputmode="decimal" autocomplete="off"><span class="affix" data-unit>ft</span></div>
+            <p id="beamHint" class="field__hint" data-i18n="hint.beam"></p>
+            <p id="beamError" class="field__error" role="alert" hidden></p>
           </div>
 
           <div class="field wide">
@@ -307,11 +322,38 @@
           <p id="zonesEmpty" data-i18n="sum.empty"></p>
           <ul id="zonesList"></ul>
           <button type="button" id="zonesClear" data-i18n="btn.removeAll" hidden></button>
-          <p id="zonesNudge" hidden></p>
+          <div id="jobOptions" hidden>
+            <h3 data-i18n="opt.title"></h3>
+            <div id="optPainted">
+              <div class="field">
+                <label for="optFinish" data-i18n="fld.finish"></label>
+                <select id="optFinish">
+                  <option value="pastello" data-i18n="opt.finish.pastello"></option>
+                  <option value="metallizzato" data-i18n="opt.finish.metallizzato"></option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="optRepair" data-i18n="fld.repair"></label>
+                <select id="optRepair">
+                  <option value="stuccature" data-i18n="opt.repair.stuccature"></option>
+                  <option value="resinatura" data-i18n="opt.repair.resinatura"></option>
+                  <option value="gravose" data-i18n="opt.repair.gravose"></option>
+                </select>
+              </div>
+            </div>
+            <div class="field" id="optBottom" hidden>
+              <label for="optBottomWork" data-i18n="fld.bottomWork"></label>
+              <select id="optBottomWork">
+                <option value="antivegetativa" data-i18n="opt.bottom.antivegetativa"></option>
+                <option value="sabbiatura" data-i18n="opt.bottom.sabbiatura"></option>
+              </select>
+            </div>
+            <label class="check" id="optNonSlipRow" hidden><input type="checkbox" id="optNonSlip"><span data-i18n="opt.nonSlip"></span></label>
+            <label class="check" id="optHardwareRow" hidden><input type="checkbox" id="optHardware"><span data-i18n="opt.hardware"></span></label>
+          </div>
           <div id="estimate" hidden>
             <p id="estPackageRow" hidden><span id="estPackageLabel"></span> <span id="estPackage"></span></p>
             <p id="estSubtotalRow"><span data-i18n="sum.subtotal"></span> <span id="estSubtotal"></span></p>
-            <p id="estDiscountRow"><span id="estDiscountLabel"></span> <span id="estDiscount"></span></p>
             <p><span data-i18n="sum.total"></span> <strong id="estTotal" aria-live="polite"></strong></p>
             <p id="estNote"></p>
           </div>
@@ -413,9 +455,9 @@
   </div>
 </footer>
 
-<script src="../src/site.js?v=2026-10-19a" defer></script>
-<script src="../src/zones.js?v=2026-10-20a" defer></script>
-<script src="../src/i18n.js?v=2026-10-19a" defer></script>
-<script src="../src/app.js?v=2026-10-19a" defer></script>
+<script src="../src/site.js?v=2026-10-21a" defer></script>
+<script src="../src/zones.js?v=2026-10-21a" defer></script>
+<script src="../src/i18n.js?v=2026-10-21a" defer></script>
+<script src="../src/app.js?v=2026-10-21a" defer></script>
 </body>
 </html>

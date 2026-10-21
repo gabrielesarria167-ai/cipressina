@@ -50,7 +50,6 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | `.is-current` / `.is-done` + `aria-current="step"` | `#wizProgress li` | progress state |
 | `.is-invalid` | `.field` wrapper | field has an error |
 | `[aria-invalid="true"]` | the control (or the radiogroup) | field has an error |
-| `.is-maxed` | `#zonesNudge` | maximum discount reached (solid instead of dashed) |
 | `.is-open` + `aria-expanded` | `#menuToggle`, `#navPanel` | mobile menu open |
 | `.is-copied` | `[data-copy]` button | «Copiato!» for 2 s |
 | `.is-3d` / `.is-fallback` | `#heroBoat` | 3D mounted / import or WebGL failed (SVG poster stays) |
@@ -66,7 +65,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 - `data-i18n-html="key.h"` sets `innerHTML` (only the shared `.h` keys, which contain `<span class="ph">`).
 - `data-i18n-attr="aria-label:key;placeholder:key2"` sets attributes.
 - `data-i18n-params='{"n":4}'` optional parameters for the three above.
-- **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#menuToggle`, `#zonesCount`, `#zonesNudge`, `#estimate *`, `#qlWord`, `#qlBefore`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
+- **Do not** put `data-i18n` on elements whose text `app.js` manages: `#stepNext`, `#menuToggle`, `#zonesCount`, `#estimate *`, `#qlWord`, `[data-tier-from]`, `#heroSwatchName`, `#modelSource`, `#modelAutofill`, `#antifoulingName`, `#zonesList` rows, `#successCode`, `#result*`, `#lookupError`, `.field__error`, `#stepHint`, `[data-progress-sr]`, `#boatError`.
 - Shared keys: see `src/i18n.js` (nav, buttons, wizard, fields, errors, tiers, viewer, summary, price sentence, success, lookup, statuses, contact labels, FAQ questions + `faq.a.h`, boat types `type.<id>`, swatches `sw.<id>`, ribbon, footer `foot.vat`). Page copy goes under the page's own key prefix.
 
 ## 2. Chrome (every view)
@@ -93,7 +92,7 @@ Up to three containers, switched with `hidden` by the router (a page contains on
 
 Router, with `#view-home` present: `#preventivo` → wizard (single-page sketch only), `#stato` → lookup, `""` → home, any other plain hash → home then scroll to that id. Without `#view-home` (`preventivo.html`): `#stato` → lookup, anything else → wizard (the step from `history.state`, else the last step shown). On `index.html` (no wizard) an old `#preventivo` / `#stato` link is redirected to `pgs/preventivo.html`. The step is in `history.state`, not in the URL; the wizard URL is the plain page URL (`location.pathname`).
 
-Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. The wizard page reads both once at load (tier must be in `Z.PACKAGE_CHOICES`, i.e. a package or `nessuno`; length within 2.5..30 m), applies them to step 1/2 and removes the query with `history.replaceState`.
+Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. The wizard page reads both once at load (tier must be in `Z.PACKAGE_CHOICES`, i.e. a package or `nessuno`; length in metres within 2.5..30), shows the length in the current unit, applies them to step 1/2 and removes the query with `history.replaceState`.
 
 ### 3.1 Home
 
@@ -117,20 +116,18 @@ Price sentence (the true default result as static HTML):
 |---|---|---|
 | Form | `form#quoteLine` | submit sets the wizard finish + length, goes to `pgs/preventivo.html?pacchetto=<tier>&loa=<m>` (or `#preventivo` in the single-page sketch) |
 | Count | `select#qlCount` | options `value` 1..6 |
-| Length | `select#qlLoa` | options `value` in metres (5, 6, 8, 10, 12, 15), text «8 m» |
+| Length | `select#qlLoa` | options `value` in metres (5, 6, 8, 10, 12, 15), text feet first, «26 ft (8 m)» |
 | Tier | `select#qlTier` | options `base`, `completo`, `premium`, `nessuno`, text via `data-i18n="ql.opt.<id>"` («con il Pacchetto Base» … «senza pacchetto»); the sketches still use `tier.<id>.name` after `ql.mid2` |
 | Word | `#qlWord` | App writes «zona/zone» |
-| Total | `#qlTotal` (an `<output>`/span) | App writes the formatted price. Wrap in `.ph` |
-| Before | `#qlBefore` | App writes `<s>1.800 €</s> senza lo sconto del 5% …` (package + zones before the discount), hidden when no discount |
+| Total | `#qlTotal` (an `<output>`/span) | App writes the formatted price: the package plus that many topsides of a «cabinato» with a typical beam (`Z.typicalBeam`, about LOA / 3). Wrap in `.ph` |
 | Sentence pieces | `data-i18n` keys `ql.pre`, `ql.mid1`, `ql.afterLoa`, `ql.post`; visually-hidden labels `ql.countLabel`, `ql.loaLabel`, `ql.tierLabel`; button `ql.cta` | R, in this order: pre, count, word, mid1, loa, afterLoa, tier, post, total |
 
-Tiers and discount list:
+Tiers:
 
 | Element | Hook | Notes |
 |---|---|---|
 | Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 55 € al metro (minimo 350 €)» from `PACKAGES` in zones.js. Wrap in `.ph` |
 | Tier choose link | `<a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base">` | O: preselects the finish in the wizard |
-| Discount list | `ul#discountList` | App replaces the children with `li.discount-step > span.discount-step__zones + strong.discount-step__rate`, from `DISCOUNT_STEPS`. Static `<li>`s inside are the no-JS fallback |
 
 Other sections (Servizi, Come funziona, Interventi, Galleria, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `galleria`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
 
@@ -195,9 +192,11 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `builder` | `input type=text list="builderList"` | + `<datalist id="builderList">` (empty, App fills) |
 | `model` | `input type=text list="modelList"` | + `<datalist id="modelList">` (empty, App fills; filtered by builder) |
 | `modelSource` | `<a target="_blank" rel="noopener" hidden>` | O. App writes «dati da beneteau.com» and `href` when a known model pre-fills length/type |
-| `modelAutofill` | `<p class="field__hint" role="status" aria-live="polite">`, **empty and never `hidden`** | O. App writes «Tipo e lunghezza compilati dal catalogo, verifica i dati.» when a builder + model match fills the type and/or the length, and clears it when the customer changes either by hand or the model no longer matches (the text is written into an always-present live region so it is announced) |
+| `modelAutofill` | `<p class="field__hint" role="status" aria-live="polite">`, **empty and never `hidden`** | O. App writes «Tipo e lunghezza compilati dal catalogo, verifica i dati.» when a builder + model match fills the type, the length and/or the beam, and clears it when the customer changes either by hand or the model no longer matches (the text is written into an always-present live region so it is announced) |
 | `year` | text, `inputmode=numeric` | |
-| `loa` | text, `inputmode=decimal` | the «m» suffix is the skin's static text |
+| `lenUnit` | radiogroup | `data-value` = `ft` (the default, selected by App) and `m` (labels `opt.unit.*`). Switching converts what is typed in `loa` and `beam`; everything sent and stored is metres (1 ft = 0.3048 m) |
+| `loa` | text, `inputmode=decimal` | the affix next to it is `<span class="affix" data-unit>`: App writes `ft` or `m` into every `[data-unit]`. Rule: 2.5..30 m, errors in the current unit |
+| `beam` | text, `inputmode=decimal`, **required** | same pattern as `loa` (affix `[data-unit]`, `#beamHint`, `#beamError`). Rule: 1..8 m and less than the length. The catalogue fills it (like `loa`) when the model has one; it goes in the payload as `beam` (metres) |
 | `registered` | radiogroup | `data-value` = `registrata`, `natante` |
 | `berthKind` | radiogroup, **required** | «Dove si trova la barca?». `data-value` = `acqua`, `terra`, `carrello` (labels `opt.berth.*`); error `#berthKindError` (`err.berthKind`); goes in the payload as `berthKind`. Sits before `location` |
 | `serviceSite` | `<p role="status" hidden>`, inside the `berthKind` field | O. App fills it once the length is valid: up to `SHOP_MAX_LOA` (8 m, placeholder; `CIPRESSINA_CONFIG.shopMaxLoa` overrides) `note.site.shop.h` (body shop, Olmo di Martellago), above it `note.site.yard.h` (local shipyard). Sent in the payload as `serviceSite`: `carrozzeria` or `cantiere` |
@@ -222,8 +221,8 @@ Control `#<id>`, error `#<id>Error`, hint `#<id>Hint`; App sets `aria-describedb
 | `zoneHover` | any element, `aria-hidden` | O | App writes the hovered zone's name |
 | `zonesSummary` | `tabindex="-1"` container | R | focus lands here when the list empties |
 | `zonesCount`, `zonesEmpty`, `zonesList` (`<ul>`), `zonesClear` (button, `hidden`) | | R | rows: `li.zone-row[data-zone] > span.zone-row__name + span.zone-row__price + button.zone-row__remove[data-zone-remove]` |
-| `zonesNudge` | | R | `hidden` when empty; `.is-maxed` at the cap |
-| `estimate` (`hidden`) | | R | children: O `estPackageRow` (hidden without a package) > `estPackageLabel` + `estPackage`; `estSubtotalRow` (the zone work, shown when there is a discount or a package) > `estSubtotal`; `estDiscountRow` > `estDiscountLabel` + `estDiscount`; `estTotal` (`aria-live="polite"`); `estNote` |
+| `jobOptions` | wrapper, `hidden` | O | «Dettagli del lavoro» (`opt.title`). App shows it while a painted zone or `bottom` is selected. Inside, native controls whose value goes to `Z.price` / `Z.estimate` and the payload (`options`): `optPainted` (wrapper, painted zone selected) > `select#optFinish` (`pastello`, `metallizzato`) + `select#optRepair` (`stuccature`, `resinatura`, `gravose`); `optBottom` (wrapper, `bottom` selected) > `select#optBottomWork` (`antivegetativa`, `sabbiatura`); `label#optNonSlipRow` > `input#optNonSlip` (checkbox, `deck` selected); `label#optHardwareRow` > `input#optHardware` (checkbox, painted zone selected; never in the total, a note says «a consuntivo, 40 €/h + IVA»). Wrappers/rows are hidden through `hidden` |
+| `estimate` (`hidden`) | | R | children: O `estPackageRow` (hidden without a package) > `estPackageLabel` + `estPackage`; `estSubtotalRow` (the zone work, shown when there is a package) > `estSubtotal`; `estTotal` (`aria-live="polite"`; «Preventivo personalizzato» when heavy repairs make the quote custom); `estNote` (says «IVA esclusa») |
 | placeholder tag | `<span class="ph" data-i18n-html="sum.placeholder.h">` | R (brief): next to the estimate |
 | `antifoulingBlock` | wrapper, `hidden` | O | Optional «Colore antivegetativa (indicativo)». App shows it only while zone `bottom` is selected |
 | `antifoulingSwatches` | `role="radiogroup" aria-labelledby="antifoulingLabel"`, **empty** | O | App renders the same 11 `.swatch` buttons as `#heroSwatches` (same `Z.SWATCHES`, `sw.<id>` names, `aria-label`), roving tabindex, `.is-active` + `aria-checked`. «Originale» is the wizard theme's `bottom` colour. Choosing one calls `setColors({ bottom: hex })` on the wizard viewer (nothing is painted when the viewer failed; the choice is still kept), stores `state.antifoulingColor` (the swatch id), shows its name in the `bottom` row of `zonesList` (`span.zone-row__sub`) and sends `antifoulingColor` in the payload. Deselecting `bottom` clears it |

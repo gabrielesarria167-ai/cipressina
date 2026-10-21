@@ -137,6 +137,8 @@
     R("fld.model", "Modello", "Model", "Modelo", "Modèle");
     R("fld.year", "Anno", "Year", "Año", "Année");
     R("fld.loa", "Lunghezza fuori tutto (LOA)", "Length overall (LOA)", "Eslora total (LOA)", "Longueur hors tout (LOA)");
+    R("fld.unit", "Unità di misura", "Unit of measure", "Unidad de medida", "Unité de mesure");
+    R("fld.beam", "Larghezza massima (baglio)", "Beam (maximum width)", "Manga (anchura máxima)", "Largeur maximale (bau)");
     R("fld.registered", "Immatricolazione", "Registration", "Matriculación", "Immatriculation");
     R("fld.registration", "Sigla di immatricolazione", "Registration number", "Matrícula", "Numéro d'immatriculation");
     R("fld.engineHours", "Ore motore", "Engine hours", "Horas de motor", "Heures moteur");
@@ -161,7 +163,8 @@
         "If you pick a model from the list, we fill in length and type for you.",
         "Si eliges un modelo de la lista, rellenamos nosotros la eslora y el tipo.",
         "Si vous choisissez un modèle de la liste, nous renseignons la longueur et le type.");
-    R("hint.loa", "In metri, ad esempio 8,5.", "In metres, for example 8,5.", "En metros, por ejemplo 8,5.", "En mètres, par exemple 8,5.");
+    R("hint.loa", "Nell'unità scelta qui sopra, ad esempio 28 ft o 8,5 m.", "In the unit chosen above, for example 28 ft or 8,5 m.", "En la unidad elegida arriba, por ejemplo 28 ft u 8,5 m.", "Dans l'unité choisie ci-dessus, par exemple 28 ft ou 8,5 m.");
+    R("hint.beam", "La parte più larga dello scafo. Se scegli un modello dell'elenco la compiliamo noi.", "The widest part of the hull. If you pick a model from the list, we fill it in.", "La parte más ancha del casco. Si eliges un modelo de la lista, la rellenamos nosotros.", "La partie la plus large de la coque. Si vous choisissez un modèle de la liste, nous la renseignons.");
     R("hint.registration.h",
         "Come riportata sui documenti. <span class=\"ph\">Formato da verificare.</span>",
         "As shown on the papers. <span class=\"ph\">Format to be checked.</span>",
@@ -189,6 +192,8 @@
         "Damage to repair, timing, where the boat is, or any other useful detail",
         "Daños que reparar, plazos, dónde está el barco u otros detalles útiles",
         "Dégâts à réparer, délais, lieu où se trouve le bateau ou autres détails utiles");
+    R("opt.unit.ft", "Piedi (ft)", "Feet (ft)", "Pies (ft)", "Pieds (ft)");
+    R("opt.unit.m", "Metri (m)", "Metres (m)", "Metros (m)", "Mètres (m)");
     R("opt.registrata", "Immatricolata", "Registered", "Matriculado", "Immatriculé");
     R("opt.natante", "Natante (non immatricolata)", "Unregistered («natante»)", "Sin matricular («natante»)", "Non immatriculé («natante»)");
     R("opt.berth.acqua", "In acqua", "In the water", "En el agua", "À l'eau");
@@ -227,10 +232,10 @@
         "¿Catamarán u otro tipo? Elige el más parecido y descríbelo en las notas.",
         "Catamaran ou autre type ? Choisissez le plus proche et décrivez-le dans les notes.");
     R("model.autofilled",
-        "Tipo e lunghezza compilati dal catalogo, verifica i dati.",
-        "Type and length filled in from the catalogue, please check them.",
-        "Tipo y eslora rellenados desde el catálogo, revisa los datos.",
-        "Type et longueur renseignés depuis le catalogue, vérifiez les données.");
+        "Tipo, lunghezza e larghezza compilati dal catalogo, verifica i dati.",
+        "Type, length and beam filled in from the catalogue, please check them.",
+        "Tipo, eslora y manga rellenados desde el catálogo, revisa los datos.",
+        "Type, longueur et bau renseignés depuis le catalogue, vérifiez les données.");
     R("model.source", "dati da {host}", "data from {host}", "datos de {host}", "données de {host}");
     R("note.natante10.h",
         "<span class=\"ph\">Oltre i 10 m le unità da diporto vanno immatricolate: controlla i dati.</span>",
@@ -270,10 +275,15 @@
     R("err.model", "Indica il modello.", "Enter the model.", "Indica el modelo.", "Indiquez le modèle.");
     R("err.year", "Inserisci un anno tra {min} e {max}.", "Enter a year between {min} and {max}.", "Introduce un año entre {min} y {max}.", "Saisissez une année entre {min} et {max}.");
     R("err.loa",
-        "Inserisci la lunghezza in metri, tra {min} e {max} (es. 8,5).",
-        "Enter the length in metres, between {min} and {max} (e.g. 8,5).",
-        "Introduce la eslora en metros, entre {min} y {max} (p. ej. 8,5).",
-        "Saisissez la longueur en mètres, entre {min} et {max} (par ex. 8,5).");
+        "Inserisci la lunghezza in {unit}, tra {min} e {max} (es. 8,5).",
+        "Enter the length in {unit}, between {min} and {max} (e.g. 8,5).",
+        "Introduce la eslora en {unit}, entre {min} y {max} (p. ej. 8,5).",
+        "Saisissez la longueur en {unit}, entre {min} et {max} (par ex. 8,5).");
+    R("err.beam",
+        "Inserisci la larghezza in {unit}, tra {min} e {max} e minore della lunghezza.",
+        "Enter the beam in {unit}, between {min} and {max} and less than the length.",
+        "Introduce la manga en {unit}, entre {min} y {max} y menor que la eslora.",
+        "Saisissez le bau en {unit}, entre {min} et {max} et inférieur à la longueur.");
     R("err.registered",
         "Indica se la barca è immatricolata o è un natante.",
         "Say whether the boat is registered or not.",
@@ -368,14 +378,39 @@
         "No zones selected yet. Tap the boat to pick one.",
         "Ninguna zona seleccionada. Toca el barco para elegir una.",
         "Aucune zone sélectionnée. Touchez le bateau pour en choisir une.");
+    // Step 3: the choices that change the price. The +25 % is zones.js SURCHARGE.
+    R("opt.title", "Dettagli del lavoro", "Job details", "Detalles del trabajo", "Détails du travail");
+    R("fld.finish", "Finitura", "Finish", "Acabado", "Finition");
+    R("opt.finish.pastello", "Pastello (tinta unita)", "Solid colour", "Color liso", "Teinte unie");
+    R("opt.finish.metallizzato", "Metallizzato (+25%)", "Metallic (+25%)", "Metalizado (+25%)", "Métallisé (+25%)");
+    R("fld.repair", "Condizioni dello scafo", "Condition of the hull", "Estado del casco", "État de la coque");
+    R("opt.repair.stuccature", "Piccole stuccature", "Minor filling", "Pequeños masillados", "Petits rebouchages");
+    R("opt.repair.resinatura", "Resinatura moderata (+25%)", "Moderate resin repair (+25%)", "Reparación moderada con resina (+25%)", "Réparation modérée à la résine (+25%)");
+    R("opt.repair.gravose", "Riparazioni gravose (preventivo personalizzato)", "Heavy repairs (custom quote)", "Reparaciones importantes (presupuesto personalizado)", "Réparations importantes (devis personnalisé)");
+    R("opt.nonSlip", "Antisdrucciolo sulla coperta (+25%)", "Non-slip deck (+25%)", "Antideslizante en la cubierta (+25%)", "Antidérapant sur le pont (+25%)");
+    R("fld.bottomWork", "Lavoro sull'opera viva", "Underwater hull work", "Trabajo en la obra viva", "Travail sur les œuvres vives");
+    R("opt.bottom.antivegetativa", "Solo antivegetativa", "Antifouling only", "Solo antiincrustante", "Antifouling seul");
+    R("opt.bottom.sabbiatura", "Sabbiatura e ripristino", "Sandblasting and restoration", "Chorreado y restauración", "Sablage et remise en état");
+    R("opt.hardware", "Stacco e riattacco di accessori e ferramenta (a consuntivo, 40 €/h + IVA)", "Removal and refitting of fittings and hardware (charged as worked, €40/h + VAT)", "Desmontaje y montaje de accesorios y herrajes (a posteriori, 40 €/h + IVA)", "Dépose et repose des accessoires et de la quincaillerie (sur facture, 40 €/h + TVA)");
+
     R("sum.subtotal", "Lavori sulle zone", "Zone work", "Trabajos en las zonas", "Travaux sur les zones");
-    R("sum.discount", "Sconto per {count} zone ({rate}%)", "Discount for {count} zones ({rate}%)", "Descuento por {count} zonas ({rate}%)", "Remise pour {count} zones ({rate}%)");
     R("sum.total", "Totale stimato", "Estimated total", "Total estimado", "Total estimé");
     R("sum.note",
-        "{tier}, calcolato su {loa} m. Prezzo indicativo: il preventivo definitivo lo conferma l'officina.",
-        "{tier}, calculated on {loa} m. Indicative price: the workshop confirms the final quote.",
-        "{tier}, calculado sobre {loa} m. Precio orientativo: el taller confirma el presupuesto definitivo.",
-        "{tier}, calculé sur {loa} m. Prix indicatif : l'atelier confirme le devis définitif.");
+        "{tier}, calcolato su {loa} × {beam} {unit}. Prezzi IVA esclusa. Prezzo indicativo: il preventivo definitivo lo conferma l'officina.",
+        "{tier}, calculated on {loa} × {beam} {unit}. Prices exclude VAT. Indicative price: the workshop confirms the final quote.",
+        "{tier}, calculado sobre {loa} × {beam} {unit}. Precios sin IVA. Precio orientativo: el taller confirma el presupuesto definitivo.",
+        "{tier}, calculé sur {loa} × {beam} {unit}. Prix hors TVA. Prix indicatif : l'atelier confirme le devis définitif.");
+    R("sum.custom", "Preventivo personalizzato", "Custom quote", "Presupuesto personalizado", "Devis personnalisé");
+    R("sum.customNote",
+        "Con riparazioni gravose il prezzo si definisce dopo un sopralluogo.",
+        "With heavy repairs the price is set after an inspection.",
+        "Con reparaciones importantes el precio se fija tras una inspección.",
+        "Avec des réparations importantes, le prix est fixé après une inspection.");
+    R("sum.hardware",
+        "Stacco e riattacco: a consuntivo, {price}/h + IVA.",
+        "Removal and refitting: charged as worked, {price}/h + VAT.",
+        "Desmontaje y montaje: a posteriori, {price}/h + IVA.",
+        "Dépose et repose : sur facture, {price}/h + TVA.");
     R("sum.unpriced",
         { one: "Non include {count} zona senza prezzo di listino.", other: "Non include {count} zone senza prezzo di listino." },
         { one: "Doesn't include {count} zone without a list price.", other: "Doesn't include {count} zones without a list price." },
@@ -389,26 +424,6 @@
     R("est.none", "—", "—", "—", "—");
     R("zones.picker", "Scegli le zone da un elenco", "Choose the zones from a list", "Elige las zonas de una lista", "Choisir les zones dans une liste");
     R("zones.pickerLegend", "Zone della barca", "Zones of the boat", "Zonas del barco", "Zones du bateau");
-
-    // The nudge under the zone list (zones.js discountHint). {next} is the
-    // percentage the next zone would unlock.
-    R("disc.first",
-        "Scegli 2 zone o più e ti scontiamo il {next}%.",
-        "Pick 2 or more zones and get {next}% off.",
-        "Elige 2 zonas o más y te hacemos un {next}% de descuento.",
-        "Choisissez 2 zones ou plus et bénéficiez de {next}% de remise.");
-    R("disc.add",
-        "Aggiungi 1 zona e lo sconto sale al {next}%.",
-        "Add 1 more zone and the discount rises to {next}%.",
-        "Añade 1 zona más y el descuento sube al {next}%.",
-        "Ajoutez 1 zone et la remise passe à {next}%.");
-    R("disc.max",
-        "Hai lo sconto massimo per più zone: {next}%.",
-        "You have the maximum multi-zone discount: {next}%.",
-        "Tienes el descuento máximo por varias zonas: {next}%.",
-        "Vous avez la remise maximale pour plusieurs zones : {next}%.");
-    R("disc.title", "Più zone, meno paghi", "More zones, lower price", "Más zonas, menos pagas", "Plus de zones, moins à payer");
-    R("disc.zonesPlus", "{count} o più zone", "{count} or more zones", "{count} zonas o más", "{count} zones ou plus");
 
     /* ---------------- Home: hero swatches and the price sentence ----------- */
     R("hero.swatchLabel",
@@ -458,7 +473,6 @@
     R("ql.opt.premium", "con il Pacchetto Premium", "with the Premium package", "con el Paquete Premium", "avec la formule Premium");
     R("ql.opt.nessuno", "senza pacchetto", "without a package", "sin paquete", "sans formule");
     R("ql.post", "costa da", "costs from", "cuesta desde", "coûte à partir de");
-    R("ql.without", "senza lo sconto del {rate}% per più zone", "without the {rate}% multi-zone discount", "sin el descuento del {rate}% por varias zonas", "sans la remise de {rate}% pour plusieurs zones");
     R("ql.cta", "Seleziona le zone in 3D", "Pick the zones in 3D", "Selecciona las zonas en 3D", "Sélectionner les zones en 3D");
     R("ql.countLabel", "Numero di zone", "Number of zones", "Número de zonas", "Nombre de zones");
     R("ql.loaLabel", "Lunghezza della barca", "Boat length", "Eslora del barco", "Longueur du bateau");

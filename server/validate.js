@@ -39,6 +39,8 @@ const SWATCH_IDS = new Set(Z.SWATCHES.map((swatch) => swatch.id));
 const YEAR_MIN = 1950;
 const LOA_MIN = 2.5;
 const LOA_MAX = 30;
+const BEAM_MIN = 1;
+const BEAM_MAX = 8;
 const HOURS_MAX = 99999;
 // The wizard sends Italian numbers with +39 already added, foreign ones with their own prefix.
 const PHONE_RE = /^\+[0-9]{8,15}$/;
@@ -77,6 +79,26 @@ function oneOf(set, value, field) {
     return value;
 }
 
+// The step 3 choices; a missing one is its default (the first value), so a
+// page sending none still gets the plain quote.
+function validateOptions(input) {
+    if (input === undefined || input === null) input = {};
+    if (typeof input !== 'object' || Array.isArray(input)) throw new BadRequest('Opzioni non valide.');
+    const pick = (key, field) => (input[key] === undefined ? Z.OPTIONS[key][0] : oneOf(new Set(Z.OPTIONS[key]), input[key], field));
+    const flag = (key, field) => {
+        if (input[key] === undefined) return false;
+        if (typeof input[key] !== 'boolean') throw new BadRequest(`Valore non valido: ${field}.`);
+        return input[key];
+    };
+    return {
+        finish: pick('finish', 'la finitura'),
+        repair: pick('repair', 'le riparazioni'),
+        bottomWork: pick('bottomWork', "il lavoro sull'opera viva"),
+        nonSlip: flag('nonSlip', "l'antisdrucciolo"),
+        hardware: flag('hardware', 'stacco e riattacco'),
+    };
+}
+
 function validateRequest(body) {
     if (body === null || typeof body !== 'object' || Array.isArray(body)) {
         throw new BadRequest('Il corpo della richiesta non è valido.');
@@ -102,6 +124,10 @@ function validateRequest(body) {
     const loa = typeof body.loa === 'number' ? body.loa : NaN;
     if (!Number.isFinite(loa) || loa < LOA_MIN || loa > LOA_MAX) throw new BadRequest('Lunghezza non valida.');
 
+    const beam = typeof body.beam === 'number' ? body.beam : NaN;
+    if (!Number.isFinite(beam) || beam < BEAM_MIN || beam > BEAM_MAX || Math.round(beam * 100) >= Math.round(loa * 100)) throw new BadRequest('Larghezza non valida.');
+    const options = validateOptions(body.options);
+
     const registered = oneOf(REGISTERED, body.registered, 'immatricolazione');
     let registration = null;
     if (registered === 'registrata') {
@@ -118,6 +144,7 @@ function validateRequest(body) {
     if (builder.length < 2) throw new BadRequest('Cantiere non valido.');
 
     const rounded = Math.round(loa * 100) / 100;
+    const roundedBeam = Math.round(beam * 100) / 100;
     return {
         lang: LANGS.has(body.lang) ? body.lang : 'it',
         boatType,
@@ -125,6 +152,8 @@ function validateRequest(body) {
         model: text(body.model, { max: 60, required: true, field: 'il modello' }),
         year: integer(body.year, { min: YEAR_MIN, max: new Date().getFullYear() + 1, required: true, field: "l'anno" }),
         loa: rounded,
+        beam: roundedBeam,
+        options,
         registered,
         registration,
         berthKind: oneOf(BERTHS, body.berthKind, 'dove si trova la barca'),
@@ -138,7 +167,7 @@ function validateRequest(body) {
         antifoulingColor,
         // The server's own figure, not the page's: a page left open across a
         // price change, or an edited request, must not set the quote.
-        estimate: Z.estimate(zones, tier, rounded),
+        estimate: Z.estimate(zones, tier, { loa: rounded, beam: roundedBeam, type: boatType }, options),
         firstName: text(body.firstName, { max: 80, required: true, field: 'il nome' }),
         lastName: text(body.lastName, { max: 80, required: true, field: 'il cognome' }),
         phone,
