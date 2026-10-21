@@ -137,7 +137,7 @@ components:
 
 **Creative North Star: "Giro della barca"**
 
-Every page is a boat seen from the side. The gelcoat-white page sits above the waterline. The boot stripe (a thin blue pinstripe over a wide logo-green band) marks the line, and below it is the antifouling coat: a dark, saturated field that carries the lead copy, the rates, the FAQ, the contacts and the footer. On the home page the visitor picks an antifouling colour from real paint swatches and everything below the line repaints to it, ink included.
+Every page is a boat seen from the side. The gelcoat-white page sits above the waterline. The boot stripe (a thin blue pinstripe over a wide logo-green band) marks the line, and below it is the antifouling coat: a dark, saturated field that carries the lead copy, the rates, the FAQ, the contacts and the footer.
 
 The look is a shipyard, not a brochure. It uses one variable family (Archivo) stretched wide for headings and squeezed narrow for prices and counts. Corners are square, borders are hairlines and 2px rules, and the surfaces are flat. Photos of real boats in the workshop carry the trust. Content sits on ruled lists (rate books, specs, awards), not on cards.
 
@@ -161,7 +161,7 @@ The palette is hull paint: an off-white gelcoat, a deep hull navy for ink, the l
 - **Pinstripe Blue** (pinstripe-blue): only the thin top line of the boot stripe. It never appears as a fill or as text.
 
 ### Tertiary
-- **Antifouling** (antifouling): the default coat, Veneziani dark blue. It is a variable (`--af`), not a constant: on the home page src/tour.js swaps it for the chosen swatch and picks the better-contrast ink.
+- **Antifouling** (antifouling): the default coat, Veneziani dark blue. It is a variable (`--af`, with `--af-ink`, `--af-muted`, `--af-rule`) so the coat can be retuned in one place. The home page has no colour picker: the user found it pointless (2026-10-21). The wizard keeps its optional antifouling swatches at step 3, which are part of the request.
 - **Coat Ink / Muted / Rule** (antifouling-ink, antifouling-muted, antifouling-rule): text, secondary text and hairlines on the coat. They flip to navy when a light coat is chosen. Anything on the coat must use these, never fixed colours.
 
 ### Neutral
@@ -177,7 +177,7 @@ The palette is hull paint: an off-white gelcoat, a deep hull navy for ink, the l
 ### Named Rules
 **The Waterline Rule.** Gelcoat is above the stripe and the coat is below it. A section never puts the coat above a stripe or gelcoat under one on the home page.
 
-**The Live Coat Rule.** Anything on the coat reads its colours from the coat variables, because the visitor can repaint it.
+**The Coat Rule.** Anything on the coat reads its colours from the coat variables, never from hard-coded white or navy.
 
 **The Marked Placeholder Rule.** An unconfirmed price or fact is shown in the placeholder highlight. It is never styled to look confirmed.
 
@@ -207,7 +207,7 @@ The palette is hull paint: an off-white gelcoat, a deep hull navy for ink, the l
 
 - Container: max 1320px, centred, gutter 16px on phones and clamp(24px, 4vw, 56px) from 768px. The header is sticky and opaque, 64px tall (72px from 1100px). Full nav shows from 1100px, a menu panel below that.
 - Hero: fills the first screen (100svh minus the header). The news headline sits at the bottom of the gelcoat and rests on a full-width 19px stripe. Under the stripe, on the coat, there is one line on what they do and two buttons.
-- Tour: a two-column grid (1.35fr / 1fr). The 3D cabin cruiser is pinned (sticky, full viewport height) on the left with its length slider and coat swatches on a coat strip under its own stripe. Zone steps scroll on the right, each about 78svh tall, dimmed to .75 opacity until it is current (kept readable, about 4.5:1). Under 900px the viewer pins at 34svh above the steps.
+- Tour: a two-column grid (1.35fr / 1fr). The 3D cabin cruiser is pinned (sticky, full viewport height) on the left with its length slider on a coat strip under its own stripe. Zone steps scroll on the right, each about 78svh tall, dimmed to .75 opacity until it is current (kept readable, about 4.5:1). Under 900px the viewer pins at 34svh above the steps.
 - Sections: vertical padding clamp(72px, 10vw, 132px). The section head is two columns (title / note) aligned to the bottom. Gallery photos run sideways in a snap-scrolling "yard" row. The later sections (rates, FAQ, contacts, footer) are on the coat.
 - Wizard and lookup: a page head band, then content up to 800px (900px for step 2, full width for the 3D step). A sticky progress bar sits on top and a sticky footer holds Back and Next. The 3D step puts the viewer on white with the summary on the coat beside it (from 960px).
 - Two-column layouts collapse to one at 900px.
@@ -250,11 +250,11 @@ Header links are 600 weight at wdth 108, with a 2px Boot Green underline on hove
 ### Page head band
 The title of a page sits on the waterline: page-title type on gelcoat with a full-width 19px boot stripe along the bottom edge. The wizard success view opens with the same stripe.
 
-### Coat swatches
-Square 34–36px chips filled with real antifouling colours. When pressed, the border is the coat ink with an inset ring in the coat colour.
+### Antifouling swatches (wizard step 3 only)
+Square 36px chips filled with real antifouling colours; the chosen one gets a 3px navy outline.
 
 ### Motion
-One signature move. On load the hero stripe draws from left to right (scaleX 0 to 1, 1.1s, `cubic-bezier(.65, 0, .35, 1)`, .15s delay). Repainting the coat cross-fades at .7s on the same curve. Everything else is a short state transition (.2s colour, .4s step opacity). With `prefers-reduced-motion: reduce`, the stripe doesn't animate, the repaint is instant, transitions are cut to almost zero and smooth scroll is off.
+One signature move. On load the hero stripe draws from left to right (scaleX 0 to 1, 1.1s, `cubic-bezier(.65, 0, .35, 1)`, .15s delay). Everything else is a short state transition (.2s colour, .4s step opacity). With `prefers-reduced-motion: reduce`, the stripe doesn't animate, transitions are cut to almost zero and smooth scroll is off.
 
 ### Staff panel (Operate)
 The workshop panel (pgs/officina.html, staff.css) uses the same tokens, type and square corners but works as a tool. The band is shorter (28px top) with a smaller title (clamp(1.6rem, 4vw, 2.4rem)), h2 is clamp(1.35rem, 2.4vw, 1.8rem) and h3 is 1.1rem. There is no coat and no motion. Targets are big (44–64px) because it is used standing up at the shop computer or a tablet. Content sits in white bordered cards and lists on gelcoat.

@@ -123,7 +123,7 @@
           "#b3caef",
           "#eaf0fb"
         ],
-        "note": "Runtime variable --af; src/tour.js swaps it for the chosen swatch and flips the coat inks to navy on light coats."
+        "note": "Variable --af with its inks; fixed in styles.css (the home page has no colour picker)."
       },
       "antifouling-ink": {
         "role": "tertiary",
@@ -266,7 +266,7 @@
       {
         "name": "paint",
         "value": ".7s cubic-bezier(.65, 0, .35, 1)",
-        "purpose": "Coat repaint cross-fade. 0s under reduced motion."
+        "purpose": "Coat colour transition. 0s under reduced motion."
       },
       {
         "name": "state",
@@ -373,7 +373,7 @@
   ],
   "narrative": {
     "northStar": "Giro della barca",
-    "overview": "Every page is a boat seen from the side. The gelcoat-white page sits above the waterline. The boot stripe (a thin blue pinstripe over a wide logo-green band) marks the line, and below it is the antifouling coat: a dark, saturated field that carries the lead copy, the rates, the FAQ, the contacts and the footer. On the home page the visitor picks an antifouling colour from real paint swatches and everything below the line repaints to it, ink included.\n\nThe look is a shipyard, not a brochure. It uses one variable family (Archivo) stretched wide for headings and squeezed narrow for prices and counts. Corners are square, borders are hairlines and 2px rules, and the surfaces are flat. Photos of real boats in the workshop carry the trust. Content sits on ruled lists (rate books, specs, awards), not on cards.",
+    "overview": "Every page is a boat seen from the side. The gelcoat-white page sits above the waterline. The boot stripe (a thin blue pinstripe over a wide logo-green band) marks the line, and below it is the antifouling coat: a dark, saturated field that carries the lead copy, the rates, the FAQ, the contacts and the footer.\n\nThe look is a shipyard, not a brochure. It uses one variable family (Archivo) stretched wide for headings and squeezed narrow for prices and counts. Corners are square, borders are hairlines and 2px rules, and the surfaces are flat. Photos of real boats in the workshop carry the trust. Content sits on ruled lists (rate books, specs, awards), not on cards.",
     "keyCharacteristics": [
       "Two zones per page: gelcoat above the stripe, coat below it.",
       "The boot stripe is the one recurring graphic device, and it always means \"the waterline\".",
@@ -388,8 +388,8 @@
         "section": "colors"
       },
       {
-        "name": "The Live Coat Rule",
-        "body": "Anything on the coat reads its colours from the coat variables, because the visitor can repaint it.",
+        "name": "The Coat Rule",
+        "body": "Anything on the coat reads its colours from the coat variables, never from hard-coded white or navy.",
         "section": "colors"
       },
       {

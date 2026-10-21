@@ -3,8 +3,7 @@
    on 2026-10-21). The page is a boat seen from the side: gelcoat white
    above the waterline, the antifouling coat below it, the green-and-blue
    boot stripe at the line. Archivo at expanded and condensed widths, square
-   corners. On the home page the visitor picks the antifouling colour and
-   everything below the line repaints (src/tour.js sets --af and its inks).
+   corners. Everything below the line is the coat (--af).
    The token names of the earlier look (--text, --primary, --panel…) are kept
    so staff.css (the workshop panel) follows the new world unchanged.
    ========================================================================= */
@@ -203,10 +202,6 @@ strong, b { font-weight: 700; }
 .ctl label { font-weight: 700; font-variation-settings: "wdth" 104; font-size: .95rem; }
 .ctl output { font-variant-numeric: tabular-nums; }
 .ctl input[type=range] { width: 100%; min-height: 32px; accent-color: var(--af-ink); }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.chips button { width: 34px; height: 34px; padding: 0; background: var(--c); border: 2px solid var(--af-rule); border-radius: 0; }
-.chips button[aria-pressed="true"] { border-color: var(--af-ink); box-shadow: inset 0 0 0 3px var(--af); }
-.ctl small { display: block; margin-top: 10px; color: var(--af-muted); font-size: .8rem; }
 .steps-tour { padding: 0 var(--gutter) 0 clamp(24px, 4vw, 56px); border-left: 1px solid var(--rule); }
 .steps-tour li { min-height: 78svh; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; opacity: .75; transition: opacity .4s cubic-bezier(.2, .7, .2, 1); }
 .steps-tour li.is-on, .no-tour .steps-tour li { opacity: 1; }
@@ -533,7 +528,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--n
   .tour__stage { height: auto; z-index: 5; background: var(--gel); }
   .viewer { height: 34svh; }
   .viewer__now { font-size: 1.6rem; top: 10px; }
-  .ctl .chips, .ctl small { display: none; }
   .steps-tour { border-left: 0; padding: 0 var(--gutter); }
   .steps-tour li { min-height: 60svh; }
 }

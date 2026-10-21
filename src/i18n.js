@@ -396,10 +396,10 @@
     R("sum.subtotal", "Lavori sulle zone", "Zone work", "Trabajos en las zonas", "Travaux sur les zones");
     R("sum.total", "Totale stimato", "Estimated total", "Total estimado", "Total estimé");
     R("sum.note",
-        "{tier}, calcolato su {loa} × {beam} {unit}. Prezzi IVA esclusa. Prezzo indicativo: il preventivo definitivo lo conferma l'officina.",
-        "{tier}, calculated on {loa} × {beam} {unit}. Prices exclude VAT. Indicative price: the workshop confirms the final quote.",
-        "{tier}, calculado sobre {loa} × {beam} {unit}. Precios sin IVA. Precio orientativo: el taller confirma el presupuesto definitivo.",
-        "{tier}, calculé sur {loa} × {beam} {unit}. Prix hors TVA. Prix indicatif : l'atelier confirme le devis définitif.");
+        "{tier}, calcolato su {loa} × {beam} {unit}. Prezzi IVA esclusa. Prezzo indicativo: il preventivo definitivo lo confermiamo noi.",
+        "{tier}, calculated on {loa} × {beam} {unit}. Prices exclude VAT. Indicative price: we confirm the final quote.",
+        "{tier}, calculado sobre {loa} × {beam} {unit}. Precios sin IVA. Precio orientativo: el presupuesto definitivo lo confirmamos nosotros.",
+        "{tier}, calculé sur {loa} × {beam} {unit}. Prix hors TVA. Prix indicatif : nous confirmons le devis définitif.");
     R("sum.custom", "Preventivo personalizzato", "Custom quote", "Presupuesto personalizado", "Devis personnalisé");
     R("sum.customNote",
         "Con riparazioni gravose il prezzo si definisce dopo un sopralluogo.",
