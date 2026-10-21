@@ -53,25 +53,6 @@
 <section class="view" id="viewTeam" hidden>
   <div class="band"><h1 class="band__title" tabindex="-1">Oggi in officina</h1></div>
   <div class="page">
-    <section class="staff-section" aria-labelledby="crewTitle">
-      <div class="staff-section__head">
-        <h2 id="crewTitle">La squadra</h2>
-        <p class="note" id="crewSummary"></p>
-      </div>
-      <p class="note">Tocca la tua foto per iniziare o finire il turno e vedere le tue barche.</p>
-      <div class="field crew-search">
-        <label for="crewSearch">Cerca il tuo nome</label>
-        <input type="search" id="crewSearch" autocomplete="off" spellcheck="false">
-      </div>
-      <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
-      <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
-      <div class="crew-wrap">
-        <ul class="crew" id="crewList"></ul>
-        <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
-      </div>
-      <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
-    </section>
-
     <section class="staff-section" aria-labelledby="boardTitle">
       <div class="staff-section__head"><h2 id="boardTitle">Cose da fare</h2></div>
       <form class="board-form" id="boardForm" novalidate>
@@ -93,6 +74,35 @@
       <ul class="board" id="boardList"></ul>
       <p class="note" id="boardEmpty" hidden>Niente da fare. Ottimo.</p>
     </section>
+
+    <section class="staff-section" aria-labelledby="crewTitle">
+      <div class="staff-section__head">
+        <h2 id="crewTitle">La squadra</h2>
+        <p class="note" id="crewSummary"></p>
+      </div>
+      <p class="note">Tocca la tua foto per iniziare o finire il turno e vedere le tue barche.</p>
+      <div class="field crew-search">
+        <label for="crewSearch">Cerca il tuo nome</label>
+        <input type="search" id="crewSearch" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="crewNone" hidden>Nessun nome trovato.</p>
+      <!-- The letters stay on screen while the cards scroll: forty faces are a long page. -->
+      <!-- Who is on shift first, then the others: the same cards, the same letters. -->
+      <div class="crew-wrap">
+        <div class="crew-groups">
+          <div id="sessionGroup">
+            <h3 id="sessionTitle">Sessioni in corso</h3>
+            <ul class="crew" id="sessionList" aria-labelledby="sessionTitle"></ul>
+          </div>
+          <div id="offGroup">
+            <h3 id="offTitle">Fuori turno</h3>
+            <ul class="crew" id="crewList" aria-labelledby="offTitle"></ul>
+          </div>
+        </div>
+        <nav class="crew-letters" id="crewLetters" aria-label="Vai alla lettera" hidden></nav>
+      </div>
+      <p class="note">Alle 23:00 i turni ancora aperti si chiudono da soli.</p>
+    </section>
   </div>
   <div class="staff-dock">
     <button type="button" class="btn" data-go="boats">Barche in officina <span class="staff-count" id="dockCount"></span></button>
@@ -106,6 +116,11 @@
     <div class="staff-actions">
       <button type="button" class="btn" id="zoneDone">Fatto, esci</button>
     </div>
+    <section class="staff-section zone-message" id="zoneMessage" aria-labelledby="zoneMessageTitle" hidden>
+      <h2 id="zoneMessageTitle">Messaggio dal titolare</h2>
+      <p class="zone-message__text" id="zoneMessageText"></p>
+      <p class="note" id="zoneMessageMeta"></p>
+    </section>
     <section class="staff-section" aria-labelledby="zoneShiftTitle">
       <h2 id="zoneShiftTitle">Il mio turno</h2>
       <div class="staff-card zone-shift">
@@ -210,15 +225,22 @@
       <p class="note">Questi turni si sono chiusi da soli (dopo 12 ore o alle 23:00). Indica a che ora è uscito davvero.</p>
       <ul class="cards" id="pendingList"></ul>
     </section>
-    <section class="staff-section" aria-labelledby="onShiftTitle">
-      <h2 id="onShiftTitle">In turno adesso</h2>
-      <ul class="cards" id="onShiftList"></ul>
-      <p class="note" id="onShiftNone" hidden>Nessuno è in turno.</p>
-    </section>
-    <section class="staff-section" aria-labelledby="monitorTitle">
-      <h2 id="monitorTitle">Barche e note</h2>
-      <p class="note" id="monitorSummary"></p>
-      <ul class="cards" id="monitorList"></ul>
+    <!-- The same big cards as the shop's «La squadra», with the owner's buttons on them. -->
+    <section class="staff-section" aria-labelledby="squadCrewTitle">
+      <div class="staff-section__head">
+        <h2 id="squadCrewTitle">La squadra</h2>
+        <p class="note" id="monitorSummary"></p>
+      </div>
+      <div class="crew-groups">
+        <div id="squadOnGroup">
+          <h3 id="squadOnTitle">Sessioni in corso</h3>
+          <ul class="crew" id="onShiftList" aria-labelledby="squadOnTitle"></ul>
+        </div>
+        <div id="squadOffGroup">
+          <h3 id="squadOffTitle">Fuori turno</h3>
+          <ul class="crew" id="monitorList" aria-labelledby="squadOffTitle"></ul>
+        </div>
+      </div>
     </section>
     <details class="staff-section history">
       <summary><h2>Storico dei turni</h2></summary>

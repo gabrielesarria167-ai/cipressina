@@ -67,25 +67,22 @@
         return b;
     }
     function pad(n) { return String(n).padStart(2, "0"); }
-    function initials(name) {
-        return String(name || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p.charAt(0); }).join("").toUpperCase();
-    }
     function nameOf(person) { return person ? person.name || person.workerId : ""; }
     // «Nicolò» -> «nicolo»: the search and the letters ignore accents and case.
     function fold(text) { return String(text).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 
-    // The worker's face, or their initials in the same frame when there is none
-    // (or it does not arrive).
+    // The worker's face, or the default user silhouette in the same frame when
+    // there is none (or it does not arrive).
+    var BLANK_FACE = '<svg class="photo__blank" viewBox="0 0 40 50" aria-hidden="true" focusable="false">' +
+        '<circle cx="20" cy="20" r="8.5"/><path d="M3 50c0-10.5 7.6-17 17-17s17 6.5 17 17z"/></svg>';
     function photoFrame(worker) {
         var frame = el("span", "photo");
-        var initialsEl = el("span", "photo__initials", initials(nameOf(worker)));
-        initialsEl.setAttribute("aria-hidden", "true");
-        if (!worker.photo) { frame.appendChild(initialsEl); return frame; }
+        if (!worker.photo) { frame.innerHTML = BLANK_FACE; return frame; }
         var img = el("img");
         img.alt = "";
         img.loading = "lazy";
         img.src = "/api/staff/photo/" + worker.workerId + "?v=" + worker.photo;
-        img.addEventListener("error", function () { if (img.parentNode) frame.replaceChild(initialsEl, img); });
+        img.addEventListener("error", function () { frame.innerHTML = BLANK_FACE; });
         frame.appendChild(img);
         return frame;
     }
@@ -315,14 +312,18 @@
     });
 
     byId("staffOut").addEventListener("click", function () {
-        // From any screen but home, «Esci» goes home; from home it logs out.
+        // From any screen but home it goes home («Torna…»); from home, «Esci» logs out.
         if (view !== "team" && view !== "profile") return goHome();
         api("POST", "/api/staff/logout").catch(function () { /* the point is to stop showing data */ });
         showLogin();
     });
 
+    // A worker's screen leaves through «Fatto, esci» only: a second way back read as «start the shift».
     function paintOutButton() {
-        byId("staffOut").textContent = view === "team" || view === "profile" ? "Esci" : "Inizio";
+        var out = byId("staffOut");
+        show(out, view !== "zone");
+        out.textContent = view === "team" || view === "profile" ? "Esci"
+            : viewer && viewer.isBoss ? "Torna al pannello" : "Torna all'officina";
     }
 
     /* ---------- the PIN pad ---------- */
@@ -473,8 +474,9 @@
     }
 
     function renderTeam() {
-        var list = byId("crewList");
-        clear(list);
+        var lists = { on: byId("sessionList"), off: byId("crewList") };
+        clear(lists.on);
+        clear(lists.off);
         if (!team) return;
         var letters = byId("crewLetters");
         clear(letters);
@@ -484,6 +486,9 @@
         var query = fold(byId("crewSearch").value.trim());
         var shown = team.workers.filter(function (worker) { return fold(nameOf(worker)).indexOf(query) !== -1; });
         show(byId("crewNone"), team.workers.length > 0 && shown.length === 0);
+        var shownOn = shown.filter(function (worker) { return worker.shift; }).length;
+        show(byId("sessionGroup"), shownOn > 0);
+        show(byId("offGroup"), shown.length > shownOn);
         var seen = {};
         shown.forEach(function (worker) {
             var item = el("li");
@@ -499,7 +504,7 @@
             if (worker.boats.length) card.appendChild(el("span", "crew-card__boats", worker.boats.map(boatTitle).join(", ")));
             card.addEventListener("click", function () { enterZone(worker.workerId); });
             item.appendChild(card);
-            list.appendChild(item);
+            (worker.shift ? lists.on : lists.off).appendChild(item);
             // The rail on the right: one button per letter a shown name starts with.
             if (seen[letter]) return;
             seen[letter] = true;
@@ -540,10 +545,16 @@
         zone.pin = enteredPin;
         zone.mine = mine;
         zone.confirm = false;
+        zone.message = null;
         paintView("zone");
         paintOutButton();
         renderZone();
         armZoneIdle();
+        api("POST", "/api/staff/note/mine", { workerId: workerId, pin: enteredPin || undefined }).then(function (data) {
+            if (zone.id !== workerId) return;
+            zone.message = data.note;
+            renderZone();
+        }, function (err) { if (err.unauthorized) fail(err); });
     }
 
     function leaveZoneQuietly() {
@@ -591,6 +602,10 @@
             list.appendChild(item);
         });
         show(byId("zoneBoatsEmpty"), worker.boats.length === 0);
+
+        byId("zoneMessageText").textContent = zone.message ? zone.message.text : "";
+        byId("zoneMessageMeta").textContent = zone.message ? "Scritto " + when(zone.message.updatedAt) : "";
+        show(byId("zoneMessage"), !!zone.message);
 
         renderMine();
     }
@@ -744,21 +759,19 @@
         var list = byId("boardList");
         clear(list);
         board.notes.forEach(function (note) {
-            var item = el("li", "board__item" + (note.kind === "boss" ? " is-boss" : ""));
+            var item = el("li", "board__item");
             var text = el("div", "board__text");
             text.appendChild(el("span", "board__to", note.to ? "Per " + nameOf(note.to) : "Per tutti"));
             text.appendChild(el("span", "board__note", note.text));
-            text.appendChild(el("span", "board__meta", (note.kind === "boss" ? "Dal titolare" : "Scritta da " + nameOf(note.from)) + ", " + when(note.createdAt)));
+            text.appendChild(el("span", "board__meta", "Scritta da " + nameOf(note.from) + ", " + when(note.createdAt)));
             item.appendChild(text);
-            if (note.kind !== "boss") {
-                var done = button("Fatto");
-                done.setAttribute("aria-label", "Segna come fatta: " + note.text);
-                done.addEventListener("click", function () {
-                    done.disabled = true;
-                    api("PATCH", "/api/staff/board/" + note.id, { done: true }).then(loadBoard, function (err) { done.disabled = false; fail(err); });
-                });
-                item.appendChild(done);
-            }
+            var done = button("Fatto");
+            done.setAttribute("aria-label", "Segna come fatta: " + note.text);
+            done.addEventListener("click", function () {
+                done.disabled = true;
+                api("PATCH", "/api/staff/board/" + note.id, { done: true }).then(loadBoard, function (err) { done.disabled = false; fail(err); });
+            });
+            item.appendChild(done);
             list.appendChild(item);
         });
         show(byId("boardEmpty"), board.notes.length === 0);
@@ -1197,35 +1210,26 @@
         squad.shifts.pending.forEach(function (shift) { pendingList.appendChild(pendingCard(shift, false)); });
         show(byId("pendingSection"), squad.shifts.pending.length > 0);
 
-        var onList = byId("onShiftList");
-        clear(onList);
-        var open = openShifts();
-        open.forEach(function (pair) { onList.appendChild(onShiftCard(pair.worker, pair.shift)); });
-        show(byId("onShiftNone"), open.length === 0);
-
-        var monitor = byId("monitorList");
-        clear(monitor);
-        var busy = squad.workers.filter(function (w) { return w.boats.length > 0; }).length;
-        byId("monitorSummary").textContent = busy ? busy + " di " + squad.workers.length + " lavorano su una barca" : "Nessuno ha una barca assegnata adesso.";
-        squad.workers.forEach(function (w) { monitor.appendChild(monitorCard(w)); });
+        // Everyone with an open shift, also one no longer on the roster: the owner must be able to close it.
+        var shiftOf = {};
+        var workers = squad.workers.slice();
+        openShifts().forEach(function (pair) {
+            shiftOf[pair.worker.workerId] = pair.shift;
+            if (!workers.some(function (w) { return w.workerId === pair.worker.workerId; })) {
+                workers.push({ workerId: pair.worker.workerId, name: pair.worker.name, photo: null, boats: [], note: null });
+            }
+        });
+        var lists = { on: byId("onShiftList"), off: byId("monitorList") };
+        clear(lists.on);
+        clear(lists.off);
+        workers.forEach(function (w) { (shiftOf[w.workerId] ? lists.on : lists.off).appendChild(squadCard(w, shiftOf[w.workerId])); });
+        var onCount = Object.keys(shiftOf).length;
+        var busy = workers.filter(function (w) { return w.boats.length > 0; }).length;
+        byId("monitorSummary").textContent = onCount + " di " + workers.length + " in turno" + (busy ? " · " + busy + " su una barca" : "");
+        show(byId("squadOnGroup"), onCount > 0);
+        show(byId("squadOffGroup"), workers.length > onCount);
 
         renderHistory();
-    }
-
-    function onShiftCard(worker, shift) {
-        var card = el("li", "card");
-        card.appendChild(el("h3", "", nameOf(worker)));
-        var line = el("p", "card__line");
-        line.appendChild(document.createTextNode("Dalle " + timeOf(shift.startedAt) + (sameDay(shift.startedAt, Date.now()) ? "" : " di " + dayOf(shift.startedAt)) + " · "));
-        line.appendChild(timer(shift.seconds, squad.at));
-        card.appendChild(line);
-        var close = button("Chiudi il turno");
-        close.addEventListener("click", function () {
-            close.hidden = true;
-            card.appendChild(exitForm(shift, true, function () { close.hidden = false; }));
-        });
-        card.appendChild(close);
-        return card;
     }
 
     function pendingCard(shift, inDialog) {
@@ -1247,7 +1251,7 @@
         return card;
     }
 
-    // «A che ora è uscito?»: the day (the start's, prefilled) and the time
+    // «A che ora è uscito?»: the day (the start's, preselected) and the time
     // (empty on purpose: closing at the moment he notices would credit the
     // night). `allowNow` adds «Chiudi adesso» for an open shift.
     function exitForm(shift, allowNow, onCancel, inDialog) {
@@ -1256,22 +1260,37 @@
         form.noValidate = true;
         var fields = el("div", "exit-form__fields");
         var dayField = el("div", "field");
-        var dayInput = el("input");
-        dayInput.type = "date";
-        dayInput.value = inputDay(shift.startedAt);
+        // The start's day or the next one (a shift closes itself within 12 hours),
+        // never a day still to come; a list so it reads dd/mm/yyyy on any computer.
+        var dayInput = el("select");
+        var day = new Date(shift.startedAt);
+        for (var i = 0; i < 2 && inputDay(day) <= inputDay(Date.now()); i++) {
+            dayInput.appendChild(new Option(day.toLocaleDateString("it-IT", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }), inputDay(day)));
+            day.setDate(day.getDate() + 1);
+        }
         dayInput.id = "exitDay" + shift.id + (inDialog ? "d" : "");
         var dayLabel = el("label", "", "Giorno di uscita");
         dayLabel.htmlFor = dayInput.id;
         dayField.appendChild(dayLabel);
         dayField.appendChild(dayInput);
         var timeField = el("div", "field");
-        var timeInput = el("input");
-        timeInput.type = "time";
+        // Two lists, not <input type="time">: that one follows the computer's
+        // 12/24 h setting and stays empty until the minutes are typed too.
+        var timeInput = el("select");
         timeInput.id = "exitTime" + shift.id + (inDialog ? "d" : "");
+        timeInput.appendChild(new Option("--", ""));
+        var minuteInput = el("select");
+        minuteInput.setAttribute("aria-label", "Minuti");
+        for (var h = 0; h < 24; h++) timeInput.appendChild(new Option(pad(h), pad(h)));
+        for (var m = 0; m < 60; m++) minuteInput.appendChild(new Option(pad(m), pad(m)));
         var timeLabel = el("label", "", "Ora di uscita");
         timeLabel.htmlFor = timeInput.id;
+        var timeRow = el("div", "exit-form__time");
+        timeRow.appendChild(timeInput);
+        timeRow.appendChild(el("span", "", ":"));
+        timeRow.appendChild(minuteInput);
         timeField.appendChild(timeLabel);
-        timeField.appendChild(timeInput);
+        timeField.appendChild(timeRow);
         fields.appendChild(dayField);
         fields.appendChild(timeField);
         form.appendChild(fields);
@@ -1300,7 +1319,7 @@
 
         function chosen() {
             if (!dayInput.value || !timeInput.value) return null;
-            var end = new Date(dayInput.value + "T" + timeInput.value);
+            var end = new Date(dayInput.value + "T" + timeInput.value + ":" + minuteInput.value);
             return isNaN(end.getTime()) ? null : end;
         }
         function paintPreview() {
@@ -1310,8 +1329,9 @@
             preview.textContent = seconds < 0 ? "L'uscita è prima dell'inizio."
                 : "Durata: " + formatDuration(seconds) + (seconds < squad.shifts.minimumSeconds ? ". Meno di 5 minuti: il turno verrà cancellato." : "");
         }
-        dayInput.addEventListener("input", paintPreview);
-        timeInput.addEventListener("input", paintPreview);
+        dayInput.addEventListener("change", paintPreview);
+        timeInput.addEventListener("change", paintPreview);
+        minuteInput.addEventListener("change", paintPreview);
 
         function send(end) {
             error.hidden = true;
@@ -1362,9 +1382,20 @@
         if (view === "squad") renderSquad();
     });
 
-    function monitorCard(worker) {
-        var card = el("li", "card" + (worker.boats.length ? "" : " card--idle"));
-        card.appendChild(el("h3", "", nameOf(worker)));
+    // A worker's big card: face, name, the open shift (green) or «Fuori turno»,
+    // the boats and the owner's note, with «Chiudi il turno» and the note buttons.
+    function squadCard(worker, shift) {
+        var card = el("li", "crew-card squad-card" + (shift ? " is-on" : ""));
+        card.appendChild(photoFrame(worker));
+        card.appendChild(el("span", "crew-card__name", nameOf(worker)));
+        var state = el("span", "crew-card__state");
+        if (shift) {
+            state.appendChild(document.createTextNode("Dalle " + timeOf(shift.startedAt) + (sameDay(shift.startedAt, Date.now()) ? "" : " di " + dayOf(shift.startedAt)) + " · "));
+            state.appendChild(timer(shift.seconds, squad.at));
+        } else {
+            state.textContent = "Fuori turno";
+        }
+        card.appendChild(state);
         if (worker.boats.length) {
             var list = el("ul", "card__boats");
             worker.boats.forEach(function (boat) {
@@ -1375,7 +1406,7 @@
             });
             card.appendChild(list);
         } else {
-            card.appendChild(el("p", "card__line", "Nessuna barca"));
+            card.appendChild(el("span", "crew-card__boats", "Nessuna barca"));
         }
         var note = el("p", "card__note");
         if (worker.note) {
@@ -1384,6 +1415,14 @@
         }
         card.appendChild(note);
         var actions = el("div", "staff-actions");
+        if (shift) {
+            var close = button("Chiudi il turno");
+            close.addEventListener("click", function () {
+                actions.hidden = true;
+                card.appendChild(exitForm(shift, true, function () { actions.hidden = false; }));
+            });
+            actions.appendChild(close);
+        }
         var write = button(worker.note ? "Modifica la nota" : "Scrivi una nota");
         write.addEventListener("click", function () { openNoteEditor(worker, card, actions); });
         actions.appendChild(write);
@@ -1406,7 +1445,7 @@
         area.value = worker.note ? worker.note.text : "";
         area.setAttribute("aria-label", "Nota per " + nameOf(worker));
         form.appendChild(area);
-        form.appendChild(el("p", "note", "La vede sul computer dell'officina, in «Cose da fare»."));
+        form.appendChild(el("p", "note", "La vede solo lui, nella sua pagina sul computer dell'officina (dietro il suo PIN, se ne ha uno)."));
         var row = el("div", "staff-actions");
         var save = el("button", "btn", "Salva");
         save.type = "submit";

@@ -13,7 +13,7 @@
 .staff-who { font-weight: 700; text-transform: uppercase; font-size: .9375rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .staff-clock { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
 /* styles.css hides the header's quote button on small screens; the panel's «Esci» must stay. */
-.staff .hdr > .btn { display: inline-flex; min-height: 44px; }
+.staff .hdr > .btn { display: inline-flex; min-height: 44px; white-space: nowrap; }
 .staff .hdr > .btn[hidden] { display: none; }
 @media (max-width: 520px) { .staff-clock { display: none; } }
 
@@ -64,22 +64,25 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 .crew-card {
   display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 100%; height: 100%; padding: 0 0 16px; overflow: hidden;
   background: #fff; border: 1px solid var(--input-border); border-top: 4px solid var(--border); border-radius: 4px;
-  text-align: center; color: var(--text);
+  text-align: center; color: var(--text); position: relative;
 }
-.crew-card:hover { border-color: var(--primary); }
-.crew-card.is-on { border-top-color: var(--green); }
+button.crew-card:hover { border-color: var(--primary); }
+/* On shift: green on all four sides. The extra 3px are drawn inside, so the card keeps the photo and name where the others have them. */
+.crew-card.is-on { border-color: var(--green); background: #eef8f2; }
+.crew-card.is-on::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--green); border-top: 0; pointer-events: none; }
 .photo {
   display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px;
   background: var(--primary-soft); color: var(--primary-dark);
 }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.photo__initials { font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: .02em; }
+.photo__blank { width: 100%; height: 100%; fill: currentColor; opacity: .3; }
 .crew-card .photo { margin-bottom: 8px; border-radius: 0; }
 .crew-card > :not(.photo) { padding-inline: 12px; }
 .crew-card__name { font-weight: 700; font-size: 1.375rem; line-height: 1.2; overflow-wrap: anywhere; }
 .crew-card__state { color: var(--muted); font-size: .9375rem; }
 .crew-card.is-on .crew-card__state { color: var(--green); font-weight: 600; }
 .crew-card__boats { font-size: .875rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crew-groups { display: grid; gap: 24px; min-width: 0; }
 .crew-letters {
   position: sticky; top: calc(var(--hdr-h) + 16px); display: flex; flex-direction: column; gap: 2px;
   max-height: calc(100vh - var(--hdr-h) - 120px); overflow-y: auto;
@@ -103,7 +106,6 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 /* The owner's photo field: the preview at the size of a small card. */
 .settings-photo { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .settings-photo .photo { width: 120px; }
-.settings-photo .photo__initials { font-size: 2.25rem; }
 .settings-photo .note { margin: 8px 0 0; max-width: 32ch; }
 #settingsPhoto:focus-visible + label { outline: 3px solid #80bdff; outline-offset: 2px; }
 .timer { font-variant-numeric: tabular-nums; }
@@ -116,11 +118,15 @@ input[type="password"]:focus, input[type="search"]:focus, input[type="date"]:foc
 .staff-count { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 14px; background: #fff; color: var(--primary-dark); font-size: .9375rem; }
 
 /* ---- «Cose da fare» -------------------------------------------------------- */
+/* The owner's note, in the worker's own area only. */
+.zone-message { padding: 16px 20px; background: var(--primary-soft); border-left: 4px solid var(--primary); border-radius: 4px; }
+.zone-message h2 { margin-bottom: 4px; }
+.zone-message__text { margin: 0 0 4px; font-size: 1.125rem; overflow-wrap: anywhere; }
+.zone-message .note { margin: 0; }
 .board-form { display: grid; gap: 12px; align-items: end; margin-bottom: 12px; }
 @media (min-width: 768px) { .board-form { grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) auto; } }
 .board { display: grid; gap: 8px; margin-top: 8px; }
 .board__item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; }
-.board__item.is-boss { background: var(--primary-soft); border-left: 4px solid var(--primary); }
 .board__text { display: grid; gap: 2px; flex: 1; min-width: 0; }
 .board__to { font-size: .8125rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
 .board__note { font-weight: 600; overflow-wrap: anywhere; }
@@ -217,8 +223,19 @@ th { text-align: left; font-size: .8125rem; text-transform: uppercase; color: va
 .exit-form { display: grid; gap: 8px; }
 .exit-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .exit-form .note, .exit-form .field__error { margin: 0; }
+.exit-form__time { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.exit-form__time select { flex: 1; min-width: 0; }
 .note-editor { display: grid; gap: 8px; }
 .note-editor .note { margin: 0; }
+/* The owner's cards: the shop's big cards, with text and buttons that are not one big button. */
+.squad-card .card__boats li { justify-content: center; }
+.squad-card form { text-align: left; }
+.squad-card .staff-actions { justify-content: center; margin: 4px 0 0; }
+.squad-card .exit-form__fields { grid-template-columns: 1fr; }
+/* Wider than the shop's 160px: these cards hold the close-shift form. Phones keep two to a row. */
+@media (min-width: 521px) {
+  #viewSquad .crew { grid-template-columns: repeat(auto-fill, minmax(max(240px, calc((100% - 3 * 16px) / 4)), 1fr)); }
+}
 .history summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .history summary::-webkit-details-marker { display: none; }
 .history summary::before { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--primary); }
