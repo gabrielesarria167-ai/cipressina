@@ -15,8 +15,8 @@
 
    Order of the file:
      1. helpers            5. hero (swatches + lazy 3D)
-     2. 3D module loader   6. home price sentence, tier prices, discount
-                              list, gallery lightbox
+     2. 3D module loader   6. home price sentence, tier prices, gallery
+                              lightbox
      3. router and views   7. wizard (rules table, steps, viewer, summary, submit)
      4. chrome (menu,      8. lookup
         language, copy)    9. language change and init
@@ -646,12 +646,12 @@
     }
 
     /* ==================================================================
-       6. Home: price sentence, tier prices, discount list
+       6. Home: price sentence, tier prices, gallery
        ================================================================== */
 
-    // «Intervenire su [2] zone di una barca lunga [8 m] [con il Pacchetto
-    // Completo] costa da X»: the package plus that many topsides (per side),
-    // with the discount curve the wizard uses, via Z.estimate.
+    // «Intervenire su [2] zone di una barca lunga [26 ft (8 m)] [con il
+    // Pacchetto Completo] costa da X»: the package plus that many topsides
+    // (per side) of a cabin cruiser with a typical beam, via Z.estimate.
     function renderQuoteLine() {
         var countEl = byId("qlCount"), loaEl = byId("qlLoa"), tierEl = byId("qlTier");
         var totalEl = byId("qlTotal");
@@ -659,22 +659,12 @@
         var count = Number(countEl.value) || 1;
         var ids = [];
         for (var i = 0; i < count; i++) ids.push("topside_port");
-        var est = Z.estimate(ids, tierEl.value, Number(loaEl.value));
+        var loa = Number(loaEl.value);
+        var est = Z.estimate(ids, tierEl.value, { loa: loa, beam: Z.typicalBeam(loa), type: "cabinato" });
 
         totalEl.textContent = Z.formatEUR(est.total);
         var word = byId("qlWord");
         if (word) word.textContent = t(count === 1 ? "ql.zoneOne" : "ql.zoneMany");
-        var before = byId("qlBefore");
-        if (before) {
-            before.textContent = "";
-            if (est.rate > 0) {
-                var struck = document.createElement("s");
-                struck.textContent = Z.formatEUR(est.total + est.discount);
-                before.appendChild(struck);
-                before.appendChild(document.createTextNode(" " + t("ql.without", { rate: est.rate })));
-            }
-            before.hidden = est.rate === 0;
-        }
     }
 
     function initQuoteLine() {
@@ -706,33 +696,6 @@
             if (Z.TIERS.indexOf(tier) === -1) return;
             var row = Z.PACKAGES[tier];
             el.textContent = t("tier.from", { price: Z.formatEUR(row.rate), min: Z.formatEUR(row.min) });
-        });
-    }
-
-    // 5% / 7% / 9% / 10% rendered from DISCOUNT_STEPS, so the page can never
-    // promise a step the estimate doesn't give. The static HTML a skin ships
-    // inside the <ul> is the no-JS fallback and is replaced here.
-    function renderDiscountList() {
-        var list = byId("discountList");
-        if (!list) return;
-        list.textContent = "";
-        var steps = Z.DISCOUNT_STEPS;
-        steps.forEach(function (rate, count) {
-            if (!(rate > 0)) return;
-            var item = document.createElement("li");
-            item.className = "discount-step";
-            var zones = document.createElement("span");
-            zones.className = "discount-step__zones";
-            zones.textContent = count === steps.length - 1
-                ? t("disc.zonesPlus", { count: count })
-                : t("sum.count", { count: count });
-            var value = document.createElement("strong");
-            value.className = "discount-step__rate";
-            value.textContent = rate + "%";
-            item.appendChild(zones);
-            item.appendChild(document.createTextNode(" "));
-            item.appendChild(value);
-            list.appendChild(item);
         });
     }
 
@@ -788,6 +751,8 @@
     var YEAR_MAX = new Date().getFullYear() + 1;
     // A sanity range for the form, not the shop's capacity (unknown, .ph).
     var LOA_MIN = 2.5, LOA_MAX = 30;
+    var BEAM_MIN = 1, BEAM_MAX = 8;
+    var FOOT = 0.3048;                         // metres in a foot
     var HOURS_MAX = 99999;
     // The shop works only around Venice. Boats up to this length come to the
     // body shop in Olmo di Martellago; longer ones are done at a shipyard in
@@ -812,8 +777,10 @@
     function freshState() {
         return {
             boatType: "", registered: "", berthKind: "", tier: "", zones: [],
+            unit: "ft",               // how LOA and beam are typed; everything sent is metres
+            options: { finish: "pastello", repair: "stuccature", bottomWork: "antivegetativa", nonSlip: false, hardware: false },
             antifoulingColor: "",     // swatch id, only while «Opera viva» is a selected zone
-            modelMatch: null, modelPrefilled: false, autoLoa: "", autoType: "", autofillNote: false
+            modelMatch: null, modelPrefilled: false, autoLoa: "", autoBeam: "", autoType: "", autofillNote: false
         };
     }
 
@@ -867,8 +834,12 @@
             ok: function (v) { var y = Number(v); return /^\d{4}$/.test(v) && y >= YEAR_MIN && y <= YEAR_MAX; },
             msg: "err.year", params: function () { return { min: YEAR_MIN, max: YEAR_MAX }; } });
         addRule({ id: "loa", step: 1, format: formatLoa,
-            ok: function (v) { var n = parseLoa(v); return n >= LOA_MIN && n <= LOA_MAX; },
-            msg: "err.loa", params: function () { return { min: formatNumber(LOA_MIN), max: formatNumber(LOA_MAX) }; } });
+            ok: function (v) { var n = toMetres(v); return n >= LOA_MIN && n <= LOA_MAX; },
+            msg: "err.loa", params: function () { return { unit: state.unit, min: limitText(LOA_MIN, true), max: limitText(LOA_MAX, false) }; } });
+        // Less than the length; with no length typed yet only the range counts.
+        addRule({ id: "beam", step: 1, format: formatLoa,
+            ok: function (v) { var n = toMetres(v); return n >= BEAM_MIN && n <= BEAM_MAX && !(n >= metres("loa")); },
+            msg: "err.beam", params: function () { return { unit: state.unit, min: limitText(BEAM_MIN, true), max: limitText(BEAM_MAX, false) }; } });
         addRule({ id: "registered", step: 1, radio: true, get: function () { return state.registered; },
             ok: function (v) { return !!v; }, msg: "err.registered" });
         addRule({ id: "berthKind", step: 1, radio: true, get: function () { return state.berthKind; },
@@ -906,6 +877,26 @@
             // things: «email valida» in front of a blank field doesn't say
             // what to do.
             msg: function (v) { return v === "" ? "err.email.empty" : "err.email.bad"; } });
+    }
+
+    // Lengths are typed in feet or metres (state.unit) and sent in metres, to the
+    // centimetre like the server stores them.
+    function toMetres(value) {
+        var n = parseLoa(value);
+        return state.unit === "ft" ? Math.round(n * FOOT * 100) / 100 : n;
+    }
+    function metres(id) { return toMetres((byId(id) || {}).value || ""); }
+    // The text for a length in metres, in the current unit (feet to a tenth,
+    // metres to the centimetre).
+    function lengthText(m) {
+        return formatNumber(state.unit === "ft" ? Math.round(m / FOOT * 10) / 10 : Math.round(m * 100) / 100);
+    }
+    // A limit in metres as shown in an error: the minimum rounded up and the
+    // maximum down, so that what the message offers is always accepted.
+    function limitText(m, up) {
+        if (state.unit === "m") return formatNumber(m);
+        var tenths = m / FOOT * 10;
+        return formatNumber((up ? Math.ceil(tenths) : Math.floor(tenths)) / 10);
     }
 
     // Keeps digits and one separator, two integer and two decimal digits, and
@@ -1098,7 +1089,7 @@
         if (pick.tier && Z.PACKAGE_CHOICES.indexOf(pick.tier) !== -1 && groups.tier) groups.tier.select(pick.tier);
         var loa = parseLoa(pick.loa || "");
         if (loaEl && !isNaN(loa) && clean(loaEl.value) === "") {
-            loaEl.value = formatNumber(loa);
+            loaEl.value = lengthText(loa);
             state.autoLoa = "";
             renderRegisteredNote();
             renderServiceSite();
@@ -1141,7 +1132,7 @@
     // customer hasn't written their own (or still has what we filled in last
     // time, so switching from one model to another updates both).
     function onModelCommit() {
-        var builderEl = byId("builder"), modelEl = byId("model"), loaEl = byId("loa");
+        var builderEl = byId("builder"), modelEl = byId("model"), loaEl = byId("loa"), beamEl = byId("beam");
         if (!builderEl || !modelEl) return;
         var entry = Z.findModel(builderEl.value, modelEl.value);
         state.modelMatch = entry;
@@ -1154,10 +1145,17 @@
         }
         var filled = false;
         if (loaEl && (clean(loaEl.value) === "" || loaEl.value === state.autoLoa)) {
-            loaEl.value = formatNumber(entry.loa);
+            loaEl.value = lengthText(entry.loa);
             state.autoLoa = loaEl.value;
             filled = true;
             checkId("loa", false);
+        }
+        // The catalogue has no beam for some models: then the customer types it.
+        if (entry.beam && beamEl && (clean(beamEl.value) === "" || beamEl.value === state.autoBeam)) {
+            beamEl.value = lengthText(entry.beam);
+            state.autoBeam = beamEl.value;
+            filled = true;
+            checkId("beam", false);
         }
         if (groups.boatType && (!state.boatType || state.boatType === state.autoType)) {
             groups.boatType.select(entry.type);
@@ -1198,12 +1196,12 @@
         var note = byId("registeredNote");
         if (!note) return;
         var loaEl = byId("loa");
-        note.hidden = !(state.registered === "natante" && loaEl && parseLoa(loaEl.value) > 10);
+        note.hidden = !(state.registered === "natante" && loaEl && metres("loa") > 10);
     }
 
     // Where the job is done follows from the length; null until it's valid.
     function serviceSite() {
-        var loa = parseLoa((byId("loa") || {}).value || "");
+        var loa = metres("loa");
         if (!(loa >= LOA_MIN && loa <= LOA_MAX)) return null;
         return loa <= SHOP_MAX_LOA ? "carrozzeria" : "cantiere";
     }
@@ -1272,11 +1270,36 @@
         if (thumb) setThumb(thumb, state.boatType);
         var bits = [builder + " " + model];
         var loa = parseLoa((byId("loa") || {}).value || "");
-        if (!isNaN(loa)) bits.push(formatNumber(loa) + " m");
+        if (!isNaN(loa)) bits.push(formatNumber(loa) + " " + state.unit);
         var year = ((byId("year") || {}).value || "").trim();
         if (year) bits.push(year);
         var text = byId("boatSummaryText");
         if (text) text.textContent = bits.join(" · ");
+    }
+
+    // Switching the unit converts what is typed in LOA and beam, so the boat
+    // stays the same; an auto-filled value stays «auto-filled».
+    function onUnit(next) {
+        var previous = state.unit;
+        state.unit = next;
+        if (previous !== next) {
+            [["loa", "autoLoa"], ["beam", "autoBeam"]].forEach(function (pair) {
+                var el = byId(pair[0]);
+                var n = el ? parseLoa(el.value) : NaN;
+                if (isNaN(n)) return;
+                var wasAuto = el.value === state[pair[1]];
+                el.value = lengthText(previous === "ft" ? n * FOOT : n);
+                if (wasAuto) state[pair[1]] = el.value;
+            });
+        }
+        $$("[data-unit]").forEach(function (el) { el.textContent = next; });
+        checkId("loa", false);
+        checkId("beam", false);
+        renderRegisteredNote();
+        renderServiceSite();
+        renderBoatSummary();
+        renderSummary();
+        refreshMain();
     }
 
     function onBoatType(value) {
@@ -1342,7 +1365,8 @@
         if (!list) return;
         var ids = orderedZones();
         var lang = I18N.getLang();
-        var loa = parseLoa((byId("loa") || {}).value || "");
+        var boat = { loa: metres("loa"), beam: metres("beam"), type: state.boatType };
+        var opts = jobOptions();
         var tier = state.tier;
 
         list.textContent = "";
@@ -1361,7 +1385,7 @@
             }
             var cost = document.createElement("span");
             cost.className = "zone-row__price";
-            var value = Z.price(id, loa);
+            var value = Z.price(id, boat, opts);
             cost.textContent = value === null ? t("est.none") : Z.formatEUR(value);
             var remove = makeButton("zone-row__remove", "✕", t("btn.remove", { label: Z.label(id, lang) }));
             remove.setAttribute("data-zone-remove", id);
@@ -1378,35 +1402,77 @@
         var clear = byId("zonesClear");
         if (clear) clear.hidden = ids.length === 0;
 
-        var est = Z.estimate(ids, tier, loa);
-        var nudge = byId("zonesNudge");
-        if (nudge) {
-            var text = Z.discountHint(est.priced, lang);
-            nudge.textContent = text;
-            nudge.hidden = !text;
-            // Dashed while there is a next step, solid at the cap.
-            nudge.classList.toggle("is-maxed", est.priced > 0 && Z.discountRate(est.priced + 1) === est.rate);
-        }
-
+        renderJobOptions(ids);
+        var est = Z.estimate(ids, tier, boat, opts);
         var box = byId("estimate");
         if (box) box.hidden = ids.length === 0 && !est.package;
         setRow("estPackageRow", est.package > 0);
         setText("estPackageLabel", tier ? t("tier." + tier + ".name") : "");
         setText("estPackage", Z.formatEUR(est.package));
-        setRow("estSubtotalRow", ids.length > 0 && (est.rate > 0 || est.package > 0));
+        setRow("estSubtotalRow", ids.length > 0 && est.package > 0);
         setText("estSubtotal", Z.formatEUR(est.subtotal));
-        setRow("estDiscountRow", est.rate > 0);
-        setText("estDiscountLabel", t("sum.discount", { count: est.priced, rate: est.rate }));
-        // U+2212, a real minus sign.
-        setText("estDiscount", "−" + Z.formatEUR(est.discount));
-        setText("estTotal", Z.formatEUR(est.total));
+        setText("estTotal", est.custom ? t("sum.custom") : Z.formatEUR(est.total));
+        var typed = function (id) {
+            var n = parseLoa((byId(id) || {}).value || "");
+            return isNaN(n) ? "?" : formatNumber(n);
+        };
         var note = t("sum.note", {
             tier: tier ? t("tier." + tier + ".name") : "",
-            loa: isNaN(loa) ? "?" : formatNumber(loa)
+            loa: typed("loa"), beam: typed("beam"), unit: state.unit
         });
         if (est.unpriced) note += " " + t("sum.unpriced", { count: est.unpriced });
+        if (est.custom) note += " " + t("sum.customNote");
+        if (opts.hardware) note += " " + t("sum.hardware", { price: Z.formatEUR(Z.HARDWARE_HOURLY) });
         setText("estNote", note);
         renderAntifouling();
+    }
+
+    /* ---------- Step 3: job details ----------
+       Native selects and checkboxes; each shows only while a zone it applies
+       to is selected. Their state goes into the estimate and the payload.  */
+
+    function jobOptions() {
+        var o = state.options, ids = orderedZones();
+        var painted = ids.some(function (id) { return Z.PAINTED.indexOf(id) !== -1; });
+        return {
+            finish: o.finish, repair: o.repair, bottomWork: o.bottomWork,
+            nonSlip: o.nonSlip && ids.indexOf("deck") !== -1,
+            hardware: o.hardware && painted
+        };
+    }
+
+    function renderJobOptions(ids) {
+        var painted = ids.some(function (id) { return Z.PAINTED.indexOf(id) !== -1; });
+        var bottom = ids.indexOf("bottom") !== -1;
+        setRow("jobOptions", painted || bottom);
+        setRow("optPainted", painted);
+        setRow("optBottom", bottom);
+        setRow("optNonSlipRow", ids.indexOf("deck") !== -1);
+        setRow("optHardwareRow", painted);
+    }
+
+    // The controls show what state.options holds (after a reset).
+    function syncJobOptions() {
+        var o = state.options;
+        [["optFinish", "finish"], ["optRepair", "repair"], ["optBottomWork", "bottomWork"]].forEach(function (pair) {
+            var el = byId(pair[0]);
+            if (el) el.value = o[pair[1]];
+        });
+        [["optNonSlip", "nonSlip"], ["optHardware", "hardware"]].forEach(function (pair) {
+            var el = byId(pair[0]);
+            if (el) el.checked = o[pair[1]];
+        });
+    }
+
+    function initJobOptions() {
+        [["optFinish", "finish"], ["optRepair", "repair"], ["optBottomWork", "bottomWork"]].forEach(function (pair) {
+            var el = byId(pair[0]);
+            if (el) el.addEventListener("change", function () { state.options[pair[1]] = el.value; renderSummary(); });
+        });
+        [["optNonSlip", "nonSlip"], ["optHardware", "hardware"]].forEach(function (pair) {
+            var el = byId(pair[0]);
+            if (el) el.addEventListener("change", function () { state.options[pair[1]] = el.checked; renderSummary(); });
+        });
     }
 
     /* ---------- Step 3: antifouling colour (optional, indicative) ----------
@@ -1669,7 +1735,9 @@
             builder: value("builder"),
             model: value("model"),
             year: Number(value("year")),
-            loa: parseLoa(value("loa")),
+            loa: metres("loa"),
+            beam: metres("beam"),
+            options: jobOptions(),
             registered: state.registered,
             berthKind: state.berthKind,
             registration: state.registered === "registrata" ? value("registration") : "",
@@ -1756,6 +1824,9 @@
         destroyViewer();
         $$("form.step", wizardEl).forEach(function (form) { form.reset(); });
         Object.keys(groups).forEach(function (id) { groups[id].reset(); });
+        if (groups.lenUnit) groups.lenUnit.select(state.unit, true);
+        $$("[data-unit]").forEach(function (el) { el.textContent = state.unit; });
+        syncJobOptions();
         RULES.forEach(function (rule) { if (!rule.virtual) paint(rule, true); });
         updateRegistrationField();
         renderModelSource();
@@ -1812,6 +1883,11 @@
                 }
             });
         }
+        var unitGroup = byId("lenUnit");
+        if (unitGroup) {
+            groups.lenUnit = radioGroup(unitGroup, { selectedClass: "is-selected", onSelect: onUnit });
+            groups.lenUnit.select(state.unit, true);
+        }
         var tierGroup = byId("tier");
         if (tierGroup) {
             groups.tier = radioGroup(tierGroup, {
@@ -1839,7 +1915,12 @@
                 if (rule.id === "loa") {
                     renderRegisteredNote();
                     renderServiceSite();
-                    if (state.autofillNote && el.value !== state.autoLoa) { state.autofillNote = false; renderAutofillNote(); }
+                    checkId("beam", false);
+                }
+                if ((rule.id === "loa" || rule.id === "beam") && state.autofillNote &&
+                        el.value !== (rule.id === "loa" ? state.autoLoa : state.autoBeam)) {
+                    state.autofillNote = false;
+                    renderAutofillNote();
                 }
                 if (rule.id === "loa" || rule.id === "year") renderBoatSummary();
                 if (rule.err) check(rule, true);
@@ -1848,7 +1929,7 @@
             el.addEventListener("input", onChange);
             if (el.tagName === "SELECT") el.addEventListener("change", onChange);
             el.addEventListener("blur", function () {
-                if (rule.id === "loa") {
+                if (rule.id === "loa" || rule.id === "beam") {
                     var n = parseLoa(el.value);
                     if (!isNaN(n)) el.value = formatNumber(n);
                 }
@@ -1876,6 +1957,7 @@
 
         // Step 3
         initAntifouling();
+        initJobOptions();
         var list = byId("zonesList");
         if (list) {
             list.addEventListener("click", function (event) {
@@ -2024,7 +2106,6 @@
         setMenu(menuToggle ? menuToggle.classList.contains("is-open") : false);
         updateTitle();
         renderTierPrices();
-        renderDiscountList();
         renderQuoteLine();
         labelSwatches();
         $$("[data-copy].is-copied").forEach(function (button) { button.textContent = t("btn.copied"); });
@@ -2061,7 +2142,6 @@
         initHero();
         initQuoteLine();
         renderTierPrices();
-        renderDiscountList();
         initLightbox();
         initWizard();
         initLookup();

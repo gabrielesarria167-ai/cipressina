@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS requests (
     antifouling_color text,
     -- The estimate the customer saw, recomputed by the server with
     -- src/zones.js at the moment of sending: { package, subtotal, priced,
-    -- rate, discount, total, unpriced, placeholder }. Kept because the price
+    -- unpriced, custom, total (null when custom), placeholder }; the first
+    -- requests also have rate and discount. Kept because the price
     -- list will change and the shop must know what this customer was quoted.
     estimate          jsonb        NOT NULL,
 
@@ -58,6 +59,12 @@ CREATE TABLE IF NOT EXISTS requests (
     email             text         NOT NULL,
     notes             text
 );
+
+-- Added with the area-based quote: the beam in metres and the step 3 choices
+-- { finish, repair, bottomWork, nonSlip, hardware }. Both stay NULL on the
+-- requests sent before.
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS beam numeric(4,2) CHECK (beam BETWEEN 1 AND 8);
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS options jsonb;
 
 -- The workshop's list, newest first.
 CREATE INDEX IF NOT EXISTS requests_created_at_idx ON requests (created_at DESC);

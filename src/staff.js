@@ -876,6 +876,26 @@
         return td;
     }
 
+    // «8,5 m» or «8,5 × 2,9 m»; requests sent before the beam was asked have none.
+    function sizeText(row) {
+        var loa = String(row.loa).replace(".", ",");
+        return (row.beam ? loa + " × " + String(row.beam).replace(".", ",") : loa) + " m";
+    }
+
+    // The choices of step 3 in words; old requests have none.
+    // Only the options that apply to the zones chosen: the page keeps the others' last value.
+    function optionsText(row) {
+        var options = row.options;
+        if (!options) return "";
+        var painted = row.zones.some(function (id) { return Z.PAINTED.indexOf(id) !== -1; });
+        var out = [];
+        if (painted) out.push(it("opt.finish." + options.finish), it("opt.repair." + options.repair));
+        if (row.zones.indexOf("bottom") !== -1) out.push(it("opt.bottom." + options.bottomWork));
+        if (options.nonSlip) out.push(it("opt.nonSlip"));
+        if (options.hardware) out.push(it("opt.hardware"));
+        return out.join(" · ");
+    }
+
     function boatRow(row) {
         var tr = el("tr");
         tr.dataset.id = row.id;
@@ -883,7 +903,7 @@
 
         var boat = el("div");
         boat.appendChild(el("strong", "", boatTitle(row)));
-        var sub = [typeLabel(row.boatType), String(row.loa).replace(".", ",") + " m"];
+        var sub = [typeLabel(row.boatType), sizeText(row)];
         if (row.boatName) sub.push("«" + row.boatName + "»");
         boat.appendChild(el("span", "sub", sub.join(" · ")));
         boat.appendChild(el("span", "sub", "Codice " + row.id + (row.serviceSite ? " · " + (row.serviceSite === "cantiere" ? "in cantiere" : "in carrozzeria") : "")));
@@ -1032,7 +1052,8 @@
         if (!row.zones.length) zones.appendChild(el("li", "", "Nessuna zona: solo il pacchetto"));
         fact(facts, "Lavori", (row.tier === "nessuno" ? "" : tierLabel(row.tier)));
         fact(facts, "Zone", zones);
-        if (row.estimate) fact(facts, "Preventivo indicativo", Z.formatEUR(row.estimate.total));
+        fact(facts, "Opzioni", optionsText(row));
+        if (row.estimate) fact(facts, "Preventivo indicativo", row.estimate.total === null ? "Preventivo personalizzato" : Z.formatEUR(row.estimate.total));
         fact(facts, "Note del cliente", row.notes);
         fact(facts, "Cliente", row.firstName + " " + row.lastName);
         var phone = el("a", "", row.phone);
@@ -1041,7 +1062,7 @@
         var mail = el("a", "", row.email);
         mail.href = "mailto:" + row.email;
         fact(facts, "Email", mail);
-        fact(facts, "Barca", typeLabel(row.boatType) + " · " + String(row.loa).replace(".", ",") + " m · " + row.year);
+        fact(facts, "Barca", typeLabel(row.boatType) + " · " + sizeText(row) + " · " + row.year);
         fact(facts, "Immatricolazione", row.registered === "registrata" ? row.registration : "Natante (non immatricolata)");
         fact(facts, "Dove si trova", [it("opt.berth." + row.berthKind), row.location].filter(Boolean).join(" · "));
         fact(facts, "Dove si lavora", row.serviceSite === "cantiere" ? "In cantiere" : row.serviceSite === "carrozzeria" ? "In carrozzeria" : "");

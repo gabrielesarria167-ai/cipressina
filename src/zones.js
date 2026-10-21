@@ -3,7 +3,7 @@
 
    Boat equivalent of autocolor's src/parts.js. One file holds everything the
    estimate needs (zone labels, which zones each boat type has, the price
-   list, the multi-zone discount, the euro formatter), so the home price
+   list, the area and option maths, the euro formatter), so the home price
    sentence, the wizard summary and the checklist fallback can never disagree.
 
    EVERY PRICE HERE IS A PLACEHOLDER until the shop confirms its list
@@ -158,26 +158,24 @@
     };
 
     // Zone work: EUR per metre of LOA, `min` is the floor per zone. One rate
-    // whatever the package. ALL PLACEHOLDER.
+    // whatever the package. ALL PLACEHOLDER. The bottom, topsides, transom
+    // and deck are not here: they have the owner's rates below.
     var PRICES = {
-        antifouling:    { rate: 40, min: 150 },
         stripe:         { rate: 12, min: 120 },
-        topsides:       { rate: 85, min: 300 }, // per side
-        transom:        { rate: 35, min: 150 },
-        deck:           { rate: 70, min: 250 },
         superstructure: { rate: 65, min: 250 },
         appendage:      { rate: 28, min: 150 },
         small:          { rate: 14, min: 100 },
         tubes:          { rate: 35, min: 200 }  // per side
     };
 
+    // «area»: priced by price() from the boat's area and the owner's rates.
     var PRICE_GROUP_OF = {
-        bottom: "antifouling",
+        bottom: "area",
         boot: "stripe",
-        topside_port: "topsides",
-        topside_starboard: "topsides",
-        transom: "transom",
-        deck: "deck",
+        topside_port: "area",
+        topside_starboard: "area",
+        transom: "area",
+        deck: "area",
         cabin: "superstructure",
         hardtop: "superstructure",
         flybridge: "superstructure",
@@ -191,16 +189,40 @@
         keel: "appendage"
     };
 
-    // The multi-zone discount, in percent, indexed by how many priced zones
-    // the request has: none for one, then 5, 7 and 9, and 10 from five up
-    // (the last step is the cap). PLACEHOLDER, same curve as autocolor. It
-    // comes off the subtotal, so the list keeps showing list prices. The home
-    // page renders its discount list from this array.
-    var DISCOUNT_STEPS = [0, 0, 5, 7, 9, 10];
+    // The owner's rates (design/checklist-titolare.md), EUR per m2 of painted
+    // surface; the bottom is either antifouling alone, per metre of LOA (and
+    // longer boats pay `longExtra` percent more on the whole length), or
+    // sandblasting and restoring, per m2 of underwater area.
+    var AREA_PRICES = { paint: 300, deck: 400, sandblast: 400 };
+    var ANTIFOULING = { rate: 120, longOver: 10, longExtra: 20 };
+    // Percent, added to the base rate for each option chosen (not compounded).
+    var SURCHARGE = 25;
+    // Removing and refitting hardware: never in the total, said in a note.
+    var HARDWARE_HOURLY = 40;
 
-    function discountRate(count) {
-        if (!(count > 0)) return 0;
-        return DISCOUNT_STEPS[Math.min(count, DISCOUNT_STEPS.length - 1)];
+    // What the customer can choose in step 3; the first value of each is the default.
+    var OPTIONS = {
+        finish: ["pastello", "metallizzato"],
+        repair: ["stuccature", "resinatura", "gravose"],
+        bottomWork: ["antivegetativa", "sabbiatura"]
+    };
+
+    // The zones the finish, repair and hardware options apply to.
+    var PAINTED = ["topside_port", "topside_starboard", "transom", "deck"];
+
+    // Area coefficients. Only the underwater one has a source: LOA x beam x
+    // 0.85, Interlux's rule of thumb (interlux.com/en/us/support/boat-painting-tips/
+    // how-much-antifouling-paint-do-i-need), same as TotalBoat's calculator.
+    // No maker publishes one for topsides, transom or deck: those, and the
+    // freeboard (topside height = LOA times a ratio per type), are PLACEHOLDER.
+    var FREEBOARD = { gommone: 0.07, open: 0.09, cabinato: 0.11, yacht: 0.13, vela: 0.09 };
+    var TRANSOM_FACTOR = 0.8;       // transom = beam x freeboard x this
+    var DECK_FACTOR = 0.75;         // deck = LOA x beam x this
+    var UNDERWATER_FACTOR = 0.85;   // underwater = LOA x beam x this
+
+    // A beam for the home sentence, which asks only for the length. PLACEHOLDER.
+    function typicalBeam(loa) {
+        return Math.round(loa / 3 * 100) / 100;
     }
 
     // ---------- Maths ------------------------------------------------------
@@ -209,13 +231,41 @@
         return Math.max(row.min, Math.round(row.rate * loa));
     }
 
-    // The price of one zone at one length, or null when either is unknown.
+    // The area in m2 that a zone is priced on, or null for the zones priced
+    // per metre (and when the beam or the type is unknown).
+    function area(id, boat) {
+        var loa = boat.loa, beam = boat.beam;
+        if (!(loa > 0) || !(beam > 0) || !has.call(FREEBOARD, boat.type)) return null;
+        var freeboard = loa * FREEBOARD[boat.type];
+        if (id === "topside_port" || id === "topside_starboard") return loa * freeboard;
+        if (id === "transom") return beam * freeboard * TRANSOM_FACTOR;
+        if (id === "deck") return loa * beam * DECK_FACTOR;
+        if (id === "bottom") return loa * beam * UNDERWATER_FACTOR;
+        return null;
+    }
+
+    // The price of one zone for a boat {loa, beam, type} and the chosen
+    // options {finish, nonSlip, repair, bottomWork} (a missing one is its
+    // default), in whole euros, or null when the zone or the boat is unknown.
     // hasOwnProperty throughout: an id such as "constructor" must not
     // resolve to an inherited Object method.
-    function price(id, loa) {
+    function price(id, boat, opts) {
         if (!has.call(PRICE_GROUP_OF, id)) return null;
-        if (!(loa > 0)) return null;
-        return perMetre(PRICES[PRICE_GROUP_OF[id]], loa);
+        if (!boat || !(boat.loa > 0)) return null;
+        if (PRICE_GROUP_OF[id] !== "area") return perMetre(PRICES[PRICE_GROUP_OF[id]], boat.loa);
+        opts = opts || {};
+        var m2 = area(id, boat);
+        if (id === "bottom") {
+            if (opts.bottomWork === "sabbiatura") return m2 === null ? null : Math.round(m2 * AREA_PRICES.sandblast);
+            var factor = boat.loa > ANTIFOULING.longOver ? 1 + ANTIFOULING.longExtra / 100 : 1;
+            return Math.round(boat.loa * ANTIFOULING.rate * factor);
+        }
+        if (m2 === null) return null;
+        var percent = 0;
+        if (opts.finish === "metallizzato") percent += SURCHARGE;
+        if (opts.repair === "resinatura") percent += SURCHARGE;
+        if (id === "deck" && opts.nonSlip) percent += SURCHARGE;
+        return Math.round(m2 * (id === "deck" ? AREA_PRICES.deck : AREA_PRICES.paint) * (1 + percent / 100));
     }
 
     // The price of a package at one length; null for «nessuno», an unknown
@@ -227,40 +277,27 @@
     }
 
     // Package + zones. The zone part follows parts.js estimate(): unpriced
-    // zones add nothing and do not count towards the discount, which is
-    // rounded to whole euros and only comes off the zones, never the package.
-    function estimate(ids, tier, loa) {
-        var subtotal = 0, priced = 0, unpriced = 0;
+    // zones add nothing. Heavy repairs on a painted zone cannot be priced
+    // without a visit: `custom` is true and `total` is null.
+    function estimate(ids, tier, boat, opts) {
+        var subtotal = 0, priced = 0, unpriced = 0, painted = false;
         (ids || []).forEach(function (id) {
-            var value = price(id, loa);
+            var value = price(id, boat, opts);
             if (value === null) unpriced++;
             else { subtotal += value; priced++; }
+            if (PAINTED.indexOf(id) !== -1) painted = true;
         });
-        var rate = discountRate(priced);
-        var discount = Math.round(subtotal * rate / 100);
-        var pkg = packagePrice(tier, loa) || 0;
+        var custom = painted && !!opts && opts.repair === "gravose";
+        var pkg = (boat && packagePrice(tier, boat.loa)) || 0;
         return {
             package: pkg,
             subtotal: subtotal,
             priced: priced,
-            rate: rate,
-            discount: discount,
-            total: pkg + subtotal - discount,
             unpriced: unpriced,
+            custom: custom,
+            total: custom ? null : pkg + subtotal,
             placeholder: PLACEHOLDER
         };
-    }
-
-    // The nudge under the zone list. Its three sentences live in i18n.js
-    // (disc.first / disc.add / disc.max) so there is one place to translate;
-    // the I18N object is looked up at call time because it loads after us.
-    function discountHint(count, lang) {
-        if (!(count > 0)) return "";
-        var current = discountRate(count);
-        var next = discountRate(count + 1);
-        var key = next === current ? "disc.max" : (count === 1 ? "disc.first" : "disc.add");
-        var i18n = W.CIPRESSINA_I18N;
-        return i18n ? i18n.t(key, { next: next }, lang) : "";
     }
 
     // Always it-IT, in every UI language (client decision, flagged in the
@@ -402,7 +439,12 @@
         NO_PACKAGE: NO_PACKAGE,
         PACKAGE_CHOICES: PACKAGE_CHOICES,
         PACKAGES: PACKAGES,
-        DISCOUNT_STEPS: DISCOUNT_STEPS,
+        AREA_PRICES: AREA_PRICES,
+        ANTIFOULING: ANTIFOULING,
+        SURCHARGE: SURCHARGE,
+        HARDWARE_HOURLY: HARDWARE_HOURLY,
+        OPTIONS: OPTIONS,
+        PAINTED: PAINTED,
         SWATCHES: SWATCHES,
         BUILDERS: BUILDERS,
         builderNames: builderNames,
@@ -411,8 +453,7 @@
         price: price,
         packagePrice: packagePrice,
         estimate: estimate,
-        discountRate: discountRate,
-        discountHint: discountHint,
+        typicalBeam: typicalBeam,
         formatEUR: formatEUR,
         label: label
     };

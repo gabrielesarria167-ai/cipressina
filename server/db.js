@@ -82,10 +82,10 @@ async function query(text, values) {
 const INSERT_REQUEST = `
     INSERT INTO requests (id, lang, boat_type, builder, model, model_year, loa, registered, registration,
                           berth_kind, engine_hours, location, service_site, boat_name, color_code,
-                          tier, zones, antifouling_color, estimate,
+                          tier, zones, antifouling_color, estimate, beam, options,
                           first_name, last_name, phone, email, notes)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19,
-            $20, $21, $22, $23, $24)
+            $20, $21, $22, $23, $24, $25, $26)
     RETURNING id, status, created_at
 `;
 
@@ -101,7 +101,7 @@ async function createRequest(data) {
                 id, data.lang, data.boatType, data.builder, data.model, data.year, data.loa,
                 data.registered, data.registration, data.berthKind, data.engineHours, data.location,
                 data.serviceSite, data.boatName, data.colorCode,
-                data.tier, data.zones, data.antifoulingColor, data.estimate,
+                data.tier, data.zones, data.antifoulingColor, data.estimate, data.beam, data.options,
                 data.firstName, data.lastName, data.phone, data.email, data.notes,
             ]);
             return { id: rows[0].id.trim(), status: rows[0].status, createdAt: rows[0].created_at };
@@ -147,7 +147,7 @@ require('../src/zones.js');
 const { FINISHED } = globalThis.CIPRESSINA_ZONES;
 const STAFF_COLUMNS = `id, created_at, status, boat_type, builder, model, model_year, loa, registered,
                        registration, berth_kind, engine_hours, location, service_site, boat_name,
-                       color_code, tier, zones, antifouling_color, estimate,
+                       color_code, tier, zones, antifouling_color, estimate, beam, options,
                        first_name, last_name, phone, email, notes, occupied_by`;
 
 function mapStaffRequest(row) {
@@ -160,6 +160,7 @@ function mapStaffRequest(row) {
         model: row.model,
         year: row.model_year,
         loa: Number(row.loa),
+        beam: row.beam === null ? null : Number(row.beam),
         registered: row.registered,
         registration: row.registration,
         berthKind: row.berth_kind,
@@ -172,6 +173,7 @@ function mapStaffRequest(row) {
         zones: row.zones || [],
         antifoulingColor: row.antifouling_color,
         estimate: row.estimate,
+        options: row.options,
         firstName: row.first_name,
         lastName: row.last_name,
         phone: row.phone,
