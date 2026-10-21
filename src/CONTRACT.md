@@ -77,7 +77,7 @@ Also keep: visible `:focus-visible` rings, inputs ≥ 16px, `[aria-disabled="tru
 | Draft ribbon | `#draftRibbon` `data-i18n="ribbon"` | R | on every view: put it outside the views, in the shell |
 | Header | `#siteHeader` | O | sticky. `top: env(safe-area-inset-top, 0px)` |
 | Logo link | `href="index.html"` on the home page, `href="../index.html"` on `pgs/preventivo.html`; `data-i18n-attr="aria-label:nav.home"` | R | |
-| Nav links | `<a href="#servizi">` … `#come-funziona`, `#interventi`, `#chi-siamo`, `#contatti` on the home page; `../index.html#servizi` … on `pgs/preventivo.html` | R | ids are plain `[A-Za-z0-9-]` |
+| Nav links | `<a href="#giro">`, `#galleria`, `#servizi`, `#chi-siamo`, `#interventi`, `#contatti` on the home page; `../index.html#giro` … on `pgs/preventivo.html` | R | ids are plain `[A-Za-z0-9-]` |
 | CTA | `<a data-i18n="nav.quote">` | R | On `index.html`: `pgs/preventivo.html` (tiers add `?pacchetto=<tier>`). On `pgs/preventivo.html`: `href="#"`, which returns to the last wizard step (e.g. from `#stato`). In the single-page sketch: `#preventivo` |
 | Language switcher | `<button type="button" data-lang="it|en|es|fr" lang="…" aria-label="Italiano" aria-pressed>` ×4 inside a `role="group"` labelled `lang.label` | R | repeatable (header and menu panel); App writes `.is-active` and `aria-pressed`. A `<select data-lang-select>` also works |
 | Menu toggle | `button#menuToggle` (`aria-controls="navPanel"`, `aria-expanded`) | R | App writes `aria-label` («Apri/Chiudi il menu»), `.is-open`; give it an icon through CSS |
@@ -96,7 +96,7 @@ Hand-over from the home page: `pgs/preventivo.html?pacchetto=<tier>&loa=<m>`. Th
 
 ### 3.1 Home
 
-The 3D hero and its swatches are optional (O). Since 2026-10-16 `index.html` shows a gallery photo (`.intro__photo`) instead and loads no importmap; App skips the hero when `#heroBoat` is absent. The design sketches still use it.
+The 3D hero and its swatches are optional (O). `index.html` has no `#heroBoat`, so App skips the hero. Since 2026-10-21 (the «Giro della barca» look) the home page has no price sentence either: its 3D is the tour in `#giro`, run by `src/tour.js` (loaded as a module after `app.js`, so `index.html` loads the importmap again). The tour is the page's own and needs from App only `CIPRESSINA_ZONES` (`price`, `typicalBeam`, `formatEUR`, `SWATCHES`) and `CIPRESSINA_I18N` (`t`, the `cipressina:lang` event). Its hooks: `#tourViewer` > `#tourCanvas`, `#tourMsg` > `#tourLoading` + `#tourErr`, `#tourNow`, `#tourLoa` + `#tourLoaOut`, `#tourChips` (empty; filled from `Z.SWATCHES` minus «Originale»), `#tourQuote` (gets `?loa=`), and `.steps-tour li[data-view][data-zones][data-name]` with `output[data-est="<zone ids>"]`. The coat colour is written to `--af`, `--af-ink`, `--af-muted`, `--af-rule` on `:root`. The design sketches still use the hero.
 
 | Element | Id / attribute | R/O |
 |---|---|---|
@@ -129,7 +129,7 @@ Tiers:
 | Tier price | `[data-tier-from="base|completo|premium"]` anywhere (home cards, wizard step 2) | App writes «da 55 € al metro (minimo 350 €)» from `PACKAGES` in zones.js. Wrap in `.ph` |
 | Tier choose link | `<a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base">` | O: preselects the finish in the wizard |
 
-Other sections (Servizi, Come funziona, Interventi, Galleria, Perché noi, FAQ, Contatti): ids `servizi`, `come-funziona`, `interventi`, `galleria`, `chi-siamo`, `domande`, `contatti` are the anchor targets (R for the nav); their content is the skin's.
+Other sections: ids `giro`, `galleria`, `servizi`, `chi-siamo`, `interventi` (rates and packages), `come-funziona` (the four steps, inside `interventi`), `domande`, `contatti` are the anchor targets (R for the nav, which links `giro`, `galleria`, `servizi`, `chi-siamo`, `interventi`, `contatti`); their content is the skin's.
 
 Gallery (O): each `a[data-lightbox="<group>"]` (`barche`, `sede`) links to the full photo and wraps its thumbnail `img`, whose `alt` becomes the caption. With `dialog#lightbox` > `#lightboxImg`, `#lightboxCaption`, `#lightboxCount` (`lb.count`), `#lightboxPrev`, `#lightboxNext` and `#lightboxClose`, App opens the photos in the dialog, previous / next within the group; without it the links simply open the file.
 

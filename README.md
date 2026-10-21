@@ -18,7 +18,8 @@ Plain HTML, CSS and JS with no build step. One small Node server (`server/`) ser
   - The build is `build-all.sh`.
   - Licences are in `CREDITS.md` (CC BY 4.0, attribution required).
   - GitHub Pages serves `.glb` fine. The `.json` copies were only needed for Claude artifacts; `node design/models/glb2json.mjs` still makes them on demand.
-- **Design archive:** `design/sketches/`. `c-laguna.html` was the approved single-page draft (home, wizard and lookup as hash-routed views). The other sketches, the research and specs (`research.md`, `flow-spec.md`, `brief.md`, `cipressina-look.md`) are there too. They load `../../src/`.
+- **Look:** «Giro della barca», approved on 2026-10-21 from a sketch (deleted once applied; the rules are in `DESIGN.md`). The home page opens with the news «Cipressina adesso lavora anche con le barche.» on the waterline stripe, then a pinned 3D tour of the zones with the owner's rates and live estimates (`src/tour.js`); everything below the line takes the antifouling colour the visitor picks.
+- **Design archive:** `design/sketches/`. `c-laguna.html` was the earlier approved single-page draft (home, wizard and lookup as hash-routed views). The other sketches, the research and specs (`research.md`, `flow-spec.md`, `brief.md`, `cipressina-look.md`) are there too. They load `../../src/`.
 
 To run it locally: `npm install`, `cp .env.example .env` (fill in `DATABASE_URL`), `npm run db:migrate` once, then `npm start` and open http://localhost:3000. `python3 -m http.server 8791` still serves the pages, but sending a request and the lookup need the server.
 

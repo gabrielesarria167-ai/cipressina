@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T21:22:20+00:00",
+  "title": "Design System: Cipressina Barche",
+  "extensions": {
+    "colorMeta": {
+      "gelcoat": {
+        "role": "neutral",
+        "displayName": "Gelcoat White",
+        "canonical": "#f4f6f5",
+        "tonalRamp": [
+          "#222a26",
+          "#3c4942",
+          "#55685e",
+          "#6e877a",
+          "#8ca196",
+          "#abbab2",
+          "#cdd6d1",
+          "#f1f4f2"
+        ]
+      },
+      "hull-navy": {
+        "role": "primary",
+        "displayName": "Hull Navy",
+        "canonical": "#0d1a4a",
+        "tonalRamp": [
+          "#0b1741",
+          "#142871",
+          "#1c38a1",
+          "#2549d0",
+          "#4d6ce0",
+          "#7d94e8",
+          "#b1bff1",
+          "#e9edfb"
+        ]
+      },
+      "hull-navy-soft": {
+        "role": "neutral",
+        "displayName": "Hull Navy Soft",
+        "canonical": "#3d4a6e",
+        "tonalRamp": [
+          "#1b2131",
+          "#2f3955",
+          "#435279",
+          "#576a9d",
+          "#7888b4",
+          "#9da8c8",
+          "#c4cbde",
+          "#eff1f6"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#d3d9e3",
+        "tonalRamp": [
+          "#1e242f",
+          "#343f51",
+          "#495973",
+          "#5f7496",
+          "#7f91ae",
+          "#a2aec3",
+          "#c7cfdb",
+          "#eff2f5"
+        ]
+      },
+      "boot-green": {
+        "role": "primary",
+        "displayName": "Boot Green",
+        "canonical": "#009642",
+        "tonalRamp": [
+          "#004c22",
+          "#00853a",
+          "#00bd53",
+          "#00f56c",
+          "#2eff8a",
+          "#66ffa9",
+          "#a3ffcc",
+          "#e5fff1"
+        ]
+      },
+      "boot-green-ink": {
+        "role": "primary",
+        "displayName": "Boot Green Ink",
+        "canonical": "#007a36",
+        "tonalRamp": [
+          "#004c22",
+          "#00853b",
+          "#00bd54",
+          "#00f56c",
+          "#2eff8a",
+          "#66ffaa",
+          "#a3ffcc",
+          "#e5fff1"
+        ]
+      },
+      "pinstripe-blue": {
+        "role": "secondary",
+        "displayName": "Pinstripe Blue",
+        "canonical": "#2742d6",
+        "tonalRamp": [
+          "#0c1441",
+          "#142370",
+          "#1d31a0",
+          "#2640cf",
+          "#4e64df",
+          "#7e8ee7",
+          "#b1bbf1",
+          "#e9ecfb"
+        ]
+      },
+      "antifouling": {
+        "role": "tertiary",
+        "displayName": "Antifouling Coat (Veneziani blu scuro)",
+        "canonical": "#14305e",
+        "tonalRamp": [
+          "#0d203f",
+          "#17386d",
+          "#214f9c",
+          "#2b67ca",
+          "#5386da",
+          "#81a6e4",
+          "#b3caef",
+          "#eaf0fb"
+        ],
+        "note": "Runtime variable --af; src/tour.js swaps it for the chosen swatch and flips the coat inks to navy on light coats."
+      },
+      "antifouling-ink": {
+        "role": "tertiary",
+        "displayName": "Coat Ink",
+        "canonical": "#eef1f7",
+        "tonalRamp": [
+          "#182234",
+          "#2a3a5a",
+          "#3c5380",
+          "#4e6ca6",
+          "#718abc",
+          "#97a9ce",
+          "#c1cce2",
+          "#eef1f7"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#e9edf0",
+        "tonalRamp": [
+          "#1f272d",
+          "#36444f",
+          "#4c6170",
+          "#637e92",
+          "#8399aa",
+          "#a4b5c1",
+          "#c8d2da",
+          "#f0f3f5"
+        ]
+      },
+      "navy-wash": {
+        "role": "neutral",
+        "displayName": "Navy Wash",
+        "canonical": "#e4e9f2",
+        "tonalRamp": [
+          "#192234",
+          "#2b3c5a",
+          "#3d557f",
+          "#506ea5",
+          "#728cbb",
+          "#98abcd",
+          "#c1cde1",
+          "#eef1f7"
+        ]
+      },
+      "input-border": {
+        "role": "neutral",
+        "displayName": "Input Border",
+        "canonical": "#7d869c",
+        "tonalRamp": [
+          "#21242b",
+          "#393f4b",
+          "#52596b",
+          "#6a738b",
+          "#8891a5",
+          "#a8aebd",
+          "#cbced7",
+          "#f1f2f4"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error Red",
+        "canonical": "#b3261e",
+        "tonalRamp": [
+          "#420e0b",
+          "#721813",
+          "#a2221b",
+          "#d22d23",
+          "#e1544c",
+          "#e9827c",
+          "#f2b4b0",
+          "#fbeae9"
+        ]
+      },
+      "placeholder-bg": {
+        "role": "neutral",
+        "displayName": "Placeholder Yellow",
+        "canonical": "#fff2cc",
+        "tonalRamp": [
+          "#4c3900",
+          "#856300",
+          "#bd8d00",
+          "#f5b600",
+          "#ffca2e",
+          "#ffd866",
+          "#ffe8a3",
+          "#fff8e5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero news only, on the stripe."
+      },
+      "page-title": {
+        "displayName": "Page title",
+        "purpose": "Title in the page head band."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "h3, card and step names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Copy, max 64ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, nav, field labels; sentence case."
+      },
+      "price": {
+        "displayName": "Price",
+        "purpose": "Rate-book and estimate figures, condensed tabular."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Step counters, equipment counts, tracking code."
+      }
+    },
+    "shadows": [
+      {
+        "name": "fab",
+        "value": "0 6px 20px rgb(0 0 0 / .25)",
+        "purpose": "Only the floating WhatsApp button."
+      }
+    ],
+    "motion": [
+      {
+        "name": "stripe-draw",
+        "value": "scaleX 0→1, 1.1s cubic-bezier(.65, 0, .35, 1) .15s",
+        "purpose": "The one signature: hero stripe draws on load. Off under reduced motion."
+      },
+      {
+        "name": "paint",
+        "value": ".7s cubic-bezier(.65, 0, .35, 1)",
+        "purpose": "Coat repaint cross-fade. 0s under reduced motion."
+      },
+      {
+        "name": "state",
+        "value": ".2s cubic-bezier(.2, .7, .2, 1)",
+        "purpose": "Button and link colour changes."
+      },
+      {
+        "name": "step",
+        "value": ".4s cubic-bezier(.2, .7, .2, 1)",
+        "purpose": "Tour step opacity."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "gutter",
+        "value": "768px"
+      },
+      {
+        "name": "wizard-3d",
+        "value": "960px"
+      },
+      {
+        "name": "stack",
+        "value": "900px"
+      },
+      {
+        "name": "nav",
+        "value": "1100px"
+      },
+      {
+        "name": "phone",
+        "value": "560px"
+      }
+    ],
+    "stripe": {
+      "value": "linear-gradient(#2742d6 0 4px,transparent 4px 7px,#009642 7px 19px)",
+      "height": "19px",
+      "purpose": "The boot stripe; marks the waterline only."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action on gelcoat.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Chiedi un preventivo</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border:2px solid var(--navy,#0d1a4a);border-radius:0;font:700 1rem/1.15 Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 112;transition:background-color .2s cubic-bezier(.2,.7,.2,1),color .2s,border-color .2s;cursor:pointer}.ds-btn:focus-visible{outline:3px solid #009642;outline-offset:3px}.ds-btn-primary{background:#0d1a4a;color:#fff}.ds-btn-primary:hover{background:#007a36;border-color:#007a36}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action on gelcoat.",
+      "html": "<button class=\"ds-btn ds-btn-outline\">Indietro</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border:2px solid var(--navy,#0d1a4a);border-radius:0;font:700 1rem/1.15 Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 112;transition:background-color .2s cubic-bezier(.2,.7,.2,1),color .2s,border-color .2s;cursor:pointer}.ds-btn:focus-visible{outline:3px solid #009642;outline-offset:3px}.ds-btn-outline{background:transparent;color:#0d1a4a}.ds-btn-outline:hover{background:#0d1a4a;color:#fff}"
+    },
+    {
+      "name": "Coat Button",
+      "kind": "button",
+      "refersTo": "button-coat",
+      "description": "Primary action below the waterline; reads the coat variables.",
+      "html": "<div class=\"ds-coat\"><button class=\"ds-btn ds-btn-coat\">Scrivici su WhatsApp</button></div>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border:2px solid var(--navy,#0d1a4a);border-radius:0;font:700 1rem/1.15 Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 112;transition:background-color .2s cubic-bezier(.2,.7,.2,1),color .2s,border-color .2s;cursor:pointer}.ds-btn:focus-visible{outline:3px solid #009642;outline-offset:3px}.ds-coat{background:var(--af,#14305e);padding:24px}.ds-btn-coat{background:var(--af-ink,#eef1f7);color:var(--af,#14305e);border-color:var(--af-ink,#eef1f7)}.ds-btn-coat:hover{background:#007a36;border-color:#007a36;color:#fff}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Square white field with navy focus ring and green halo.",
+      "html": "<label class=\"ds-label\">Lunghezza<input class=\"ds-input\" type=\"text\" placeholder=\"8,5\"></label>",
+      "css": ".ds-label{display:grid;gap:6px;font:700 1rem/1.3 Archivo,system-ui,sans-serif;color:#0d1a4a}.ds-input{min-height:48px;padding:8px 12px;font:400 1rem/1.5 Archivo,system-ui,sans-serif;background:#fff;color:#0d1a4a;border:1px solid #7d869c;border-radius:0}.ds-input:focus{outline:none;border-color:#0d1a4a;box-shadow:inset 0 0 0 1px #0d1a4a,0 0 0 3px rgb(0 150 66 / .35)}"
+    },
+    {
+      "name": "Choice Card",
+      "kind": "card",
+      "refersTo": "choice-card",
+      "description": "Selected card sits on a mini boot stripe.",
+      "html": "<div class=\"ds-choices\"><button class=\"ds-choice\">Gommone</button><button class=\"ds-choice is-selected\">Cabinato</button></div>",
+      "css": ".ds-choices{display:flex;gap:8px}.ds-choice{position:relative;min-height:48px;padding:12px 18px;background:#fff;border:1px solid #7d869c;border-radius:0;font:700 1rem/1.2 Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 110;color:#0d1a4a;cursor:pointer}.ds-choice:hover{border-color:#0d1a4a}.ds-choice:focus-visible{outline:3px solid #009642;outline-offset:3px}.ds-choice.is-selected{border-color:#0d1a4a;box-shadow:inset 0 0 0 1px #0d1a4a}.ds-choice.is-selected::after{content:'';position:absolute;left:-1px;right:-1px;bottom:-1px;height:7px;background:linear-gradient(#2742d6 0 2px,transparent 2px 3px,#009642 3px)}"
+    },
+    {
+      "name": "Rate Book",
+      "kind": "custom",
+      "description": "Ruled list of rates, condensed tabular prices.",
+      "html": "<dl class=\"ds-book\"><div><dt>Fiancate e specchio di poppa</dt><dd>300 €/m²</dd></div><div><dt>Coperta</dt><dd>400 €/m²</dd></div><div><dt>Antivegetativa</dt><dd>120 €/m</dd></div></dl>",
+      "css": ".ds-book{margin:0;border-top:2px solid #0d1a4a;font-family:Archivo,system-ui,sans-serif;color:#0d1a4a}.ds-book div{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:15px 0;border-bottom:1px solid #d3d9e3}.ds-book dt{font-weight:650}.ds-book dd{margin:0;font-weight:800;font-variation-settings:'wdth' 70;font-size:1.55rem;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}"
+    },
+    {
+      "name": "Page Head Band",
+      "kind": "custom",
+      "refersTo": "page-band",
+      "description": "Page title on the waterline.",
+      "html": "<div class=\"ds-band\"><p class=\"ds-band__title\">Preventivo barca</p></div>",
+      "css": ".ds-band{position:relative;padding:48px 24px 47px;background:#f4f6f5;color:#0d1a4a}.ds-band::after{content:'';position:absolute;left:0;right:0;bottom:0;height:19px;background:linear-gradient(#2742d6 0 4px,transparent 4px 7px,#009642 7px 19px)}.ds-band__title{margin:0;font:800 clamp(2.2rem,5.6vw,4.6rem)/.98 Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 125;letter-spacing:-0.035em}"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "description": "Header link with green underline on hover and current.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Lavori</a><a href=\"#\">Servizi</a><a href=\"#\">Contatti</a></nav>",
+      "css": ".ds-nav{display:flex;gap:26px;font:600 .95rem Archivo,system-ui,sans-serif;font-variation-settings:'wdth' 108}.ds-nav a{padding:6px 0;color:#0d1a4a;text-decoration:none;border-bottom:2px solid transparent}.ds-nav a:hover,.ds-nav a[aria-current]{border-color:#009642}.ds-nav a:focus-visible{outline:3px solid #009642;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Giro della barca",
+    "overview": "Every page is a boat seen from the side. The gelcoat-white page sits above the waterline. The boot stripe (a thin blue pinstripe over a wide logo-green band) marks the line, and below it is the antifouling coat: a dark, saturated field that carries the lead copy, the rates, the FAQ, the contacts and the footer. On the home page the visitor picks an antifouling colour from real paint swatches and everything below the line repaints to it, ink included.\n\nThe look is a shipyard, not a brochure. It uses one variable family (Archivo) stretched wide for headings and squeezed narrow for prices and counts. Corners are square, borders are hairlines and 2px rules, and the surfaces are flat. Photos of real boats in the workshop carry the trust. Content sits on ruled lists (rate books, specs, awards), not on cards.",
+    "keyCharacteristics": [
+      "Two zones per page: gelcoat above the stripe, coat below it.",
+      "The boot stripe is the one recurring graphic device, and it always means \"the waterline\".",
+      "Archivo's width axis does the hierarchy work: wide for words, narrow for numbers.",
+      "Square corners everywhere (0).",
+      "Motion is one gesture: the stripe draws across when the page loads."
+    ],
+    "rules": [
+      {
+        "name": "The Waterline Rule",
+        "body": "Gelcoat is above the stripe and the coat is below it. A section never puts the coat above a stripe or gelcoat under one on the home page.",
+        "section": "colors"
+      },
+      {
+        "name": "The Live Coat Rule",
+        "body": "Anything on the coat reads its colours from the coat variables, because the visitor can repaint it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Marked Placeholder Rule",
+        "body": "An unconfirmed price or fact is shown in the placeholder highlight. It is never styled to look confirmed.",
+        "section": "colors"
+      },
+      {
+        "name": "The Width Axis Rule",
+        "body": "Words go wide (wdth 104–125). Numbers go narrow (wdth 62–70) and tabular. Body copy stays at 100.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Labels, buttons and headings are never set in all caps. Only the language codes (IT, EN, ES, FR) are uppercase.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Hull Rule",
+        "body": "Surfaces don't cast shadows. Hierarchy comes from rules, colour fields and width.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do put every new page's title on a band with the boot stripe under it.",
+      "Do read coat colours from the coat variables in anything placed below the line.",
+      "Do set prices and counts condensed (wdth 62–70) and tabular, and headings expanded (wdth 108–125).",
+      "Do use ruled lists (2px ink top rule, 1px hairlines) for rates, specs and facts.",
+      "Do mark every unconfirmed price or fact with the placeholder highlight.",
+      "Do use real workshop and boat photos from `img/` for imagery."
+    ],
+    "donts": [
+      "Don't round corners, add card shadows or use gradients other than the boot stripe.",
+      "Don't use the boot stripe as decoration: it always marks the waterline (page head, hero, the tour control strip, the selected card).",
+      "Don't set labels, buttons or headings in all caps, or add small labels above headings.",
+      "Don't add a second animated signature. The stripe draw is the only one.",
+      "Don't change the logo or its blue and green. They stay as supplied.",
+      "Don't invent facts for the design to carry: no founding date other than the 1978 Registro Imprese line, no counts of boats served, reviews, testimonials, certifications, response times or warranty terms (see PRODUCT.md)."
+    ]
+  }
+}

@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preventivo barca | Cipressina Barche</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="../styles.css?v=2026-10-21a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<link rel="stylesheet" href="../styles.css?v=2026-10-21b">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
@@ -19,11 +21,11 @@
     </a>
     <span class="hdr__spacer"></span>
     <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+      <a href="../index.html#giro" data-i18n="cip.nav.giro">Il giro</a>
+      <a href="../index.html#galleria" data-i18n="cip.nav.lavori">Lavori</a>
       <a href="../index.html#servizi" data-i18n="nav.servizi">Servizi</a>
-      <a href="../index.html#come-funziona" data-i18n="nav.come">Come funziona</a>
-      <a href="../index.html#interventi" data-i18n="nav.interventi">Interventi</a>
-      <a href="../index.html#galleria" data-i18n="nav.galleria">Galleria</a>
       <a href="../index.html#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+      <a href="../index.html#interventi" data-i18n="cip.nav.rates">Tariffe</a>
       <a href="../index.html#contatti" data-i18n="nav.contatti">Contatti</a>
     </nav>
     <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
@@ -36,11 +38,11 @@
     <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel" aria-label="Apri il menu"></button>
   </div>
   <div id="navPanel">
+    <a href="../index.html#giro" data-i18n="cip.nav.giro">Il giro</a>
+    <a href="../index.html#galleria" data-i18n="cip.nav.lavori">Lavori</a>
     <a href="../index.html#servizi" data-i18n="nav.servizi">Servizi</a>
-    <a href="../index.html#come-funziona" data-i18n="nav.come">Come funziona</a>
-    <a href="../index.html#interventi" data-i18n="nav.interventi">Interventi</a>
-    <a href="../index.html#galleria" data-i18n="nav.galleria">Galleria</a>
     <a href="../index.html#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+    <a href="../index.html#interventi" data-i18n="cip.nav.rates">Tariffe</a>
     <a href="../index.html#contatti" data-i18n="nav.contatti">Contatti</a>
     <a href="#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
     <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
@@ -57,10 +59,7 @@
 
 <!-- ========================= VIEW: WIZARD ========================= -->
 <section id="view-wizard" hidden>
-  <div class="band">
-    <p class="band__title" data-i18n="cip.band.quote">Preventivo barca</p>
-    <p class="crumbs"><a href="../index.html"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="cip.band.quote">Preventivo barca</span></p>
-  </div>
+  <div class="band"><p class="band__title" data-i18n="cip.band.quote">Preventivo barca</p></div>
 
   <nav class="wiz-progress" data-i18n-attr="aria-label:wiz.progress">
     <ol id="wizProgress">
@@ -413,10 +412,7 @@
 
 <!-- ========================= VIEW: LOOKUP ========================= -->
 <section id="view-lookup" hidden>
-  <div class="band">
-    <h1 class="band__title" tabindex="-1" data-i18n="lookup.title">Verifica la tua richiesta</h1>
-    <p class="crumbs"><a href="../index.html"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="lookup.title">Verifica la tua richiesta</span></p>
-  </div>
+  <div class="band"><h1 class="band__title" tabindex="-1" data-i18n="lookup.title">Verifica la tua richiesta</h1></div>
   <div class="page">
     <p data-i18n="lookup.sub"></p>
     <form id="lookupForm" novalidate>
@@ -442,7 +438,7 @@
 <a id="waFab" class="fab" href="https://wa.me/393391810099?text=Ciao!%20Vorrei%20prenotare%20la%20seguente%20riparazione" target="_blank" rel="noopener" data-i18n-attr="aria-label:fab.label" aria-label="Scrivici su WhatsApp">
   <!-- WhatsApp glyph and look of the Click to Chat button (style 8) on carrozzeriacipressina.it -->
   <svg viewBox="0 0 509 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M259.253137,0.00180389396 C121.502859,0.00180389396 9.83730687,111.662896 9.83730687,249.413175 C9.83730687,296.530232 22.9142299,340.597122 45.6254897,378.191325 L0.613226597,512.001804 L138.700183,467.787757 C174.430395,487.549184 215.522926,498.811168 259.253137,498.811168 C396.994498,498.811168 508.660049,387.154535 508.660049,249.415405 C508.662279,111.662896 396.996727,0.00180389396 259.253137,0.00180389396 L259.253137,0.00180389396 Z M259.253137,459.089875 C216.65782,459.089875 176.998957,446.313956 143.886359,424.41206 L63.3044195,450.21808 L89.4939401,372.345171 C64.3924908,337.776609 49.5608297,295.299463 49.5608297,249.406486 C49.5608297,133.783298 143.627719,39.7186378 259.253137,39.7186378 C374.871867,39.7186378 468.940986,133.783298 468.940986,249.406486 C468.940986,365.025215 374.874096,459.089875 259.253137,459.089875 Z M200.755924,146.247066 C196.715791,136.510165 193.62103,136.180176 187.380228,135.883632 C185.239759,135.781068 182.918689,135.682963 180.379113,135.682963 C172.338979,135.682963 164.002301,138.050856 158.97889,143.19021 C152.865178,149.44439 137.578667,164.09322 137.578667,194.171258 C137.578667,224.253755 159.487251,253.321759 162.539648,257.402027 C165.600963,261.477835 205.268745,324.111057 266.985579,349.682963 C315.157262,369.636141 329.460495,367.859106 340.450462,365.455539 C356.441543,361.9639 376.521811,350.186865 381.616571,335.917077 C386.711331,321.63837 386.711331,309.399797 385.184018,306.857991 C383.654475,304.305037 379.578667,302.782183 373.464955,299.716408 C367.351242,296.659552 337.288812,281.870254 331.68569,279.83458 C326.080339,277.796676 320.898622,278.418749 316.5887,284.378615 C310.639982,292.612729 304.918689,301.074268 300.180674,306.09099 C296.46161,310.02856 290.477218,310.577055 285.331175,308.389764 C278.564174,305.506821 259.516237,298.869139 236.160607,278.048627 C217.988923,261.847958 205.716906,241.83458 202.149458,235.711949 C198.582011,229.598236 201.835077,225.948292 204.584241,222.621648 C207.719135,218.824546 210.610997,216.097679 213.667853,212.532462 C216.724709,208.960555 218.432625,207.05866 220.470529,202.973933 C222.508433,198.898125 221.137195,194.690767 219.607652,191.629452 C218.07588,188.568136 205.835077,158.494558 200.755924,146.247066 Z"/></svg>
-  <span data-i18n="cip.fab">Sono a tua disposizione</span>
+  <span data-i18n="fab.label">Scrivici su WhatsApp</span>
 </a>
 
 
@@ -455,9 +451,9 @@
   </div>
 </footer>
 
-<script src="../src/site.js?v=2026-10-21a" defer></script>
-<script src="../src/zones.js?v=2026-10-21a" defer></script>
-<script src="../src/i18n.js?v=2026-10-21a" defer></script>
-<script src="../src/app.js?v=2026-10-21a" defer></script>
+<script src="../src/site.js?v=2026-10-21b" defer></script>
+<script src="../src/zones.js?v=2026-10-21b" defer></script>
+<script src="../src/i18n.js?v=2026-10-21b" defer></script>
+<script src="../src/app.js?v=2026-10-21b" defer></script>
 </body>
 </html>

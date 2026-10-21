@@ -10,3 +10,5 @@ node_modules/
 .env
 .env.*
 !.env.example
+# Review captures from the impeccable finish review
+.impeccable/review/

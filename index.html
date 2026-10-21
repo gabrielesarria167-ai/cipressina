@@ -3,9 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cipressina Barche | Manutenzione e riparazione barche</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="styles.css?v=2026-10-21a">
+<title>Cipressina Barche | Carrozzeria per barche a Olmo di Martellago</title>
+<meta name="description" content="Officina Carrozzeria Cipressina, iscritta al Registro Imprese di Venezia dal 1978, adesso lavora anche con le barche: verniciatura, coperta, antivegetativa e motori, con le tariffe scritte in chiaro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<link rel="stylesheet" href="styles.css?v=2026-10-21b">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
 <a class="skip-link" href="#contenuto" data-skip data-i18n="skip">Vai al contenuto</a>
@@ -18,11 +22,11 @@
     </a>
     <span class="hdr__spacer"></span>
     <nav id="siteNav" data-i18n-attr="aria-label:nav.label">
+      <a href="#giro" data-i18n="cip.nav.giro">Il giro</a>
+      <a href="#galleria" data-i18n="cip.nav.lavori">Lavori</a>
       <a href="#servizi" data-i18n="nav.servizi">Servizi</a>
-      <a href="#come-funziona" data-i18n="nav.come">Come funziona</a>
-      <a href="#interventi" data-i18n="nav.interventi">Interventi</a>
-      <a href="#galleria" data-i18n="nav.galleria">Galleria</a>
       <a href="#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+      <a href="#interventi" data-i18n="cip.nav.rates">Tariffe</a>
       <a href="#contatti" data-i18n="nav.contatti">Contatti</a>
     </nav>
     <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
@@ -35,11 +39,11 @@
     <button id="menuToggle" type="button" aria-expanded="false" aria-controls="navPanel" aria-label="Apri il menu"></button>
   </div>
   <div id="navPanel">
+    <a href="#giro" data-i18n="cip.nav.giro">Il giro</a>
+    <a href="#galleria" data-i18n="cip.nav.lavori">Lavori</a>
     <a href="#servizi" data-i18n="nav.servizi">Servizi</a>
-    <a href="#come-funziona" data-i18n="nav.come">Come funziona</a>
-    <a href="#interventi" data-i18n="nav.interventi">Interventi</a>
-    <a href="#galleria" data-i18n="nav.galleria">Galleria</a>
     <a href="#chi-siamo" data-i18n="nav.chi">Chi siamo</a>
+    <a href="#interventi" data-i18n="cip.nav.rates">Tariffe</a>
     <a href="#contatti" data-i18n="nav.contatti">Contatti</a>
     <a href="pgs/preventivo.html#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
     <div class="lang-wrap"><div class="lang" role="group" data-i18n-attr="aria-label:lang.label">
@@ -56,293 +60,294 @@
 
 <!-- ========================= VIEW: HOME ========================= -->
 <main id="view-home">
-  <div class="band">
-    <h1 class="band__title" tabindex="-1" data-i18n="cip.band.home">Manutenzione Barche</h1>
-    <p class="crumbs"><a href="index.html"><span aria-hidden="true">⌂</span> <span data-i18n="cip.bc.home">Home</span></a><span class="sep" aria-hidden="true">::</span><span data-i18n="cip.bc.boats">Barche</span></p>
-  </div>
 
-  <section id="hero" class="container intro">
-    <div class="intro__text">
-      <p class="lead" data-i18n="cip.hero.p1"></p>
-      <p data-i18n="cip.hero.p2"></p>
-      <p class="intro__cta">
-        <a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
-        <a class="btn btn--outline" href="#interventi" data-i18n="cip.hero.cta2">Vedi i pacchetti</a>
-      </p>
-      <h2 data-i18n="cip.hero.why">Perché scegliere noi?</h2>
-      <ul class="tick-list">
-        <li><strong data-i18n="cip.hero.why1"></strong> <span data-i18n="cip.hero.why1d"></span></li>
-        <li><strong data-i18n="cip.hero.why2"></strong> <span data-i18n="cip.hero.why2d"></span></li>
-        <li><strong data-i18n="cip.hero.why3"></strong> <span data-i18n="cip.hero.why3d"></span></li>
-      </ul>
+  <!-- The news, set on the waterline -->
+  <section id="hero" class="hero" aria-labelledby="homeTitle">
+    <div class="wrap news"><h1 id="homeTitle" tabindex="-1" data-i18n="cip.hero.title">Cipressina adesso lavora anche con le barche.</h1></div>
+    <div class="stripe" role="presentation"></div>
+    <div class="coat lead">
+      <div class="wrap lead__grid">
+        <p data-i18n="cip.hero.lead">Oltre alle auto, la carrozzeria di Olmo di Martellago vernicia scafi, coperte e carene. Scorri e fai il giro della barca, zona per zona, con le tariffe del titolare.</p>
+        <div class="ctas"><a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a><a class="btn btn--ghost" href="#galleria" data-i18n="cip.hero.ctaWork">Guarda i lavori</a></div>
+      </div>
     </div>
+  </section>
 
-    <figure class="intro__photo">
-      <img src="img/barche/barca-03.webp" width="1600" height="1205" fetchpriority="high" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a3">
-    </figure>
+  <!-- The walk round the boat: src/tour.js pins the 3D boat and lights each zone -->
+  <section id="giro" class="tour" aria-labelledby="tourTitle">
+    <h2 id="tourTitle" class="sr-only" data-i18n="cip.tour.title">Il giro della barca, con le tariffe</h2>
+    <div class="tour__grid">
+      <div class="tour__stage">
+        <div class="viewer" id="tourViewer">
+          <canvas id="tourCanvas" role="img" data-i18n-attr="aria-label:cip.tour.canvas" aria-label="Modello 3D di un cabinato: la zona descritta accanto è evidenziata in verde"></canvas>
+          <p class="viewer__now" id="tourNow" aria-hidden="true">Fiancate</p>
+          <div class="viewer__msg" id="tourMsg"><p><span id="tourLoading" data-i18n="viewer.loading">Carico la barca 3D…</span><span id="tourErr" hidden></span></p></div>
+        </div>
+        <div class="ctl coat">
+          <div class="stripe" role="presentation"></div>
+          <div class="ctl__row">
+            <label for="tourLoa"><span data-i18n="cip.tour.loa">La tua barca</span>: <output id="tourLoaOut" for="tourLoa">9 m · 30 ft</output></label>
+            <input type="range" id="tourLoa" min="5" max="16" step="0.5" value="9">
+          </div>
+          <div class="chips" id="tourChips" role="group" data-i18n-attr="aria-label:af.label" aria-label="Colore dell'antivegetativa"></div>
+          <small data-i18n="cip.tour.colours">Colori indicativi dei cataloghi Veneziani, Hempel e International.</small>
+        </div>
+      </div>
+      <ol class="steps-tour">
+        <li data-view="destra" data-zones="topside_port topside_starboard" data-name="cip.tour.s1.n">
+          <h3 data-i18n="cip.tour.s1.h">Murate, a destra e a sinistra</h3>
+          <p data-i18n="cip.tour.s1.p">Riverniciatura e riparazioni di carrozzeria: graffi, sbiadimenti, urti contro il pontile.</p>
+          <dl class="rate">
+            <div><dt data-i18n="cip.rate.paint">Verniciatura</dt><dd>300 €/m²</dd></div>
+            <div><dt data-i18n="cip.rate.metal">Metallizzato</dt><dd>+25 %</dd></div>
+            <div class="est"><dt data-i18n="cip.tour.est">Sulla tua barca</dt><dd><output data-est="topside_port topside_starboard">…</output></dd></div>
+          </dl>
+        </li>
+        <li data-view="poppa" data-zones="transom" data-name="cip.tour.s2.n">
+          <h3 data-i18n="cip.tour.s2.h">Specchio di poppa</h3>
+          <p data-i18n="cip.tour.s2.p">Dove si legge il nome della barca, e dove si vedono per primi i colpi.</p>
+          <dl class="rate">
+            <div><dt data-i18n="cip.rate.paint">Verniciatura</dt><dd>300 €/m²</dd></div>
+            <div class="est"><dt data-i18n="cip.tour.est">Sulla tua barca</dt><dd><output data-est="transom">…</output></dd></div>
+          </dl>
+        </li>
+        <li data-view="alto" data-zones="deck" data-name="cip.tour.s3.n">
+          <h3 data-i18n="cip.tour.s3.h">La coperta</h3>
+          <p data-i18n="cip.tour.s3.p">La superficie che calpesti: verniciatura, anche antiscivolo.</p>
+          <dl class="rate">
+            <div><dt data-i18n="cip.rate.paint">Verniciatura</dt><dd>400 €/m²</dd></div>
+            <div><dt data-i18n="cip.rate.nonslip">Antiscivolo</dt><dd>+25 %</dd></div>
+            <div class="est"><dt data-i18n="cip.tour.est">Sulla tua barca</dt><dd><output data-est="deck">…</output></dd></div>
+          </dl>
+        </li>
+        <li data-view="sotto" data-zones="" data-name="cip.tour.s4.n">
+          <h3 data-i18n="cip.tour.s4.h">La carena</h3>
+          <p data-i18n="cip.tour.s4.p">Antivegetativa contro alghe e molluschi, oppure sabbiatura fino al materiale nudo. Prova i colori qui accanto.</p>
+          <dl class="rate">
+            <div><dt data-i18n="cip.rate.af">Antivegetativa</dt><dd>120 €/m</dd></div>
+            <div><dt data-i18n="cip.rate.over10">Oltre i 10 m</dt><dd>+20 %</dd></div>
+            <div><dt data-i18n="cip.rate.sand">Sabbiatura</dt><dd>400 €/m²</dd></div>
+            <div class="est"><dt data-i18n="cip.tour.est">Sulla tua barca</dt><dd><output data-est="bottom">…</output></dd></div>
+          </dl>
+        </li>
+        <li data-view="destra" data-zones="topside_port topside_starboard transom deck" data-name="cip.tour.s5.n">
+          <h3 data-i18n="cip.tour.s5.h">Fiancate, poppa, coperta e carena</h3>
+          <p data-i18n="cip.tour.s5.p">La stessa somma che fa il preventivo al passo 3, prima di scegliere le opzioni. Le riparazioni importanti hanno un preventivo su misura.</p>
+          <dl class="rate">
+            <div><dt data-i18n="cip.rate.hw">Smontaggio accessori</dt><dd>40 €/h</dd></div>
+            <div class="est"><dt data-i18n="cip.tour.est">Sulla tua barca</dt><dd><output data-est="topside_port topside_starboard transom deck bottom">…</output></dd></div>
+          </dl>
+          <p class="note" data-i18n-html="cip.tour.note.h"><span class="ph">Superfici stimate dalla lunghezza con coefficienti provvisori.</span> Prezzi IVA esclusa.</p>
+          <div class="ctas"><a class="btn" id="tourQuote" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Lavori e sede ===== -->
+  <section id="galleria" class="sec" aria-labelledby="galTitle">
+    <div class="wrap head"><h2 id="galTitle" data-i18n="cip.gal.title">Lavori usciti dalla nostra cabina</h2><p data-i18n="cip.gal.lede">Alcuni lavori eseguiti nella nostra officina: preparazione, verniciatura e antivegetativa.</p></div>
+    <ul class="yard" tabindex="0" data-i18n-attr="aria-label:cip.gal.boats" aria-label="Lavori sulle barche">
+      <li><a href="img/barche/barca-04.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-04.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a4"></a></li>
+      <li><a href="img/barche/barca-02.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-02.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a2"></a></li>
+      <li><a href="img/barche/barca-09.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-09.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a9"></a></li>
+      <li><a href="img/barche/barca-03.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-03.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a3"></a></li>
+      <li><a href="img/barche/barca-06.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-06.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a6"></a></li>
+      <li><a href="img/barche/barca-11.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-11.webp" width="640" height="360" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a11"></a></li>
+      <li><a href="img/barche/barca-01.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-01.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a1"></a></li>
+      <li><a href="img/barche/barca-05.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-05.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a5"></a></li>
+      <li><a href="img/barche/barca-07.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-07.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a7"></a></li>
+      <li><a href="img/barche/barca-08.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-08.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a8"></a></li>
+      <li><a href="img/barche/barca-10.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-10.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a10"></a></li>
+    </ul>
+    <div class="wrap yard-title"><h3 data-i18n="cip.gal.sede">La nostra sede</h3><p data-i18n="cip.gal.sedeLede">L'officina di Olmo di Martellago, in provincia di Venezia.</p></div>
+    <ul class="yard" tabindex="0" data-i18n-attr="aria-label:cip.gal.sede" aria-label="La nostra sede">
+      <li><a href="img/sede/sede-01.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-01.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a1"></a></li>
+      <li><a href="img/sede/sede-03.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-03.webp" width="640" height="587" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a3"></a></li>
+      <li><a href="img/sede/sede-04.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-04.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a4"></a></li>
+      <li><a href="img/sede/sede-02.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-02.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a2"></a></li>
+      <li><a href="img/sede/sede-05.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-05.webp" width="640" height="481" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a5"></a></li>
+      <li><a href="img/sede/sede-07.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-07.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a7"></a></li>
+      <li><a href="img/sede/sede-08.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-08.webp" width="640" height="429" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a8"></a></li>
+      <li><a href="img/sede/sede-06.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-06.webp" width="640" height="429" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a6"></a></li>
+    </ul>
   </section>
 
   <!-- ===== Servizi ===== -->
-  <section id="servizi" class="sec">
-    <div class="container">
-      <h2 data-i18n="cip.srv.title">I nostri servizi</h2>
-      <p class="lede" data-i18n="cip.srv.lede"></p>
-      <div class="cols" style="margin-top:24px">
+  <section id="servizi" class="sec sec--flush" aria-labelledby="srvTitle">
+    <div class="wrap">
+      <div class="head"><h2 id="srvTitle" data-i18n="cip.srv.title2">Scafo e motore, nello stesso posto</h2><p data-i18n="cip.srv.lede">Manutenzione completa per la tua barca: servizi specializzati per motore e scafo.</p></div>
+      <div class="split">
         <div>
           <h3 data-i18n="cip.srv.hull">Manutenzione scafo e coperta</h3>
-          <p class="srv-sub" data-i18n="cip.srv.hullSub">Protezione ed estetica per la tua barca</p>
-          <p data-i18n="cip.srv.hullLede"></p>
-          <p data-i18n="cip.srv.hullList"></p>
-          <ul class="bul bul--desc">
-            <li><strong data-i18n="cip.srv.h1"></strong> <span data-i18n="cip.srv.h1d"></span></li>
-            <li><strong data-i18n="cip.srv.h2"></strong> <span data-i18n="cip.srv.h2d"></span></li>
-            <li><strong data-i18n="cip.srv.h3"></strong> <span data-i18n="cip.srv.h3d"></span></li>
-            <li><strong data-i18n="cip.srv.h4"></strong> <span data-i18n="cip.srv.h4d"></span></li>
-            <li><strong data-i18n="cip.srv.h5"></strong> <span data-i18n="cip.srv.h5d"></span></li>
+          <p class="muted" data-i18n="cip.srv.hullSub">Protezione ed estetica per la tua barca</p>
+          <ul class="spec">
+            <li><strong data-i18n="cip.srv.h1">Lavaggio completo e lucidatura</strong> <span data-i18n="cip.srv.h1d"></span></li>
+            <li><strong data-i18n="cip.srv.h2">Riverniciatura e riparazioni</strong> <span data-i18n="cip.srv.h2d"></span></li>
+            <li><strong data-i18n="cip.srv.h3">Applicazione di antivegetativa</strong> <span data-i18n="cip.srv.h3d"></span></li>
+            <li><strong data-i18n="cip.srv.h4">Riparazione di crepe o danni strutturali</strong> <span data-i18n="cip.srv.h4d"></span></li>
+            <li><strong data-i18n="cip.srv.h5">Controllo e manutenzione degli accessori esterni</strong> <span data-i18n="cip.srv.h5d"></span></li>
           </ul>
         </div>
         <div>
           <h3 data-i18n="cip.srv.engine">Manutenzione del motore</h3>
-          <p class="srv-sub" data-i18n="cip.srv.engineSub">Massime prestazioni e sicurezza in mare</p>
-          <p data-i18n="cip.srv.engineLede"></p>
-          <p data-i18n="cip.srv.engineList"></p>
-          <ul class="bul bul--desc">
-            <li><strong data-i18n="cip.srv.e1"></strong> <span data-i18n="cip.srv.e1d"></span></li>
-            <li><strong data-i18n="cip.srv.e2"></strong> <span data-i18n="cip.srv.e2d"></span></li>
-            <li><strong data-i18n="cip.srv.e3"></strong> <span data-i18n="cip.srv.e3d"></span></li>
-            <li><strong data-i18n="cip.srv.e4"></strong> <span data-i18n="cip.srv.e4d"></span></li>
-            <li><strong data-i18n="cip.srv.e5"></strong> <span data-i18n="cip.srv.e5d"></span></li>
-            <li><strong data-i18n="cip.srv.e6"></strong> <span data-i18n="cip.srv.e6d"></span></li>
+          <p class="muted" data-i18n="cip.srv.engineSub">Massime prestazioni e sicurezza in mare</p>
+          <ul class="spec">
+            <li><strong data-i18n="cip.srv.e1">Controllo e sostituzione dell'olio</strong> <span data-i18n="cip.srv.e1d"></span></li>
+            <li><strong data-i18n="cip.srv.e2">Pulizia del sistema di raffreddamento</strong> <span data-i18n="cip.srv.e2d"></span></li>
+            <li><strong data-i18n="cip.srv.e3">Controllo e pulizia dei motori a iniezione diesel e benzina</strong> <span data-i18n="cip.srv.e3d"></span></li>
+            <li><strong data-i18n="cip.srv.e4">Sostituzione dei filtri carburante e aria</strong> <span data-i18n="cip.srv.e4d"></span></li>
+            <li><strong data-i18n="cip.srv.e5">Ispezione della cinghia di trasmissione</strong> <span data-i18n="cip.srv.e5d"></span></li>
+            <li><strong data-i18n="cip.srv.e6">Verifica del sistema elettrico e delle batterie</strong> <span data-i18n="cip.srv.e6d"></span></li>
           </ul>
-          <p class="srv-note" data-i18n="cip.srv.engineNote"></p>
+          <p class="note" data-i18n="cip.srv.engineNote">Da poco abbiamo attivato una nuova sede operativa per gli interventi sui motori entro bordo nautici.</p>
         </div>
       </div>
-      <p class="srv-end">
-        <strong data-i18n="cip.srv.end"></strong>
-        <a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
-      </p>
+      <p class="srv-end"><span data-i18n="cip.srv.end">Mantieni la tua barca nelle migliori condizioni tutto l'anno!</span> <a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a></p>
     </div>
   </section>
 
-  <!-- ===== Come funziona ===== -->
-  <section id="come-funziona" class="sec sec--panel">
-    <div class="container">
-      <h2 data-i18n="nav.come">Come funziona</h2>
-      <ol class="steps">
-        <li><h3 data-i18n="cip.how.1t">Racconta la barca</h3><p data-i18n="cip.how.1d"></p></li>
-        <li><h3 data-i18n="cip.how.2t">Scegli il pacchetto</h3><p data-i18n="cip.how.2d"></p></li>
-        <li><h3 data-i18n="cip.how.3t">Tocca le zone sul modello 3D</h3><p data-i18n="cip.how.3d"></p></li>
-        <li><h3 data-i18n="cip.how.4t">Lasciaci i contatti</h3><p data-i18n-html="cip.how.4d.h"></p></li>
-      </ol>
-      <p class="steps__end"><a class="btn" href="pgs/preventivo.html" data-i18n="cip.how.cta">Inizia dal passo 1</a></p>
-    </div>
-  </section>
-
-  <!-- ===== Interventi ===== -->
-  <section id="interventi" class="sec">
-    <div class="container">
-      <h2 data-i18n="nav.interventi">Interventi</h2>
-      <p class="lede" data-i18n="cip.int.lede"></p>
-
-      <!-- The price sentence. Static content is the true default result
-           (2 zones, 8 m, Pacchetto Completo) so the page is right without JS. -->
-      <form id="quoteLine" class="qline" novalidate>
-        <p class="qline__s">
-          <span data-i18n="ql.pre">Intervenire su</span>
-          <label class="sr-only" for="qlCount" data-i18n="ql.countLabel">Numero di zone</label>
-          <select id="qlCount">
-            <option value="1">1</option>
-            <option value="2" selected>2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-          <span id="qlWord">zone</span>
-          <span data-i18n="ql.mid1">di una barca lunga</span>
-          <label class="sr-only" for="qlLoa" data-i18n="ql.loaLabel">Lunghezza della barca</label>
-          <select id="qlLoa">
-            <option value="5">16 ft (5 m)</option>
-            <option value="6">20 ft (6 m)</option>
-            <option value="8" selected>26 ft (8 m)</option>
-            <option value="10">33 ft (10 m)</option>
-            <option value="12">39 ft (12 m)</option>
-            <option value="15">49 ft (15 m)</option>
-          </select>
-          <span data-i18n="ql.afterLoa"></span>
-          <label class="sr-only" for="qlTier" data-i18n="ql.tierLabel">Pacchetto</label>
-          <select id="qlTier">
-            <option value="base" data-i18n="ql.opt.base">con il Pacchetto Base</option>
-            <option value="completo" data-i18n="ql.opt.completo" selected>con il Pacchetto Completo</option>
-            <option value="premium" data-i18n="ql.opt.premium">con il Pacchetto Premium</option>
-            <option value="nessuno" data-i18n="ql.opt.nessuno">senza pacchetto</option>
-          </select>
-          <span data-i18n="ql.post">costa da</span>
-          <span class="ph"><output id="qlTotal">4.664 €</output></span>
-        </p>
-        <button type="submit" class="btn" data-i18n="ql.cta">Seleziona le zone in 3D</button>
-      </form>
-
-      <h3 class="pkgs-title" data-i18n="cip.int.pkg">Pacchetti di manutenzione</h3>
-      <p class="pkgs-lede" data-i18n="cip.int.pkgLede"></p>
-      <div class="pkgs">
-        <article class="pkg">
-          <h3 data-i18n="tier.base.name">Pacchetto Base</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="base">da 30 € al metro (minimo 180 €)</span></p>
-          <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
-          <a class="btn btn--outline" href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base" data-i18n="tier.choose">Scegli questo pacchetto</a>
-        </article>
-        <article class="pkg pkg--c">
-          <p class="pkg__badge" data-i18n-html="tier.badge.h"></p>
-          <h3 data-i18n="tier.completo.name">Pacchetto Completo</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="completo">da 55 € al metro (minimo 350 €)</span></p>
-          <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
-          <a class="btn" href="pgs/preventivo.html?pacchetto=completo" data-tier-choose="completo" data-i18n="tier.choose">Scegli questo pacchetto</a>
-        </article>
-        <article class="pkg">
-          <h3 data-i18n="tier.premium.name">Pacchetto Premium</h3>
-          <p class="pkg__price"><span class="ph" data-tier-from="premium">da 80 € al metro (minimo 500 €)</span></p>
-          <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
-          <a class="btn btn--outline" href="pgs/preventivo.html?pacchetto=premium" data-tier-choose="premium" data-i18n="tier.choose">Scegli questo pacchetto</a>
-        </article>
+  <!-- ===== Chi siamo: who they are, before what they do ===== -->
+  <section id="chi-siamo" class="sec sec--flush" aria-labelledby="aboutTitle">
+    <div class="wrap">
+      <div class="since">
+        <h2 id="aboutTitle" data-i18n="cip.why.title">Carrozzieri dal 1978.</h2>
+        <p data-i18n="cip.why.text">Officina Carrozzeria Cipressina è iscritta al Registro Imprese di Venezia dal 1978. Oggi la trovi a Olmo di Martellago, con la squadra qui sotto, e sulle barche porta la stessa cabina, gli stessi tintometri e la stessa cura per il colore.</p>
+      </div>
+      <figure class="crew"><img src="img/officina/staff.webp" width="1351" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.staffAlt"><figcaption data-i18n="cip.why.crew">La squadra, in officina a Olmo di Martellago</figcaption></figure>
+      <div class="proof">
+        <div>
+          <h3 data-i18n="cip.why.awardsN">Quattro riconoscimenti</h3>
+          <ul class="awards" data-i18n-attr="aria-label:cip.why.awards" aria-label="Riconoscimenti"><li>Mercurio d'oro</li><li>Alfiere Economico</li><li>Venezia che Lavora</li><li>Lavoro e Progresso</li></ul>
+        </div>
+        <div>
+          <h3 data-i18n="cip.why.colour">Il colore si misura, non si indovina</h3>
+          <ul class="equip">
+            <li><b>1</b><span data-i18n="cip.why.f1">Forno di verniciatura e cabina di essiccazione</span></li>
+            <li><b>3</b><span data-i18n="cip.why.e2">Zone di preparazione</span></li>
+            <li><b>4</b><span data-i18n="cip.why.e3">Tintometri</span></li>
+            <li><b>2</b><span data-i18n="cip.why.e4">Colorimetri elettronici</span></li>
+          </ul>
+          <p class="note" data-i18n-html="cip.why.ph.h"></p>
+        </div>
+        <div class="minis">
+          <figure><img src="img/officina/cabina.webp" width="1345" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.cabinaAlt"><figcaption data-i18n="cip.photo.cabina">Cabina di verniciatura</figcaption></figure>
+          <figure><img src="img/officina/tintometro.webp" width="946" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.tintometroAlt"><figcaption data-i18n="cip.photo.tintometro">Tintometro</figcaption></figure>
+          <figure><img src="img/officina/colore.webp" width="748" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.coloreAlt"><figcaption data-i18n="cip.photo.colore">Ricerca del colore</figcaption></figure>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Galleria ===== -->
-  <section id="galleria" class="sec sec--panel">
-    <div class="container">
-      <h2 data-i18n="nav.galleria">Galleria</h2>
-      <h3 class="gallery__title" data-i18n="cip.gal.boats">Lavori sulle barche</h3>
-      <p class="lede" data-i18n="cip.gal.lede"></p>
-      <ul class="gallery">
-        <li><a href="img/barche/barca-01.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-01.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a1"></a></li>
-        <li><a href="img/barche/barca-02.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-02.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a2"></a></li>
-        <li><a href="img/barche/barca-03.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-03.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a3"></a></li>
-        <li><a href="img/barche/barca-04.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-04.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a4"></a></li>
-        <li><a href="img/barche/barca-05.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-05.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a5"></a></li>
-        <li><a href="img/barche/barca-06.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-06.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a6"></a></li>
-        <li><a href="img/barche/barca-07.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-07.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a7"></a></li>
-        <li><a href="img/barche/barca-08.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-08.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a8"></a></li>
-        <li><a href="img/barche/barca-09.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-09.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a9"></a></li>
-        <li><a href="img/barche/barca-10.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-10.webp" width="640" height="482" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a10"></a></li>
-        <li><a href="img/barche/barca-11.webp" data-lightbox="barche"><img src="img/barche/thumb/barca-11.webp" width="640" height="360" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.gal.a11"></a></li>
-      </ul>
-      <h3 class="gallery__title" data-i18n="cip.gal.sede">La nostra sede</h3>
-      <p class="lede" data-i18n="cip.gal.sedeLede"></p>
-      <ul class="gallery">
-        <li><a href="img/sede/sede-01.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-01.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a1"></a></li>
-        <li><a href="img/sede/sede-02.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-02.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a2"></a></li>
-        <li><a href="img/sede/sede-03.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-03.webp" width="640" height="587" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a3"></a></li>
-        <li><a href="img/sede/sede-04.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-04.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a4"></a></li>
-        <li><a href="img/sede/sede-05.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-05.webp" width="640" height="481" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a5"></a></li>
-        <li><a href="img/sede/sede-06.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-06.webp" width="640" height="429" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a6"></a></li>
-        <li><a href="img/sede/sede-07.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-07.webp" width="640" height="361" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a7"></a></li>
-        <li><a href="img/sede/sede-08.webp" data-lightbox="sede"><img src="img/sede/thumb/sede-08.webp" width="640" height="429" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.sede.a8"></a></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ===== Chi siamo ===== -->
-  <section id="chi-siamo" class="sec">
-    <div class="container about">
-      <div>
-        <h2 data-i18n="nav.chi">Chi siamo</h2>
-        <p class="lede" data-i18n="cip.why.lede"></p>
-        <h3 data-i18n="cip.why.equip">Attrezzature</h3>
-        <ul class="bul">
-          <li data-i18n="cip.why.f1"></li>
-          <li data-i18n="cip.why.f2"></li>
-          <li data-i18n="cip.why.f3"></li>
-          <li data-i18n="cip.why.f4"></li>
-        </ul>
-        <p class="why__ph" data-i18n-html="cip.why.ph.h"></p>
-        <h3 data-i18n="cip.why.awards">Riconoscimenti</h3>
-        <ul class="awards">
-          <li>Mercurio d'oro</li>
-          <li>Alfiere Economico</li>
-          <li>Venezia che Lavora</li>
-          <li>Lavoro e Progresso</li>
-        </ul>
+  <!-- Below the waterline: the coat -->
+  <div class="stripe" role="presentation"></div>
+  <div class="coat">
+    <!-- ===== Tariffe, pacchetti, come funziona ===== -->
+    <section id="interventi" class="sec" aria-labelledby="ratesTitle">
+      <div class="wrap">
+        <div class="head"><h2 id="ratesTitle" data-i18n="cip.rates.title">Le nostre tariffe, scritte qui</h2><p data-i18n="cip.rates.lede">Le cifre sono quelle del titolare. Per una stima sulla tua barca, scegli le zone sul modello 3D: il calcolo usa questi stessi numeri.</p></div>
+        <div class="rates">
+          <div>
+            <dl class="book">
+              <div><dt data-i18n="cip.rates.topsides">Murate e specchio di poppa</dt><dd>300 €/m²</dd></div>
+              <div><dt data-i18n="cip.tour.s3.n">Coperta</dt><dd>400 €/m²</dd></div>
+              <div><dt data-i18n="cip.rate.sand">Sabbiatura</dt><dd>400 €/m²</dd></div>
+              <div><dt data-i18n="cip.rate.af">Antivegetativa</dt><dd>120 €/m</dd><small data-i18n="cip.rates.afNote">Al metro di lunghezza; +20 % oltre i 10 m.</small></div>
+              <div><dt data-i18n="cip.rates.extras">Metallizzato, antiscivolo, riparazioni in resina</dt><dd>+25 %</dd><small data-i18n="cip.rates.extrasNote">Ciascuno. Le riparazioni importanti hanno un preventivo su misura.</small></div>
+              <div><dt data-i18n="cip.rate.hw">Smontaggio accessori</dt><dd>40 €/h</dd></div>
+            </dl>
+            <p class="vat" data-i18n="cip.rates.vat">Prezzi IVA esclusa.</p>
+          </div>
+          <div>
+            <h3 class="pkgs-title" data-i18n="cip.int.pkg">Pacchetti di manutenzione</h3>
+            <div class="pkgs">
+              <article class="pkg">
+                <h4 data-i18n="tier.base.name">Pacchetto Base</h4>
+                <p class="pkg__price"><span class="ph" data-tier-from="base">da 30 € al metro (minimo 180 €)</span></p>
+                <ul><li data-i18n="tier.base.i1"></li><li data-i18n="tier.base.i2"></li></ul>
+                <a href="pgs/preventivo.html?pacchetto=base" data-tier-choose="base" data-i18n="tier.choose">Scegli questo pacchetto</a>
+              </article>
+              <article class="pkg">
+                <h4 data-i18n="tier.completo.name">Pacchetto Completo</h4>
+                <p class="pkg__price"><span class="ph" data-tier-from="completo">da 55 € al metro (minimo 350 €)</span></p>
+                <ul><li data-i18n="tier.completo.i1"></li><li data-i18n="tier.completo.i2"></li></ul>
+                <a href="pgs/preventivo.html?pacchetto=completo" data-tier-choose="completo" data-i18n="tier.choose">Scegli questo pacchetto</a>
+              </article>
+              <article class="pkg">
+                <h4 data-i18n="tier.premium.name">Pacchetto Premium</h4>
+                <p class="pkg__price"><span class="ph" data-tier-from="premium">da 80 € al metro (minimo 500 €)</span></p>
+                <ul><li data-i18n="tier.premium.i1"></li><li data-i18n="tier.premium.i2"></li><li data-i18n="tier.premium.i3"></li></ul>
+                <a href="pgs/preventivo.html?pacchetto=premium" data-tier-choose="premium" data-i18n="tier.choose">Scegli questo pacchetto</a>
+              </article>
+            </div>
+          </div>
+        </div>
+        <h3 id="come-funziona" class="sr-only" data-i18n="nav.come">Come funziona</h3>
+        <ol class="steps" aria-labelledby="come-funziona">
+          <li><h3 data-i18n="cip.how.1t">Racconta la barca</h3><p data-i18n="cip.how.1d"></p></li>
+          <li><h3 data-i18n="cip.how.2t">Scegli il pacchetto</h3><p data-i18n="cip.how.2d"></p></li>
+          <li><h3 data-i18n="cip.how.3t">Tocca le zone sul modello 3D</h3><p data-i18n="cip.how.3d"></p></li>
+          <li><h3 data-i18n="cip.how.4t">Lasciaci i contatti</h3><p data-i18n-html="cip.how.4d.h"></p></li>
+        </ol>
+        <div class="cta-row"><a class="btn" href="pgs/preventivo.html" data-i18n="cip.how.cta">Inizia dal passo 1</a><a class="btn btn--ghost" href="pgs/preventivo.html#stato" data-i18n="lookup.title">Verifica la tua richiesta</a></div>
       </div>
-      <div class="about__photos">
-        <figure class="about__main">
-          <img src="img/officina/staff.webp" width="1351" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.staffAlt">
-          <figcaption data-i18n="cip.photo.staff">Lo staff dell'officina</figcaption>
-        </figure>
-        <figure>
-          <img src="img/officina/cabina.webp" width="1345" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.cabinaAlt">
-          <figcaption data-i18n="cip.photo.cabina">Cabina di verniciatura</figcaption>
-        </figure>
-        <figure>
-          <img src="img/officina/tintometro.webp" width="946" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.tintometroAlt">
-          <figcaption data-i18n="cip.photo.tintometro">Tintometro</figcaption>
-        </figure>
-        <figure>
-          <img src="img/officina/colore.webp" width="748" height="900" loading="lazy" decoding="async" alt="" data-i18n-attr="alt:cip.photo.coloreAlt">
-          <figcaption data-i18n="cip.photo.colore">Ricerca del colore</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===== FAQ ===== -->
-  <section id="domande" class="sec sec--panel">
-    <div class="container faq">
-      <h2 data-i18n="cip.faq.title">Domande frequenti</h2>
-      <details><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q4"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q5"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q6"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q7"></summary><p data-i18n-html="faq.a.h"></p></details>
-      <details><summary data-i18n="faq.q8"></summary><p data-i18n-html="faq.a.h"></p></details>
-    </div>
-  </section>
-
-  <!-- ===== Contatti ===== -->
-  <section id="contatti" class="sec">
-    <div class="container contacts">
-      <h2 data-i18n="nav.contatti">Contatti</h2>
-      <p class="lede" data-i18n="cip.con.lede"></p>
-      <dl>
-        <div class="row">
-          <dt data-i18n="contact.address">Indirizzo</dt>
-          <dd>
-            <span id="contactAddress">Viale Nazario Sauro, 13-15 · 30030 Olmo di Martellago (VE)</span>
-            <button type="button" data-copy="#contactAddress" data-i18n="btn.copy">Copia</button><br>
-            <a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=Viale+Nazario+Sauro+13-15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map">Apri in Google Maps</a>
-          </dd>
+    <!-- ===== FAQ ===== -->
+    <section id="domande" class="sec sec--flush" aria-labelledby="faqTitle">
+      <div class="wrap faq-grid">
+        <h2 id="faqTitle" data-i18n="cip.faq.title">Domande frequenti</h2>
+        <div class="faq">
+          <details><summary data-i18n="faq.q1"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q2"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q3"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q4"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q5"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q6"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q7"></summary><p data-i18n-html="faq.a.h"></p></details>
+          <details><summary data-i18n="faq.q8"></summary><p data-i18n-html="faq.a.h"></p></details>
         </div>
-        <div class="row">
-          <dt data-i18n="contact.phone">Telefono</dt>
-          <dd><span id="contactPhone">041 907941</span>
-            <button type="button" data-copy="#contactPhone" data-i18n="btn.copy">Copia</button></dd>
-        </div>
-        <div class="row">
-          <dt data-i18n="contact.email">Email</dt>
-          <dd><span id="contactEmail">info@carrozzeriacipressina.it</span>
-            <button type="button" data-copy="#contactEmail" data-i18n="btn.copy">Copia</button></dd>
-        </div>
-        <div class="row">
-          <dt data-i18n="contact.whatsapp">WhatsApp</dt>
-          <dd><a href="https://wa.me/393391810099" target="_blank" rel="noopener">+39 339 181 0099</a></dd>
-        </div>
-        <div class="row">
-          <dt data-i18n="contact.hours">Orari</dt>
-          <dd data-i18n-html="contact.openingHours.h"></dd>
-        </div>
-      </dl>
-      <div class="map-embed">
-        <iframe src="https://www.google.com/maps?q=Officina+Carrozzeria+Cipressina,+Viale+Nazario+Sauro+13-15,+30030+Martellago+VE&amp;hl=it&amp;z=16&amp;output=embed" width="600" height="400" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-i18n-attr="title:contact.mapTitle" title="Mappa dell'officina"></iframe>
       </div>
-      <p class="contacts__cta">
-        <a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a>
-        <a class="link-arrow" href="pgs/preventivo.html#stato" data-i18n="lookup.title">Verifica la tua richiesta</a>
-      </p>
-    </div>
-  </section>
+    </section>
+
+    <!-- ===== Contatti ===== -->
+    <section id="contatti" class="sec sec--flush" aria-labelledby="conTitle">
+      <div class="wrap contact">
+        <div>
+          <h2 id="conTitle" data-i18n="cip.con.title">Vieni a trovarci in officina</h2>
+          <p style="margin-top:14px" data-i18n="cip.con.lede">L'officina è a Olmo di Martellago, in provincia di Venezia.</p>
+          <dl>
+            <div>
+              <dt data-i18n="contact.address">Indirizzo</dt>
+              <dd><span id="contactAddress">Viale Nazario Sauro, 13-15 · 30030 Olmo di Martellago (VE)</span>
+                <button type="button" data-copy="#contactAddress" data-i18n="btn.copy">Copia</button><br>
+                <a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=Viale+Nazario+Sauro+13-15+Olmo+di+Martellago" target="_blank" rel="noopener" data-i18n="contact.map">Apri in Google Maps</a></dd>
+            </div>
+            <div>
+              <dt data-i18n="contact.phone">Telefono</dt>
+              <dd><span id="contactPhone">041 907941</span> <button type="button" data-copy="#contactPhone" data-i18n="btn.copy">Copia</button></dd>
+            </div>
+            <div>
+              <dt data-i18n="contact.email">Email</dt>
+              <dd><span id="contactEmail">info@carrozzeriacipressina.it</span> <button type="button" data-copy="#contactEmail" data-i18n="btn.copy">Copia</button></dd>
+            </div>
+            <div>
+              <dt data-i18n="contact.whatsapp">WhatsApp</dt>
+              <dd><a href="https://wa.me/393391810099" target="_blank" rel="noopener">+39 339 181 0099</a></dd>
+            </div>
+            <div>
+              <dt data-i18n="contact.hours">Orari</dt>
+              <dd data-i18n-html="contact.openingHours.h">Lun–Ven: 07:15–12:30, 13:30–19:15<br>Sab: 07:30–12:00<br>Dom: chiuso</dd>
+            </div>
+          </dl>
+          <p class="contacts__cta"><a class="btn" href="pgs/preventivo.html" data-i18n="cip.hero.cta">Chiedi il preventivo</a></p>
+        </div>
+        <div class="map-embed">
+          <iframe src="https://www.google.com/maps?q=Officina+Carrozzeria+Cipressina,+Viale+Nazario+Sauro+13-15,+30030+Martellago+VE&amp;hl=it&amp;z=16&amp;output=embed" width="600" height="400" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen data-i18n-attr="title:contact.mapTitle" title="Mappa dell'officina"></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
 </main>
 
 </div><!-- /#contenuto -->
@@ -361,11 +366,9 @@
 </dialog>
 
 <a id="waFab" class="fab" href="https://wa.me/393391810099?text=Ciao!%20Vorrei%20prenotare%20la%20seguente%20riparazione" target="_blank" rel="noopener" data-i18n-attr="aria-label:fab.label" aria-label="Scrivici su WhatsApp">
-  <!-- WhatsApp glyph and look of the Click to Chat button (style 8) on carrozzeriacipressina.it -->
   <svg viewBox="0 0 509 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M259.253137,0.00180389396 C121.502859,0.00180389396 9.83730687,111.662896 9.83730687,249.413175 C9.83730687,296.530232 22.9142299,340.597122 45.6254897,378.191325 L0.613226597,512.001804 L138.700183,467.787757 C174.430395,487.549184 215.522926,498.811168 259.253137,498.811168 C396.994498,498.811168 508.660049,387.154535 508.660049,249.415405 C508.662279,111.662896 396.996727,0.00180389396 259.253137,0.00180389396 L259.253137,0.00180389396 Z M259.253137,459.089875 C216.65782,459.089875 176.998957,446.313956 143.886359,424.41206 L63.3044195,450.21808 L89.4939401,372.345171 C64.3924908,337.776609 49.5608297,295.299463 49.5608297,249.406486 C49.5608297,133.783298 143.627719,39.7186378 259.253137,39.7186378 C374.871867,39.7186378 468.940986,133.783298 468.940986,249.406486 C468.940986,365.025215 374.874096,459.089875 259.253137,459.089875 Z M200.755924,146.247066 C196.715791,136.510165 193.62103,136.180176 187.380228,135.883632 C185.239759,135.781068 182.918689,135.682963 180.379113,135.682963 C172.338979,135.682963 164.002301,138.050856 158.97889,143.19021 C152.865178,149.44439 137.578667,164.09322 137.578667,194.171258 C137.578667,224.253755 159.487251,253.321759 162.539648,257.402027 C165.600963,261.477835 205.268745,324.111057 266.985579,349.682963 C315.157262,369.636141 329.460495,367.859106 340.450462,365.455539 C356.441543,361.9639 376.521811,350.186865 381.616571,335.917077 C386.711331,321.63837 386.711331,309.399797 385.184018,306.857991 C383.654475,304.305037 379.578667,302.782183 373.464955,299.716408 C367.351242,296.659552 337.288812,281.870254 331.68569,279.83458 C326.080339,277.796676 320.898622,278.418749 316.5887,284.378615 C310.639982,292.612729 304.918689,301.074268 300.180674,306.09099 C296.46161,310.02856 290.477218,310.577055 285.331175,308.389764 C278.564174,305.506821 259.516237,298.869139 236.160607,278.048627 C217.988923,261.847958 205.716906,241.83458 202.149458,235.711949 C198.582011,229.598236 201.835077,225.948292 204.584241,222.621648 C207.719135,218.824546 210.610997,216.097679 213.667853,212.532462 C216.724709,208.960555 218.432625,207.05866 220.470529,202.973933 C222.508433,198.898125 221.137195,194.690767 219.607652,191.629452 C218.07588,188.568136 205.835077,158.494558 200.755924,146.247066 Z"/></svg>
-  <span data-i18n="cip.fab">Sono a tua disposizione</span>
+  <span data-i18n="fab.label">Scrivici su WhatsApp</span>
 </a>
-
 
 <footer id="siteFooter">
   <div class="in">
@@ -376,9 +379,10 @@
   </div>
 </footer>
 
-<script src="src/site.js?v=2026-10-21a" defer></script>
-<script src="src/zones.js?v=2026-10-21a" defer></script>
-<script src="src/i18n.js?v=2026-10-21a" defer></script>
-<script src="src/app.js?v=2026-10-21a" defer></script>
+<script src="src/site.js?v=2026-10-21b" defer></script>
+<script src="src/zones.js?v=2026-10-21b" defer></script>
+<script src="src/i18n.js?v=2026-10-21b" defer></script>
+<script src="src/app.js?v=2026-10-21b" defer></script>
+<script type="module" src="src/tour.js?v=2026-10-21b"></script>
 </body>
 </html>
