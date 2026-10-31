@@ -1324,6 +1324,8 @@
     function onBoatType(value) {
         var previous = state.boatType;
         state.boatType = value;
+        // onModelCommit sets autoType before it selects the model's type.
+        var byCustomer = previous && previous !== value && value !== state.autoType;
         if (previous && previous !== value) {
             // Zones belong to a hull; the old ones mean nothing on the new
             // one. Autocolor cleared them silently; here it is said.
@@ -1336,18 +1338,21 @@
             destroyViewer();
         }
         if (state.autoType && value !== state.autoType) { state.autoType = ""; state.autofillNote = false; renderAutofillNote(); }
-        // A catalogue model of another type is not this boat: it goes, with
-        // the length and beam it filled in (unless the customer changed them).
-        if (state.modelMatch && state.modelMatch.type !== value) {
-            var modelEl = byId("model");
-            if (modelEl) modelEl.value = "";
+        // A type the customer changes is another boat: the builder and model
+        // go, with the length and beam the catalogue filled in (unless the
+        // customer changed them).
+        if (byCustomer) {
+            ["builder", "model"].forEach(function (id) {
+                var el = byId(id);
+                if (el) el.value = "";
+                checkId(id, false);
+            });
             [["loa", "autoLoa"], ["beam", "autoBeam"]].forEach(function (pair) {
                 var el = byId(pair[0]);
                 if (el && state[pair[1]] && el.value === state[pair[1]]) el.value = "";
                 state[pair[1]] = "";
                 checkId(pair[0], false);
             });
-            checkId("model", false);
             state.modelMatch = null;
             state.modelPrefilled = false;
             state.autofillNote = false;
