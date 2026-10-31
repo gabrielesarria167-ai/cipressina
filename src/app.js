@@ -1106,18 +1106,44 @@
     }
 
     // Models of the builder typed so far; with no builder, all of them, each
-    // labelled with its builder, so a model can be found first.
+    // labelled with its builder, so a model can be found first. Only those
+    // of the type the customer picked themselves (a type the catalogue
+    // filled in follows the model, so it filters nothing).
     function fillModelList() {
         var list = byId("modelList");
         var builderEl = byId("builder");
         if (!list || !builderEl) return;
         list.textContent = "";
         var typed = clean(builderEl.value) !== "";
+        var type = state.boatType !== state.autoType ? state.boatType : "";
         Z.modelsFor(builderEl.value).forEach(function (entry) {
+            if (type && entry.type !== type) return;
             var option = document.createElement("option");
             option.value = entry.model;
             if (!typed) option.label = entry.builder;
             list.appendChild(option);
+        });
+    }
+
+    // A datalist suggests only what matches the text in the field, so once a
+    // catalogue name is chosen it is the only one offered. On focus that name
+    // moves to the placeholder and the field empties, so the whole list
+    // shows; leaving the field empty puts the name back (both fields are
+    // required, so empty is never an answer). The rule's own blur check runs
+    // first and sees the empty field, hence the check again.
+    function showWholeList(el) {
+        var saved = "", hint = el.placeholder;
+        el.addEventListener("focus", function () {
+            var value = el.value;
+            if (!value || !el.list || !$$("option", el.list).some(function (o) { return o.value === value; })) return;
+            saved = value;
+            el.placeholder = value;
+            el.value = "";
+        });
+        el.addEventListener("blur", function () {
+            if (saved && el.value === "") { el.value = saved; checkId(el.id, true); }
+            saved = "";
+            el.placeholder = hint;
         });
     }
 
@@ -1151,8 +1177,8 @@
             checkId("beam", false);
         }
         if (groups.boatType && (!state.boatType || state.boatType === state.autoType)) {
+            state.autoType = entry.type;     // first: onBoatType reads it
             groups.boatType.select(entry.type);
-            state.autoType = entry.type;
             filled = true;
         }
         if (filled) { state.modelPrefilled = true; state.autofillNote = true; }
@@ -1310,6 +1336,27 @@
             destroyViewer();
         }
         if (state.autoType && value !== state.autoType) { state.autoType = ""; state.autofillNote = false; renderAutofillNote(); }
+        // A catalogue model of another type is not this boat: it goes, with
+        // the length and beam it filled in (unless the customer changed them).
+        if (state.modelMatch && state.modelMatch.type !== value) {
+            var modelEl = byId("model");
+            if (modelEl) modelEl.value = "";
+            [["loa", "autoLoa"], ["beam", "autoBeam"]].forEach(function (pair) {
+                var el = byId(pair[0]);
+                if (el && state[pair[1]] && el.value === state[pair[1]]) el.value = "";
+                state[pair[1]] = "";
+                checkId(pair[0], false);
+            });
+            checkId("model", false);
+            state.modelMatch = null;
+            state.modelPrefilled = false;
+            state.autofillNote = false;
+            renderModelSource();
+            renderAutofillNote();
+            renderRegisteredNote();
+            renderServiceSite();
+        }
+        fillModelList();
         checkId("boatType", false);
         renderBoatSummary();
         renderChecklist();
@@ -1939,10 +1986,14 @@
         fillBuilderList();
         fillModelList();
         var builderEl = byId("builder"), modelEl = byId("model");
-        if (builderEl) builderEl.addEventListener("input", function () { fillModelList(); onModelCommit(); renderBoatSummary(); });
+        if (builderEl) {
+            builderEl.addEventListener("input", function () { fillModelList(); onModelCommit(); renderBoatSummary(); });
+            showWholeList(builderEl);
+        }
         if (modelEl) {
             modelEl.addEventListener("input", function () { onModelCommit(); renderBoatSummary(); });
             modelEl.addEventListener("change", function () { onModelCommit(); renderBoatSummary(); });
+            showWholeList(modelEl);
         }
 
         updateRegistrationField();
