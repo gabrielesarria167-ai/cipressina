@@ -497,18 +497,11 @@
     // one colour list; markup that arrives with its own strips is kept. The
     // CSS variables are the fan's geometry hooks (--i index, --n count, --z
     // z-index peaking in the middle) and --sw the printed colour.
-    // «Originale» is the colour the skin's 3D theme gives the hull: the
-    // hero's theme for the hero strips, the wizard viewer's for step 3.
-    function swatchHex(swatch, theme) {
-        theme = theme || CONFIG.heroTheme || CONFIG.theme || {};
-        return swatch.id === "original" && theme.bottom ? theme.bottom : swatch.hex;
-    }
-
-    function renderSwatches(group, theme) {
+    function renderSwatches(group) {
         if ($('[role="radio"]', group)) return;
         var all = Z.SWATCHES;
         all.forEach(function (swatch, i) {
-            var hex = swatchHex(swatch, theme);
+            var hex = swatch.hex;
             var button = document.createElement("button");
             button.type = "button";
             button.className = "swatch";
@@ -562,7 +555,7 @@
         if (!group) return;
         renderSwatches(group);
         hero.radio = radioGroup(group, { selectedClass: "is-active", onSelect: onSwatch });
-        var start = $('[data-value="original"]', group) || $$('[role="radio"]', group)[Math.floor(Z.SWATCHES.length / 2)];
+        var start = $$('[role="radio"]', group)[Math.floor(Z.SWATCHES.length / 2)];
         if (start) hero.radio.select(start.getAttribute("data-value"));
         labelSwatches();
     }
@@ -1493,7 +1486,7 @@
 
     function antifoulingHex(id) {
         var swatch = antifoulingSwatch(id);
-        return swatch ? swatchHex(swatch, CONFIG.theme || {}) : null;
+        return swatch ? swatch.hex : null;
     }
 
     // The viewer shows the chosen colour, or the theme's own hull colour when
@@ -1501,7 +1494,7 @@
     function paintAntifouling() {
         if (!viewer || typeof viewer.setColors !== "function") return;
         var hex = state.antifoulingColor ? antifoulingHex(state.antifoulingColor)
-            : (CONFIG.theme && CONFIG.theme.bottom) || antifoulingHex("original");
+            : CONFIG.theme && CONFIG.theme.bottom;
         if (hex) viewer.setColors({ bottom: hex });
     }
 
@@ -1540,7 +1533,7 @@
     function initAntifouling() {
         var group = byId("antifoulingSwatches");
         if (!group) return;
-        renderSwatches(group, CONFIG.theme || {});
+        renderSwatches(group);
         groups.antifouling = radioGroup(group, { selectedClass: "is-active", onSelect: onAntifouling });
     }
 

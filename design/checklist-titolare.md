@@ -13,6 +13,7 @@ Sul sito ogni dato segnaposto è in un riquadro giallo tratteggiato. Quando arri
 
 ## Novità di questa versione
 
+- **Prova del 29/10/2026, su richiesta del titolare.** Ogni prezzo di verniciatura è più basso del 40 %: opera morta e specchio di poppa 180 €/m², coperta 240 €/m², antivegetativa 72 €/m (86,40 €/m oltre i 10 m), e anche le zone con prezzo segnaposto. La sabbiatura resta a 400 €/m². La coperta si stima su una superficie più piccola (lunghezza × larghezza × 0,5 invece di 0,75): su un open di 5,5 × 2,2 m costa 1.452 € invece di 3.630 €. L'antivegetativa si sceglie solo in nero, blu o rosso. Per tornare ai prezzi pieni si cambia `PAINT_CUT` in `src/zones.js` e le tariffe scritte in `index.html`.
 - **Preventivo con i prezzi del titolare.** Il preventivo usa i prezzi che il titolare ci ha mandato (al m² per opera morta, specchio di poppa, coperta e sabbiatura; al metro per l'antivegetativa), con le maggiorazioni (metallizzato, antisdrucciolo, resinatura) e le riparazioni gravose a preventivo personalizzato. Il modulo chiede anche la **larghezza** della barca, e la lunghezza si può scrivere in **piedi o metri** (piedi di default). Lo sconto per più zone non c'è più. Le domande aperte sono in B1.
 - **Il sito è online.** Il modulo invia davvero la richiesta: il server la salva in un database, con il preventivo calcolato in quel momento, e dà al cliente un codice di 10 cifre. «Verifica la tua richiesta» mostra lo stato vero della barca.
 - **Il pannello dell'officina** (solo in italiano). Si entra con una password, in due modi:
@@ -33,7 +34,7 @@ Il preventivo ha due parti che si sommano:
 
 Chi vuole solo i lavori sulle zone può scegliere «Nessun pacchetto».
 
-Esempio: un cabinato di 8 m (larghezza 2,7 m) con il Pacchetto Completo (prezzo segnaposto), l'antivegetativa e le due fiancate in pastello costa 440 € + 960 € (8 m × 120 €/m) + 4.224 € (2 fiancate da 7,04 m² × 300 €/m²), cioè **5.624 €** più IVA. Non c'è più lo sconto per più zone. I m² sono stimati con coefficienti segnaposto (vedi B1).
+Esempio: un cabinato di 8 m (larghezza 2,7 m) con il Pacchetto Completo (prezzo segnaposto), l'antivegetativa e le due fiancate in pastello costa 440 € + 576 € (8 m × 72 €/m) + 2.534 € (2 fiancate da 7,04 m² × 180 €/m²), cioè **3.550 €** più IVA (con la prova del −40 %). Non c'è più lo sconto per più zone. I m² sono stimati con coefficienti segnaposto (vedi B1).
 
 ### A1. Su cosa si calcola il prezzo dei pacchetti?
 
@@ -113,9 +114,11 @@ Da confermare con il titolare (le nostre ipotesi):
 - [ ] Oltre i 10 m il +20 % vale su tutta la lunghezza (144 €/m), non solo sui metri oltre i 10?
 - [ ] Le maggiorazioni valgono solo per opera morta, specchio di poppa e coperta, mai per carena (sabbiatura e antivegetativa) e per le altre zone?
 - [ ] I prezzi al m² sono IVA esclusa, come scritto ora nel preventivo?
-- [ ] I m² sono calcolati da lunghezza, larghezza e tipo di barca con coefficienti **segnaposto** (`src/zones.js`, tabella `FREEBOARD` e fattori): francobordo = lunghezza × 0,07 (gommone) / 0,09 (open, vela) / 0,11 (cabinato) / 0,13 (yacht); fianco = lunghezza × francobordo; specchio di poppa = larghezza × francobordo × 0,8; coperta = lunghezza × larghezza × 0,75; opera viva = lunghezza × larghezza × 0,85 (questa è la regola pratica di Interlux, l'unica con una fonte). Il titolare ha un suo modo di misurare i m²? ______________________________
+- [ ] I m² sono calcolati da lunghezza, larghezza e tipo di barca con coefficienti **segnaposto** (`src/zones.js`, tabella `FREEBOARD` e fattori): francobordo = lunghezza × 0,07 (gommone) / 0,09 (open, vela) / 0,11 (cabinato) / 0,13 (yacht); fianco = lunghezza × francobordo; specchio di poppa = larghezza × francobordo × 0,8; coperta = lunghezza × larghezza × 0,5; opera viva = lunghezza × larghezza × 0,85 (questa è la regola pratica di Interlux, l'unica con una fonte). Il titolare ha un suo modo di misurare i m²? ______________________________
 
 **Altre zone, ancora segnaposto**
+
+Con la prova del 29/10/2026 questi prezzi, minimi compresi, sono più bassi del 40 %.
 
 | Lavoro | Segnaposto | Prezzo vero |
 |---|---|---|

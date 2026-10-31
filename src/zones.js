@@ -197,6 +197,8 @@
     var ANTIFOULING = { rate: 120, longOver: 10, longExtra: 20 };
     // Percent, added to the base rate for each option chosen (not compounded).
     var SURCHARGE = 25;
+    // The owner's trial (2026-10-29): every painting price 40 % lower; sandblasting is not painting.
+    var PAINT_CUT = 40;
     // Removing and refitting hardware: never in the total, said in a note.
     var HARDWARE_HOURLY = 40;
 
@@ -217,7 +219,7 @@
     // freeboard (topside height = LOA times a ratio per type), are PLACEHOLDER.
     var FREEBOARD = { gommone: 0.07, open: 0.09, cabinato: 0.11, yacht: 0.13, vela: 0.09 };
     var TRANSOM_FACTOR = 0.8;       // transom = beam x freeboard x this
-    var DECK_FACTOR = 0.75;         // deck = LOA x beam x this
+    var DECK_FACTOR = 0.5;          // deck = LOA x beam x this
     var UNDERWATER_FACTOR = 0.85;   // underwater = LOA x beam x this
 
     // A beam for the home sentence, which asks only for the length. PLACEHOLDER.
@@ -252,20 +254,21 @@
     function price(id, boat, opts) {
         if (!has.call(PRICE_GROUP_OF, id)) return null;
         if (!boat || !(boat.loa > 0)) return null;
-        if (PRICE_GROUP_OF[id] !== "area") return perMetre(PRICES[PRICE_GROUP_OF[id]], boat.loa);
+        var cut = 1 - PAINT_CUT / 100;
+        if (PRICE_GROUP_OF[id] !== "area") return Math.round(perMetre(PRICES[PRICE_GROUP_OF[id]], boat.loa) * cut);
         opts = opts || {};
         var m2 = area(id, boat);
         if (id === "bottom") {
             if (opts.bottomWork === "sabbiatura") return m2 === null ? null : Math.round(m2 * AREA_PRICES.sandblast);
             var factor = boat.loa > ANTIFOULING.longOver ? 1 + ANTIFOULING.longExtra / 100 : 1;
-            return Math.round(boat.loa * ANTIFOULING.rate * factor);
+            return Math.round(boat.loa * ANTIFOULING.rate * factor * cut);
         }
         if (m2 === null) return null;
         var percent = 0;
         if (opts.finish === "metallizzato") percent += SURCHARGE;
         if (opts.repair === "resinatura") percent += SURCHARGE;
         if (id === "deck" && opts.nonSlip) percent += SURCHARGE;
-        return Math.round(m2 * (id === "deck" ? AREA_PRICES.deck : AREA_PRICES.paint) * (1 + percent / 100));
+        return Math.round(m2 * (id === "deck" ? AREA_PRICES.deck : AREA_PRICES.paint) * (1 + percent / 100) * cut);
     }
 
     // The price of a package at one length; null for «nessuno», an unknown
@@ -324,23 +327,13 @@
 
     // ---------- Hero swatches (antivegetativa colours) ---------------------
     // research.md §5. No maker publishes hex values: ALL HEX ARE
-    // APPROXIMATIONS, hence «colori indicativi» next to them. The order puts
-    // «Originale» in the middle of an odd count (11), so the fan has one
-    // upright strip. «Originale» is the 3D boat's own default antifouling colour
-    // (boat3d.js DEFAULT_THEME.bottom, #1d3b8f); app.js uses the skin's
-    // theme.bottom instead when it passes one.
+    // APPROXIMATIONS, hence «colori indicativi» next to them. Only the three
+    // colours the owner offers (2026-10-29), in his order; «blu» is the
+    // Raffaello Next «Blu scuro».
     var SWATCHES = [
-        { id: "bianco",      hex: "#F4F4F2", source: "Veneziani Raffaello Next" },
-        { id: "azzurro",     hex: "#5B9BD5", source: "Veneziani Raffaello Next" },
-        { id: "grigio12400", hex: "#8A8F94", source: "Hempel Mille NCT 12400" },
-        { id: "grigioScuro", hex: "#4A4F55", source: "Veneziani Eurosprint Next" },
-        { id: "verde",       hex: "#2E6B3A", source: "International Interspeed 6400 BQA643" },
-        { id: "original",    hex: "#1D3B8F", source: "", placeholder: true },
-        { id: "marrone",     hex: "#6B4A2B", source: "International Interspeed 6400 BQA648" },
-        { id: "rosso",       hex: "#B22A2A", source: "Veneziani Raffaello Next" },
-        { id: "bluScuro",    hex: "#14305E", source: "Veneziani Raffaello Next" },
-        { id: "blu37110",    hex: "#1F2F4F", source: "Hempel Mille NCT 37110" },
-        { id: "nero",        hex: "#1B1B1B", source: "Veneziani Raffaello Next" }
+        { id: "nero",  hex: "#1B1B1B", source: "Veneziani Raffaello Next" },
+        { id: "blu",   hex: "#14305E", source: "Veneziani Raffaello Next" },
+        { id: "rosso", hex: "#B22A2A", source: "Veneziani Raffaello Next" }
     ];
 
     // ---------- Builders and models (research.md §2) -----------------------

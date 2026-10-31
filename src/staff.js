@@ -1046,7 +1046,9 @@
         var zones = el("ul", "zone-list");
         row.zones.forEach(function (id) {
             var text = zoneLabel(id);
-            if (id === "bottom" && row.antifoulingColor) text += " · " + it("sw." + row.antifoulingColor);
+            // A colour no longer offered (older requests) has no label: show its id.
+            var colour = row.antifoulingColor && it("sw." + row.antifoulingColor);
+            if (id === "bottom" && colour) text += " · " + (colour === "sw." + row.antifoulingColor ? row.antifoulingColor : colour);
             zones.appendChild(el("li", "", text));
         });
         if (!row.zones.length) zones.appendChild(el("li", "", "Nessuna zona: solo il pacchetto"));

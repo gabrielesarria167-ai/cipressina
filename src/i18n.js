@@ -439,19 +439,10 @@
         "Couleurs indicatives : l'antifouling réel peut différer.");
     R("hero.boatAlt", "Barca con l'opera viva colorata", "Boat with a coloured underwater hull", "Barco con la obra viva coloreada", "Bateau aux œuvres vives colorées");
 
-    // The ten antifouling colours of research.md §5 (names as the makers print
-    // them, codes included) plus «Originale».
-    R("sw.original", "Originale", "Original", "Original", "D'origine");
-    R("sw.bianco", "Bianco", "White", "Blanco", "Blanc");
-    R("sw.azzurro", "Azzurro", "Light blue", "Azul claro", "Bleu clair");
-    R("sw.grigio12400", "Grigio 12400", "Grey 12400", "Gris 12400", "Gris 12400");
-    R("sw.grigioScuro", "Grigio scuro", "Dark grey", "Gris oscuro", "Gris foncé");
-    R("sw.verde", "Verde BQA643", "Green BQA643", "Verde BQA643", "Vert BQA643");
-    R("sw.marrone", "Marrone BQA648", "Brown BQA648", "Marrón BQA648", "Brun BQA648");
-    R("sw.rosso", "Rosso", "Red", "Rojo", "Rouge");
-    R("sw.bluScuro", "Blu scuro", "Dark blue", "Azul oscuro", "Bleu foncé");
-    R("sw.blu37110", "Blu scuro 37110", "Dark blue 37110", "Azul oscuro 37110", "Bleu foncé 37110");
+    // The owner's three antifouling colours (zones.js SWATCHES).
     R("sw.nero", "Nero", "Black", "Negro", "Noir");
+    R("sw.blu", "Blu", "Blue", "Azul", "Bleu");
+    R("sw.rosso", "Rosso", "Red", "Rojo", "Rouge");
 
     // Step 3: the optional antifouling colour, offered when «Opera viva» is a
     // selected zone. Colour names are the sw.<id> keys above.
