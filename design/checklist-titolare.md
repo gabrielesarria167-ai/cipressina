@@ -13,7 +13,9 @@ Sul sito ogni dato segnaposto è in un riquadro giallo tratteggiato. Quando arri
 
 ## Novità di questa versione
 
-- **Prova del 29/10/2026, su richiesta del titolare.** Ogni prezzo di verniciatura è più basso del 40 %: opera morta e specchio di poppa 180 €/m², coperta 240 €/m², antivegetativa 72 €/m (86,40 €/m oltre i 10 m), e anche le zone con prezzo segnaposto. La sabbiatura resta a 400 €/m². La coperta si stima su una superficie più piccola (lunghezza × larghezza × 0,5 invece di 0,75): su un open di 5,5 × 2,2 m costa 1.452 € invece di 3.630 €. L'antivegetativa si sceglie solo in nero, blu o rosso. Per tornare ai prezzi pieni si cambia `PAINT_CUT` in `src/zones.js` e le tariffe scritte in `index.html`.
+- **Prezzi del −40 % ufficiali, 01/11/2026.** La prova del 29/10 diventa il listino: opera morta e specchio di poppa 180 €/m², coperta 240 €/m², antivegetativa 25,20 €/m² di carena, zone segnaposto più basse del 40 %. La sabbiatura resta a 400 €/m², i pacchetti non cambiano.
+- **Antivegetativa al m², 01/11/2026, su segnalazione del titolare.** L'antivegetativa ora conta anche la larghezza: si calcola sui m² di carena (lunghezza × larghezza × 0,85), a 25,20 €/m², sempre +20 % oltre i 10 m. Sono i suoi 120 €/m riportati su una barca di 10 m di larghezza tipica (42 €/m²), meno il 40 %: le barche strette e piccole pagano meno, le grandi e larghe di più. Esempi: open 5,5 × 2,2 m 259 € (prima 396 €), yacht 18 × 4,75 m 2.198 € (prima 1.555 €).
+- **Prova del 29/10/2026, su richiesta del titolare.** Ogni prezzo di verniciatura è più basso del 40 %: opera morta e specchio di poppa 180 €/m², coperta 240 €/m², antivegetativa 72 €/m (86,40 €/m oltre i 10 m), e anche le zone con prezzo segnaposto. La sabbiatura resta a 400 €/m². La coperta si stima su una superficie più piccola (lunghezza × larghezza × 0,5 invece di 0,75): su un open di 5,5 × 2,2 m costa 1.452 € invece di 3.630 €. L'antivegetativa si sceglie solo in nero, blu o rosso. Dal 01/11/2026 questi prezzi sono ufficiali.
 - **Preventivo con i prezzi del titolare.** Il preventivo usa i prezzi che il titolare ci ha mandato (al m² per opera morta, specchio di poppa, coperta e sabbiatura; al metro per l'antivegetativa), con le maggiorazioni (metallizzato, antisdrucciolo, resinatura) e le riparazioni gravose a preventivo personalizzato. Il modulo chiede anche la **larghezza** della barca, e la lunghezza si può scrivere in **piedi o metri** (piedi di default). Lo sconto per più zone non c'è più. Le domande aperte sono in B1.
 - **Il sito è online.** Il modulo invia davvero la richiesta: il server la salva in un database, con il preventivo calcolato in quel momento, e dà al cliente un codice di 10 cifre. «Verifica la tua richiesta» mostra lo stato vero della barca.
 - **Il pannello dell'officina** (solo in italiano). Si entra con una password, in due modi:
@@ -34,7 +36,7 @@ Il preventivo ha due parti che si sommano:
 
 Chi vuole solo i lavori sulle zone può scegliere «Nessun pacchetto».
 
-Esempio: un cabinato di 8 m (larghezza 2,7 m) con il Pacchetto Completo (prezzo segnaposto), l'antivegetativa e le due fiancate in pastello costa 440 € + 576 € (8 m × 72 €/m) + 2.534 € (2 fiancate da 7,04 m² × 180 €/m²), cioè **3.550 €** più IVA (con la prova del −40 %). Non c'è più lo sconto per più zone. I m² sono stimati con coefficienti segnaposto (vedi B1).
+Esempio: un cabinato di 8 m (larghezza 2,7 m) con il Pacchetto Completo (prezzo segnaposto), l'antivegetativa e le due fiancate in pastello costa 440 € + 463 € (18,36 m² di carena × 25,20 €/m²) + 2.534 € (2 fiancate da 7,04 m² × 180 €/m²), cioè **3.437 €** più IVA. Non c'è più lo sconto per più zone. I m² sono stimati con coefficienti segnaposto (vedi B1).
 
 ### A1. Su cosa si calcola il prezzo dei pacchetti?
 
@@ -98,35 +100,36 @@ I prezzi del titolare, ricevuti il 21/10/2026 e inseriti nel preventivo (IVA esc
 
 | Lavoro | Prezzo del titolare | Stato |
 |---|---|---|
-| Opera morta (ogni lato) e specchio di poppa, pastello | 300 €/m² | ✓ |
-| Coperta | 400 €/m² (nel messaggio era «m³»: lo leggiamo come m²) | ✓ |
+| Opera morta (ogni lato) e specchio di poppa, pastello | 180 €/m² (era 300, −40 %) | ✓ |
+| Coperta | 240 €/m² (era 400, −40 %; nel messaggio era «m³»: lo leggiamo come m²) | ✓ |
 | Metallizzato | +25 % (opera morta, specchio di poppa, coperta) | ✓ |
 | Antisdrucciolo | +25 % (coperta) | ✓ |
 | Piccole stuccature / resinatura moderata | 0 % / +25 % | ✓ |
 | Riparazioni gravose | preventivo personalizzato dopo sopralluogo | ✓ |
-| Opera viva, solo antivegetativa | 120 € al metro lineare, +20 % oltre i 10 m | ✓ |
+| Opera viva, solo antivegetativa | 25,20 €/m² di carena, +20 % oltre i 10 m (era 120 € al metro lineare: nostra conversione, −40 %) | da confermare |
 | Opera viva, sabbiatura e ripristino | 400 €/m² (serve la larghezza) | ✓ |
 | Stacco e riattacco | a consuntivo, 40 €/h + IVA (non entra nel totale) | ✓ |
 
 Da confermare con il titolare (le nostre ipotesi):
 
-- [ ] Le maggiorazioni si sommano sulla tariffa base? Esempio: metallizzato + antisdrucciolo sulla coperta = 400 € × 1,50 (non 400 × 1,25 × 1,25).
-- [ ] Oltre i 10 m il +20 % vale su tutta la lunghezza (144 €/m), non solo sui metri oltre i 10?
+- [ ] Le maggiorazioni si sommano sulla tariffa base? Esempio: metallizzato + antisdrucciolo sulla coperta = 240 € × 1,50 (non 240 × 1,25 × 1,25).
+- [ ] Antivegetativa: va bene 25,20 €/m² di carena, o il titolare ha un suo prezzo al m²? ______
+- [ ] Oltre i 10 m il +20 % vale su tutta l'antivegetativa, non solo sui metri oltre i 10? Ora che il prezzo cresce con la superficie, serve ancora?
 - [ ] Le maggiorazioni valgono solo per opera morta, specchio di poppa e coperta, mai per carena (sabbiatura e antivegetativa) e per le altre zone?
 - [ ] I prezzi al m² sono IVA esclusa, come scritto ora nel preventivo?
 - [ ] I m² sono calcolati da lunghezza, larghezza e tipo di barca con coefficienti **segnaposto** (`src/zones.js`, tabella `FREEBOARD` e fattori): francobordo = lunghezza × 0,07 (gommone) / 0,09 (open, vela) / 0,11 (cabinato) / 0,13 (yacht); fianco = lunghezza × francobordo; specchio di poppa = larghezza × francobordo × 0,8; coperta = lunghezza × larghezza × 0,5; opera viva = lunghezza × larghezza × 0,85 (questa è la regola pratica di Interlux, l'unica con una fonte). Il titolare ha un suo modo di misurare i m²? ______________________________
 
 **Altre zone, ancora segnaposto**
 
-Con la prova del 29/10/2026 questi prezzi, minimi compresi, sono più bassi del 40 %.
+Questi prezzi, minimi compresi, sono già più bassi del 40 % rispetto ai primi segnaposto.
 
 | Lavoro | Segnaposto | Prezzo vero |
 |---|---|---|
-| Tuga, hard-top, sovrastruttura, fly | 65 €/m, minimo 250 € | ______ |
-| Tubolare del gommone, per lato | 35 €/m, minimo 200 € | ______ |
-| Timone, chiglia / bulbo | 28 €/m, minimo 150 € | ______ |
-| Linea di galleggiamento | 12 €/m, minimo 120 € | ______ |
-| Parti piccole (consolle, fuoribordo, piede, eliche) | 14 €/m, minimo 100 € | ______ |
+| Tuga, hard-top, sovrastruttura, fly | 39 €/m, minimo 150 € | ______ |
+| Tubolare del gommone, per lato | 21 €/m, minimo 120 € | ______ |
+| Timone, chiglia / bulbo | 16,80 €/m, minimo 90 € | ______ |
+| Linea di galleggiamento | 7,20 €/m, minimo 72 € | ______ |
+| Parti piccole (consolle, fuoribordo, piede, eliche) | 8,40 €/m, minimo 60 € | ______ |
 
 **Sconto per più zone**: tolto dal sito il 21/10/2026 (era un segnaposto inventato). Se il titolare ne vuole uno, va deciso insieme ai prezzi.
 

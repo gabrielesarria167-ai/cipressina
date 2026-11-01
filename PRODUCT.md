@@ -22,7 +22,7 @@ Visitors arrive on phone or desktop, often off-season, planning haul-out work. S
 - Pages: `index.html` (home), `pgs/preventivo.html` (4-step wizard, lookup at `#stato`), `pgs/officina.html` (staff panel, Italian only).
 - Static HTML/CSS/JS, no framework; served by a small Node server on Render with Neon Postgres.
 - Italian main, with EN/ES/FR via `data-i18n` keys in `src/site.js` and `src/i18n.js`.
-- Real rates: topsides and transom 300 €/m², deck 400 €/m², sandblasting 400 €/m², antifouling 120 €/m of length. Since 2026-10-29 the owner is trying every painting price 40 % lower (sandblasting excluded): 180, 240 and 72. Packages (Base/Completo/Premium) are still placeholder prices.
+- Real rates: topsides and transom 180 €/m², deck 240 €/m², sandblasting 400 €/m², antifouling 25.20 €/m² of underwater area, +20 % over 10 m. Painting is 40 % below the owner's first list (300, 400 and 120 €/m of length): his trial of 2026-10-29, official since 2026-11-01. Antifouling counts the beam since 2026-11-01, at his 120 €/m converted on a 10 m boat (42 €/m²) less 40 %. Packages (Base/Completo/Premium) are still placeholder prices.
 - The 3D boat model is the owner's top priority and lives in the wizard.
 
 ## Brand Commitments

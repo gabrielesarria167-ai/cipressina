@@ -158,14 +158,15 @@
     };
 
     // Zone work: EUR per metre of LOA, `min` is the floor per zone. One rate
-    // whatever the package. ALL PLACEHOLDER. The bottom, topsides, transom
-    // and deck are not here: they have the owner's rates below.
+    // whatever the package. ALL PLACEHOLDER, already 40 % lower like the
+    // owner's rates below. The bottom, topsides, transom and deck are not
+    // here: they have the owner's rates below.
     var PRICES = {
-        stripe:         { rate: 12, min: 120 },
-        superstructure: { rate: 65, min: 250 },
-        appendage:      { rate: 28, min: 150 },
-        small:          { rate: 14, min: 100 },
-        tubes:          { rate: 35, min: 200 }  // per side
+        stripe:         { rate: 7.2,  min: 72 },
+        superstructure: { rate: 39,   min: 150 },
+        appendage:      { rate: 16.8, min: 90 },
+        small:          { rate: 8.4,  min: 60 },
+        tubes:          { rate: 21,   min: 120 }  // per side
     };
 
     // «area»: priced by price() from the boat's area and the owner's rates.
@@ -190,15 +191,18 @@
     };
 
     // The owner's rates (design/checklist-titolare.md), EUR per m2 of painted
-    // surface; the bottom is either antifouling alone, per metre of LOA (and
-    // longer boats pay `longExtra` percent more on the whole length), or
-    // sandblasting and restoring, per m2 of underwater area.
-    var AREA_PRICES = { paint: 300, deck: 400, sandblast: 400 };
-    var ANTIFOULING = { rate: 120, longOver: 10, longExtra: 20 };
+    // surface; the bottom is either antifouling alone or sandblasting and
+    // restoring, both per m2 of underwater area. Longer boats pay `longExtra`
+    // percent more antifouling on the whole length.
+    // Painting is 40 % below the owner's first list (300 / 400 / 120 €/m): his
+    // trial of 2026-10-29, official since 2026-11-01. Sandblasting is not painting.
+    var AREA_PRICES = { paint: 180, deck: 240, sandblast: 400 };
+    // Antifouling was 120 €/m of length; the owner says it must count the beam (2026-11-01).
+    // 25.20 €/m2 = 42 less 40 %, and 42 €/m2 is 120 €/m on a 10 m boat of typical beam
+    // (10 / 3 x 0.85 = 2.83 m2 of underwater hull per metre).
+    var ANTIFOULING = { rate: 25.2, longOver: 10, longExtra: 20 };
     // Percent, added to the base rate for each option chosen (not compounded).
     var SURCHARGE = 25;
-    // The owner's trial (2026-10-29): every painting price 40 % lower; sandblasting is not painting.
-    var PAINT_CUT = 40;
     // Removing and refitting hardware: never in the total, said in a note.
     var HARDWARE_HOURLY = 40;
 
@@ -254,21 +258,20 @@
     function price(id, boat, opts) {
         if (!has.call(PRICE_GROUP_OF, id)) return null;
         if (!boat || !(boat.loa > 0)) return null;
-        var cut = 1 - PAINT_CUT / 100;
-        if (PRICE_GROUP_OF[id] !== "area") return Math.round(perMetre(PRICES[PRICE_GROUP_OF[id]], boat.loa) * cut);
+        if (PRICE_GROUP_OF[id] !== "area") return perMetre(PRICES[PRICE_GROUP_OF[id]], boat.loa);
         opts = opts || {};
         var m2 = area(id, boat);
-        if (id === "bottom") {
-            if (opts.bottomWork === "sabbiatura") return m2 === null ? null : Math.round(m2 * AREA_PRICES.sandblast);
-            var factor = boat.loa > ANTIFOULING.longOver ? 1 + ANTIFOULING.longExtra / 100 : 1;
-            return Math.round(boat.loa * ANTIFOULING.rate * factor * cut);
-        }
         if (m2 === null) return null;
+        if (id === "bottom") {
+            if (opts.bottomWork === "sabbiatura") return Math.round(m2 * AREA_PRICES.sandblast);
+            var factor = boat.loa > ANTIFOULING.longOver ? 1 + ANTIFOULING.longExtra / 100 : 1;
+            return Math.round(m2 * ANTIFOULING.rate * factor);
+        }
         var percent = 0;
         if (opts.finish === "metallizzato") percent += SURCHARGE;
         if (opts.repair === "resinatura") percent += SURCHARGE;
         if (id === "deck" && opts.nonSlip) percent += SURCHARGE;
-        return Math.round(m2 * (id === "deck" ? AREA_PRICES.deck : AREA_PRICES.paint) * (1 + percent / 100) * cut);
+        return Math.round(m2 * (id === "deck" ? AREA_PRICES.deck : AREA_PRICES.paint) * (1 + percent / 100));
     }
 
     // The price of a package at one length; null for «nessuno», an unknown

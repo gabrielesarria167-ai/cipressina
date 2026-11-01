@@ -23,19 +23,19 @@ test('a complete request becomes a row, with the server computing the estimate',
     assert.equal(row.beam, 3);
     assert.deepEqual(row.zones, ['bottom', 'topside_port']);
     assert.deepEqual(row.options, { finish: 'pastello', repair: 'stuccature', bottomWork: 'antivegetativa', nonSlip: false, hardware: false });
-    // completo 55 €/m × 8.5 = 468 (no cut); bottom (antifouling) 120 × 8.5 × 0.6 = 612;
-    // topside 8.5 × (8.5 × 0.11 freeboard) = 7.9475 m² × 300 × 0.6 = 1431.
+    // completo 55 €/m × 8.5 = 468; bottom (antifouling) 8.5 × 3 × 0.85 = 21.675 m² × 25.20 = 546;
+    // topside 8.5 × (8.5 × 0.11 freeboard) = 7.9475 m² × 180 = 1431.
     assert.equal(row.estimate.package, 468);
-    assert.equal(row.estimate.subtotal, 612 + 1431);
+    assert.equal(row.estimate.subtotal, 546 + 1431);
     assert.equal(row.estimate.custom, false);
-    assert.equal(row.estimate.total, 468 + 612 + 1431);
+    assert.equal(row.estimate.total, 468 + 546 + 1431);
 });
 
 // The estimate of a request with no package, so the zones alone are in the total.
 const total = (extra) => validateRequest(payload(Object.assign({ tier: 'nessuno' }, extra))).estimate.total;
 
 test('metallic finish and non-slip add 25 % each to the base rate, not compounded', () => {
-    // topside 7.9475 m² × 300 × 1.25 × 0.6 = 1788; deck 8.5 × 3 × 0.5 = 12.75 m² × 400 × 1.5 × 0.6 = 4590.
+    // topside 7.9475 m² × 180 × 1.25 = 1788; deck 8.5 × 3 × 0.5 = 12.75 m² × 240 × 1.5 = 4590.
     const options = { finish: 'metallizzato', nonSlip: true };
     assert.equal(total({ zones: ['topside_port', 'deck'], options }), 1788 + 4590);
     // The non-slip applies to the deck only, the metallic to the topside too.
@@ -45,21 +45,22 @@ test('metallic finish and non-slip add 25 % each to the base rate, not compounde
 test('moderate resin repair adds 25 % to the painted zones, not to the bottom', () => {
     const options = { repair: 'resinatura' };
     assert.equal(total({ zones: ['topside_port'], options }), 1788);
-    assert.equal(total({ zones: ['bottom'], options }), 612);
+    assert.equal(total({ zones: ['bottom'], options }), 546);
 });
 
-test('antifouling is 72 € per metre of LOA (120 less 40 %), 86.40 € above 10 m', () => {
-    assert.equal(total({ zones: ['bottom'], loa: 9 }), 648);
-    assert.equal(total({ zones: ['bottom'], loa: 10 }), 720);
-    assert.equal(total({ zones: ['bottom'], loa: 12, beam: 3.5 }), 1037);
+test('antifouling is 25.20 € per m² of underwater area, 20 % more above 10 m', () => {
+    assert.equal(total({ zones: ['bottom'], loa: 9 }), 578);                // 9 × 3 × 0.85 = 22.95 m²
+    assert.equal(total({ zones: ['bottom'], loa: 9, beam: 3.5 }), 675);     // a wider boat pays more
+    assert.equal(total({ zones: ['bottom'], loa: 10 }), 643);
+    assert.equal(total({ zones: ['bottom'], loa: 12, beam: 3.5 }), 1080);   // 35.7 m² × 25.20 × 1.2
 });
 
-test('the painting cut also lowers the transom and the placeholder zones, minimum included', () => {
-    assert.equal(total({ zones: ['transom'] }), 404);   // 3 × 0.935 freeboard × 0.8 = 2.244 m² × 300 × 0.6
-    assert.equal(total({ zones: ['boot'] }), 72);       // 12 × 8.5 = 102, minimum 120, × 0.6
+test('the transom is priced on its area, a placeholder zone per metre with a minimum', () => {
+    assert.equal(total({ zones: ['transom'] }), 404);   // 3 × 0.935 freeboard × 0.8 = 2.244 m² × 180
+    assert.equal(total({ zones: ['boot'] }), 72);       // 7.20 × 8.5 = 61, minimum 72
 });
 
-test('sandblasting is 400 € per m² of underwater area, without the painting cut', () => {
+test('sandblasting is 400 € per m² of underwater area', () => {
     const options = { bottomWork: 'sabbiatura' };
     assert.equal(total({ zones: ['bottom'], options }), 8670);              // 8.5 × 3 × 0.85 = 21.675 m²
 });
@@ -72,7 +73,7 @@ test('heavy repairs on a painted zone make the quote custom, with no total', () 
     // Only the bottom: nothing painted, so the price stands.
     const bottomOnly = validateRequest(payload({ zones: ['bottom'], options }));
     assert.equal(bottomOnly.estimate.custom, false);
-    assert.equal(bottomOnly.estimate.total, 468 + 612);
+    assert.equal(bottomOnly.estimate.total, 468 + 546);
 });
 
 test('a price sent by the page is ignored', () => {
