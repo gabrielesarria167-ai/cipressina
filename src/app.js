@@ -831,8 +831,8 @@
             msg: "err.loa", params: function () { return { unit: state.unit, min: limitText(LOA_MIN, true), max: limitText(LOA_MAX, false) }; } });
         // Less than the length; with no length typed yet only the range counts.
         addRule({ id: "beam", step: 1, format: formatLoa,
-            ok: function (v) { var n = toMetres(v); return n >= BEAM_MIN && n <= BEAM_MAX && !(n >= metres("loa")); },
-            msg: "err.beam", params: function () { return { unit: state.unit, min: limitText(BEAM_MIN, true), max: limitText(BEAM_MAX, false) }; } });
+            ok: function (v) { var n = toMetres(v, "m"); return n >= BEAM_MIN && n <= BEAM_MAX && !(n >= metres("loa")); },
+            msg: "err.beam", params: function () { return { unit: "m", min: limitText(BEAM_MIN, true, "m"), max: limitText(BEAM_MAX, false, "m") }; } });
         addRule({ id: "registered", step: 1, radio: true, get: function () { return state.registered; },
             ok: function (v) { return !!v; }, msg: "err.registered" });
         addRule({ id: "berthKind", step: 1, radio: true, get: function () { return state.berthKind; },
@@ -872,22 +872,24 @@
             msg: function (v) { return v === "" ? "err.email.empty" : "err.email.bad"; } });
     }
 
-    // Lengths are typed in feet or metres (state.unit) and sent in metres, to the
-    // centimetre like the server stores them.
-    function toMetres(value) {
+    // The length is typed in feet or metres (state.unit), the beam always in
+    // metres: the owner says boats are measured in feet, beams in metres. Both
+    // are sent in metres, to the centimetre like the server stores them.
+    // `unit` defaults to state.unit.
+    function toMetres(value, unit) {
         var n = parseLoa(value);
-        return state.unit === "ft" ? Math.round(n * FOOT * 100) / 100 : n;
+        return (unit || state.unit) === "ft" ? Math.round(n * FOOT * 100) / 100 : n;
     }
-    function metres(id) { return toMetres((byId(id) || {}).value || ""); }
-    // The text for a length in metres, in the current unit (feet to a tenth,
-    // metres to the centimetre).
-    function lengthText(m) {
-        return formatNumber(state.unit === "ft" ? Math.round(m / FOOT * 10) / 10 : Math.round(m * 100) / 100);
+    function metres(id) { return toMetres((byId(id) || {}).value || "", id === "beam" ? "m" : null); }
+    // The text for a length in metres, in a unit (feet to a tenth, metres to
+    // the centimetre).
+    function lengthText(m, unit) {
+        return formatNumber((unit || state.unit) === "ft" ? Math.round(m / FOOT * 10) / 10 : Math.round(m * 100) / 100);
     }
     // A limit in metres as shown in an error: the minimum rounded up and the
     // maximum down, so that what the message offers is always accepted.
-    function limitText(m, up) {
-        if (state.unit === "m") return formatNumber(m);
+    function limitText(m, up, unit) {
+        if ((unit || state.unit) === "m") return formatNumber(m);
         var tenths = m / FOOT * 10;
         return formatNumber((up ? Math.ceil(tenths) : Math.floor(tenths)) / 10);
     }
@@ -1171,7 +1173,7 @@
         }
         // The catalogue has no beam for some models: then the customer types it.
         if (entry.beam && beamEl && (clean(beamEl.value) === "" || beamEl.value === state.autoBeam)) {
-            beamEl.value = lengthText(entry.beam);
+            beamEl.value = lengthText(entry.beam, "m");
             state.autoBeam = beamEl.value;
             filled = true;
             checkId("beam", false);
@@ -1296,20 +1298,17 @@
         if (text) text.textContent = bits.join(" · ");
     }
 
-    // Switching the unit converts what is typed in LOA and beam, so the boat
-    // stays the same; an auto-filled value stays «auto-filled».
+    // Switching the unit converts what is typed in LOA, so the boat stays the
+    // same; an auto-filled value stays «auto-filled». The beam is always metres.
     function onUnit(next) {
         var previous = state.unit;
         state.unit = next;
-        if (previous !== next) {
-            [["loa", "autoLoa"], ["beam", "autoBeam"]].forEach(function (pair) {
-                var el = byId(pair[0]);
-                var n = el ? parseLoa(el.value) : NaN;
-                if (isNaN(n)) return;
-                var wasAuto = el.value === state[pair[1]];
-                el.value = lengthText(previous === "ft" ? n * FOOT : n);
-                if (wasAuto) state[pair[1]] = el.value;
-            });
+        var el = byId("loa");
+        var n = el ? parseLoa(el.value) : NaN;
+        if (previous !== next && !isNaN(n)) {
+            var wasAuto = el.value === state.autoLoa;
+            el.value = lengthText(previous === "ft" ? n * FOOT : n);
+            if (wasAuto) state.autoLoa = el.value;
         }
         $$("[data-unit]").forEach(function (el) { el.textContent = next; });
         checkId("loa", false);

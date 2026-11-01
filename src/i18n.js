@@ -137,7 +137,7 @@
     R("fld.model", "Modello", "Model", "Modelo", "Modèle");
     R("fld.year", "Anno", "Year", "Año", "Année");
     R("fld.loa", "Lunghezza fuori tutto (LOA)", "Length overall (LOA)", "Eslora total (LOA)", "Longueur hors tout (LOA)");
-    R("fld.unit", "Unità di misura", "Unit of measure", "Unidad de medida", "Unité de mesure");
+    R("fld.unit", "Lunghezza in", "Length in", "Eslora en", "Longueur en");
     R("fld.beam", "Larghezza massima (baglio)", "Beam (maximum width)", "Manga (anchura máxima)", "Largeur maximale (bau)");
     R("fld.registered", "Immatricolazione", "Registration", "Matriculación", "Immatriculation");
     R("fld.registration", "Sigla di immatricolazione", "Registration number", "Matrícula", "Numéro d'immatriculation");
@@ -164,7 +164,7 @@
         "Si eliges un modelo de la lista, rellenamos nosotros la eslora y el tipo.",
         "Si vous choisissez un modèle de la liste, nous renseignons la longueur et le type.");
     R("hint.loa", "Nell'unità scelta qui sopra, ad esempio 28 ft o 8,5 m.", "In the unit chosen above, for example 28 ft or 8,5 m.", "En la unidad elegida arriba, por ejemplo 28 ft u 8,5 m.", "Dans l'unité choisie ci-dessus, par exemple 28 ft ou 8,5 m.");
-    R("hint.beam", "La parte più larga dello scafo. Se scegli un modello dell'elenco la compiliamo noi.", "The widest part of the hull. If you pick a model from the list, we fill it in.", "La parte más ancha del casco. Si eliges un modelo de la lista, la rellenamos nosotros.", "La partie la plus large de la coque. Si vous choisissez un modèle de la liste, nous la renseignons.");
+    R("hint.beam", "In metri: la parte più larga dello scafo. Se scegli un modello dell'elenco la compiliamo noi.", "In metres: the widest part of the hull. If you pick a model from the list, we fill it in.", "En metros: la parte más ancha del casco. Si eliges un modelo de la lista, la rellenamos nosotros.", "En mètres : la partie la plus large de la coque. Si vous choisissez un modèle de la liste, nous la renseignons.");
     R("hint.registration.h",
         "Come riportata sui documenti. <span class=\"ph\">Formato da verificare.</span>",
         "As shown on the papers. <span class=\"ph\">Format to be checked.</span>",
@@ -396,10 +396,10 @@
     R("sum.subtotal", "Lavori sulle zone", "Zone work", "Trabajos en las zonas", "Travaux sur les zones");
     R("sum.total", "Totale stimato", "Estimated total", "Total estimado", "Total estimé");
     R("sum.note",
-        "{tier}, calcolato su {loa} × {beam} {unit}. Prezzi IVA esclusa. Prezzo indicativo: il preventivo definitivo lo confermiamo noi.",
-        "{tier}, calculated on {loa} × {beam} {unit}. Prices exclude VAT. Indicative price: we confirm the final quote.",
-        "{tier}, calculado sobre {loa} × {beam} {unit}. Precios sin IVA. Precio orientativo: el presupuesto definitivo lo confirmamos nosotros.",
-        "{tier}, calculé sur {loa} × {beam} {unit}. Prix hors TVA. Prix indicatif : nous confirmons le devis définitif.");
+        "{tier}, calcolato su {loa} {unit} × {beam} m. Prezzi IVA esclusa. Prezzo indicativo: il preventivo definitivo lo confermiamo noi.",
+        "{tier}, calculated on {loa} {unit} × {beam} m. Prices exclude VAT. Indicative price: we confirm the final quote.",
+        "{tier}, calculado sobre {loa} {unit} × {beam} m. Precios sin IVA. Precio orientativo: el presupuesto definitivo lo confirmamos nosotros.",
+        "{tier}, calculé sur {loa} {unit} × {beam} m. Prix hors TVA. Prix indicatif : nous confirmons le devis définitif.");
     R("sum.custom", "Preventivo personalizzato", "Custom quote", "Presupuesto personalizado", "Devis personnalisé");
     R("sum.customNote",
         "Con riparazioni gravose il prezzo si definisce dopo un sopralluogo.",
